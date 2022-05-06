@@ -1,4 +1,6 @@
 import csv
+import mysql.connector
+
 
 with open("./export.csv", "r") as file:
     csvFile=csv.reader(file)
