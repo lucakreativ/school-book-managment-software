@@ -1,7 +1,9 @@
 import csv
 import mysql.connector
 
+
 state="INSERT INTO schueler (ID, Stufe, Klasse, Vorname, Nachname, Religion, Fremdsp1, Fremdsp2, Fremdsp3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+
 
 mydb = mysql.connector.connect(
   host="localhost",
@@ -15,8 +17,8 @@ mycursor = mydb.cursor()
 
 with open("./export.csv", "r") as file:
     csvFile=csv.reader(file)
-
     next(csvFile)
+    
 
 #['Klasse', 'Vornamen', 'Nachname', 'ID', 'Fremdsprache 1.', 'Fremdsprache 2.', 'Fremdsprache 3.', 'Religion', 'Alle besuchten Pflichtfächer']
 #   0           1           2         3             4               5                   6               7                   8
