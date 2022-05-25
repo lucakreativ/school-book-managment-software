@@ -16,6 +16,11 @@ def insert_book(ISBN, Titel, Verlag, preis=0):
     mydb.commit()
 
 
+def update_book(ISBN, Titel, Verlag, preis):
+    mycursor.execute(""""UPTATE buecher SET Titel='%s', Verlag='%s', preis=%s WHERE ISBN=%s""" % (Titel, Verlag, preis, ISBN))
+    mydb.commit()
+
+
 def insert_taken_book_add(Sch_ID, ISBN, Anzahl=1):
     mycursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
     result=mycursor.fetchall()
