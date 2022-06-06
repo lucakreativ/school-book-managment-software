@@ -35,6 +35,15 @@ def search_book(search_term):
     return data
 
 
+def print_books():
+    cursor, conn = re_connect()
+    cursor.execute("SELECT ISBN, Titel, Verlag, preis FROM buecher")
+    data=cursor.fetchall()
+    data=pd.DataFrame(data, columns=["ISBN", "Titel", "Verlag", "Preis"])
+    data["ISBN"]=data["ISBN"].apply(lambda x:'<a href="/?site=book_by_ISBN&ISBN={0}">{0}</a>'.format(x))
+    return data
+
+
 def insert_taken_book_add(Sch_ID, ISBN, Anzahl=1):
     cursor, conn = re_connect()
     cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
