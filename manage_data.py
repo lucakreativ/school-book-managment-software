@@ -44,6 +44,11 @@ def print_books():
     return data
 
 
+def book_by_ISBN(ISBN):
+    cursor, conn = re_connect()
+    cursor.execute("SELECT ISBN, Titel, Verlag, preis FROM buecher WHERE ISBN='%s'" % (ISBN))
+
+
 def insert_taken_book_add(Sch_ID, ISBN, Anzahl=1):
     cursor, conn = re_connect()
     cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
