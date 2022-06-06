@@ -1,5 +1,6 @@
-from unittest import result
 import mysql.connector
+
+from read_config import read_db_config
 
 mydb = mysql.connector.connect(
     host="localhost",
