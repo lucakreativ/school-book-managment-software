@@ -2,7 +2,7 @@ from mysql.connector import MySQLConnection
 import pandas as pd
 
 from read_config import read_db_config
-
+from hash_func import hash_func
 
 def re_connect():
     dbconfig = read_db_config()
@@ -85,3 +85,21 @@ def delete_zero_taken_books():
     cursor, conn = re_connect()
     cursor.execute("""DELETE FROM ausgeliehen WHERE Anzahl=0""")
     conn.commit()
+
+
+
+def login(username, password):
+    cursor, conn = re_connect()
+    try:
+        cursor.execute("SELECT hash FROM user WHERE username = '%s'" % (username))
+        hash_d=cursor.fetchall()
+        hash_d=hash_d[0][0]
+        hash_input=hash_func(password)
+
+        if str(hash_d)==str(hash_input):
+            return True
+        else:
+            return False
+    
+    except:
+        return False
