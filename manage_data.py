@@ -73,3 +73,9 @@ def insert_taken_book_absolute(Sch_ID, ISBN, Anzahl=1):
     else:
         cursor.execute("""INSERT INTO ausgeliehen (ID, ISBN, Anzahl) VALUES ('%s', %s, %s)""" % (Sch_ID, ISBN, Anzahl))
         conn.commit()
+
+
+def delete_zero_taken_books():
+    cursor, conn = re_connect()
+    cursor.execute("""DELETE FROM ausgeliehen WHERE Anzahl=0""")
+    conn.commit()
