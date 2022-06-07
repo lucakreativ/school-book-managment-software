@@ -4,12 +4,12 @@ import pandas as pd
 from read_config import read_db_config
 
 
-def re_connect():                                   #setzt eine neue Verbindung, wegen MySQL timeout
-    dbconfig = read_db_config()                     #benutzt library Config-Reader für die Konfiguration
-    conn = MySQLConnection(**dbconfig)              #verbindung zur Datenbank wird hergestellt
-    cursor = conn.cursor()                          #setzt den Curser, der die Befehle ausführt
+def re_connect():
+    dbconfig = read_db_config()
+    conn = MySQLConnection(**dbconfig)
+    cursor = conn.cursor()
 
-    return cursor, conn                             #gibt den Cursor und die Verbindung zurück
+    return cursor, conn
 
 
 
