@@ -13,6 +13,12 @@ def re_connect():                                   #setzt eine neue Verbindung,
 
 
 
+def delete_book(ISBN):
+    cursor, conn = re_connect()
+    cursor.execute("DELETE FROM buecher WHERE ISBN='%s'" % (ISBN))
+    conn.commit()
+
+
 def insert_book(ISBN, Titel, Verlag, preis=0):
     cursor, conn = re_connect()
     values=[ISBN, Titel, Verlag, preis]
