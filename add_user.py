@@ -17,7 +17,7 @@ print("Rechte: "+ str(priv))
 hash_i=hash_func(passwort)
 print("Hash: '"+ hash_i+"'")
 
-cursor.execute("""INSERT INTO user (username, hash, privileges) VALUES (%s, %s, %s)""" % (username, hash_i, priv))
+cursor.execute("""INSERT INTO user (username, hash, privileges) VALUES (%s, %s, %s)""", (username, hash_i, priv))
 conn.commit()
 
 print("Success") 
