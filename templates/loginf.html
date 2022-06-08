@@ -1,0 +1,20 @@
+<!DOCTYPE html>   
+<html>   
+<head>  
+<title> Login Page </title>  
+<link rel="stylesheet" href="/static/login.css" type="text/css">  
+</head>    
+<body>    
+    <center> <h1>Login-Seite</h1> </center>
+    <h1>Falscher Benutzername oder Passwort</h1>
+    <form action="/validate" method="post">  
+        <div class="container">   
+            <label>Username : </label>   
+            <input type="text" placeholder="Enter Username" name="username" required autofocus>  
+            <label>Password : </label>   
+            <input type="password" placeholder="Enter Password" name="password" required>  
+            <button type="submit">Login</button>     
+        </div>   
+    </form>     
+</body>     
+</html>  
