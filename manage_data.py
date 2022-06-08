@@ -87,6 +87,29 @@ def delete_zero_taken_books():
     conn.commit()
 
 
+def book_by_user(ID):
+    cursor, conn = re_connect()
+    cursor.execute("""SELECT schueler.Stufe, schueler.Klasse, schueler.Vorname, schueler.Nachname, schueler.Religion, schueler.Fremdsp1, schueler.Fremdsp2, schueler.Fremdsp3 FROM schueler WHERE schueler.ID = '%s'""" % (ID))
+    data = cursor.fetchall()
+    schueler=pd.DataFrame(data, columns=["Stufe", "Klasse", "Vorname", "Nachname", "Religion", "Fremdsp1", "Fremdsp2", "Fremdsp3"])
+
+    cursor.execute("""SELECT ISBN, Anzahl FROM ausgeliehen WHERE ID = '%s'""" % (ID))
+    data=cursor.fetchall()
+
+    buecher=pd.DataFrame(data, columns=["ISBN", "Anzahl"])
+
+    for index in buecher.iterrows():#get Titel from ISBN
+        num=index[0]
+        ISBN=buecher.iloc[num]["ISBN"]
+        cursor.execute("""SELECT Titel FROM buecher WHERE ISBN = %s""" % (ISBN))
+        data=cursor.fetchall()
+        if len(data)>0:
+            buecher.at[num, "ISBN"]=data[0][0]
+
+
+    print(schueler)
+    print(buecher)
+
 
 def login(username, password):
     cursor, conn = re_connect()
@@ -103,3 +126,6 @@ def login(username, password):
     
     except:
         return False
+
+
+book_by_user("402880f7-75b1b3a6-0175-b2570d73-09cd")
