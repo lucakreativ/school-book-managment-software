@@ -27,7 +27,9 @@ def home():
     if not check_login():
         return (redirect("/login"))
     else:
-        pass
+        site=request.args.get("site")
+        if site==None:
+            return "Startseite"
 
 
 
