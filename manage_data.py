@@ -177,5 +177,3 @@ def login(username, password):
     
     except:
         return False
-
-search_schueler("Eckenfels")
