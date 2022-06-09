@@ -36,5 +36,3 @@ def decrypt(ciphertext):
 
 
     return plaintext2.decode()
-
-print(encrypt("jz7miejYxX70ES89xFfqHex2vCNH3hmzeJ+xwlMpTy0="))
