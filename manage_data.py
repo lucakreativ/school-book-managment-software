@@ -142,6 +142,26 @@ def next_schueler(ID):
     return (next_ID, prev_ID)
 
 
+def search_schueler(name):
+    schueler=[]
+    cursor, conn = re_connect()
+    cursor.execute("SELECT Vorname, Nachname, ID FROM schueler WHERE Nachname LIKE '%"+name+"%'")
+    data=cursor.fetchall()
+
+    for list_l in data:
+        list_l=list(list_l)
+        list_l[2]=cryption.encrypt(list_l[2])
+        list_l[0]+=" "+list_l[1]
+        list_l.pop(1)
+        schueler.append(list_l)
+
+
+
+    data=pd.DataFrame(schueler, columns=["Name", "Seite"])
+    data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" methond="get"><input type="hidden" name="user" value={0}><input type="submit" value="Seite"></form>')
+    return data
+
+
 def login(username, password):
     cursor, conn = re_connect()
     try:
@@ -157,3 +177,5 @@ def login(username, password):
     
     except:
         return False
+
+search_schueler("Eckenfels")
