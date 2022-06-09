@@ -71,7 +71,6 @@ def insert_taken_book_add(Sch_ID, ISBN, Anzahl=1):
 
 
 def insert_taken_book_absolute(Sch_ID, ISBN, Anzahl=1):
-    Sch_ID=cryption.decrypt(Sch_ID)
     cursor, conn = re_connect()
     cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
     result=cursor.fetchall()
@@ -104,13 +103,23 @@ def book_by_user(ID):
 
     buecher=pd.DataFrame(data, columns=["ISBN", "Anzahl"])
 
+    for index in buecher.iterrows():
+        num=index[0]
+        anzahl=buecher.iloc[num]["Anzahl"]
+        temp='<input type="number" name="a%s" value="%s" onchange="submitform()">' % (num, anzahl)
+        buecher.at[num, "Anzahl"]=temp
+
     for index in buecher.iterrows():#get Titel from ISBN
         num=index[0]
         ISBN=buecher.iloc[num]["ISBN"]
+        temp='<input type="hidden" name="b%s" value="%s">' % (num, ISBN)
+        buecher.at[num, "ISBN"]=temp
         cursor.execute("""SELECT Titel FROM buecher WHERE ISBN = %s""" % (ISBN))
         data=cursor.fetchall()
         if len(data)>0:
-            buecher.at[num, "ISBN"]=data[0][0]
+            ISBN=data[0][0]
+
+        buecher.at[num, "ISBN"]+=ISBN
 
     return (schueler, buecher)
 

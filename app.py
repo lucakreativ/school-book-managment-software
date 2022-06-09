@@ -3,8 +3,8 @@ import random
 import time
 import os
 
-from kiwisolver import Term
 
+import cryption
 import manage_data
 
 
@@ -40,7 +40,7 @@ def home():
             else:
                 schueler, buecher = manage_data.book_by_user(ID)
                 next_ID, prev_ID = manage_data.next_schueler(ID)
-                return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"], ID_next=next_ID, ID_prev=prev_ID)
+                return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"], ID_next=next_ID, ID_prev=prev_ID, ID=ID)
         
         elif site=="search":
             name=request.args.get("term")
@@ -50,6 +50,22 @@ def home():
                 schueler=manage_data.search_schueler(name)
                 return render_template("search_student.html", tables=[schueler.to_html(escape=False)], titles=["Schueler"], term=name)
 
+
+
+        elif site=="save":
+            ID_e=request.args.get("ID")
+            ID=cryption.decrypt(ID_e)
+            con=False
+            i=0
+            while con==False:
+                print("hi")
+                ISBN=request.args.get("b"+str(i))
+                Anzahl=request.args.get("a"+str(i))
+                if ISBN!=None and Anzahl!=None:
+                    manage_data.insert_taken_book_absolute(ID, ISBN, Anzahl)
+                else:
+                    return redirect("/?site=schueler&ID=%s" % (ID_e))
+                i+=1
 
 
 
@@ -80,6 +96,7 @@ def validate():
 
 
 def check_login():
+    return True
     if session.get("login")==2:
         if check_inactivity()==True:
             return True

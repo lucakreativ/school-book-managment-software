@@ -3,13 +3,16 @@
 
     <body>
         <div id="main">
-
-            {% for table in tables %}            
-            <h2>{{titles[loop.index]}}</h2>
-            
-            {{ table|safe }}
-                {% endfor %}
-
+            <form action="/" method="get" id="save_book">
+                <input type="hidden" name="site" value="save">
+                <input type="hidden" name="ID" value="{{ID}}"
+                {% for table in tables %}            
+                <h2>{{titles[loop.index]}}</h2>
+                
+                {{ table|safe }}
+                    {% endfor %}
+                <input type="submit">
+            </form>
         </div>
 
     </body>
@@ -31,6 +34,14 @@
     </div>
 
     {% include "footer.html" %}
+
+    <script type="text/javascript">
+
+            function submitform(){
+              document.forms["save_book"].submit();
+            }
+
+    </script>
 </html>
 
 
