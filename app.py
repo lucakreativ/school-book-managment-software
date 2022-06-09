@@ -31,6 +31,13 @@ def home():
         if site==None:
             return "Startseite"
 
+        if site=="schueler":
+            ID=request.args.get("ID")
+            if ID==None:
+                return "Schueler auswählen"
+            else:
+                schueler, buecher = manage_data.book_by_user(ID)
+                return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"])
 
 
 

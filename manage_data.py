@@ -107,8 +107,7 @@ def book_by_user(ID):
             buecher.at[num, "ISBN"]=data[0][0]
 
 
-    print(schueler)
-    print(buecher)
+    return (schueler, buecher)
 
 
 def login(username, password):
@@ -126,6 +125,3 @@ def login(username, password):
     
     except:
         return False
-
-
-book_by_user("402880f7-75b1b3a6-0175-b2570d73-09cd")
