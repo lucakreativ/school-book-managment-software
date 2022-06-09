@@ -3,6 +3,8 @@ import random
 import time
 import os
 
+from kiwisolver import Term
+
 import manage_data
 
 
@@ -31,13 +33,21 @@ def home():
         if site==None:
             return "Startseite"
 
-        if site=="schueler":
+        elif site=="schueler":
             ID=request.args.get("ID")
             if ID==None:
                 return "Schueler auswählen"
             else:
                 schueler, buecher = manage_data.book_by_user(ID)
                 return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"])
+        
+        elif site=="search":
+            name=request.args.get("term")
+            if name==None:
+                return render_template("search_student.html")
+            else:
+                schueler=manage_data.search_schueler(name)
+                return render_template("search_student.html", tables=[schueler.to_html(escape=False)], titles=["Schueler"], term=name)
 
 
 

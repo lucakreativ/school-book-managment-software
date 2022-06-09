@@ -96,6 +96,8 @@ def book_by_user(ID):
     cursor.execute("""SELECT schueler.Stufe, schueler.Klasse, schueler.Vorname, schueler.Nachname, schueler.Religion, schueler.Fremdsp1, schueler.Fremdsp2, schueler.Fremdsp3 FROM schueler WHERE schueler.ID = '%s'""" % (ID))
     data = cursor.fetchall()
     schueler=pd.DataFrame(data, columns=["Stufe", "Klasse", "Vorname", "Nachname", "Religion", "Fremdsp1", "Fremdsp2", "Fremdsp3"])
+    schueler["Klasse"]=schueler["Stufe"].astype(str)+schueler["Klasse"].astype(str)
+    schueler.drop(schueler.columns[[0]], axis=1, inplace=True)
 
     cursor.execute("""SELECT ISBN, Anzahl FROM ausgeliehen WHERE ID = '%s'""" % (ID))
     data=cursor.fetchall()
@@ -158,7 +160,7 @@ def search_schueler(name):
 
 
     data=pd.DataFrame(schueler, columns=["Name", "Seite"])
-    data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" methond="get"><input type="hidden" name="user" value={0}><input type="submit" value="Seite"></form>')
+    data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" methond="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
     return data
 
 
