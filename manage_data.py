@@ -106,8 +106,34 @@ def book_by_user(ID):
         if len(data)>0:
             buecher.at[num, "ISBN"]=data[0][0]
 
-
     return (schueler, buecher)
+
+
+def next_schueler(ID):
+    cursor, conn = re_connect()
+    cursor.execute("""SELECT Stufe, Klasse FROM schueler WHERE ID = '%s'""" % (ID))
+    data=cursor.fetchall()[0]
+    Stufe=data[0]
+    Klasse=data[1]
+
+    cursor.execute("""SELECT Nachname, Vorname, ID FROM schueler WHERE Stufe = '%s' AND Klasse = '%s'""" % (Stufe, Klasse))
+    data=cursor.fetchall()
+    data.sort()
+    
+    i=0
+    while i<len(data):
+        if data[i][2]==ID:
+            next_i=(i+1)%len(data)
+            next_ID=data[next_i][2]
+
+            prev_i=i-1
+            if i<0:
+                prev_i=len(data)-1
+                
+            prev_ID=data[prev_i][2]
+        i+=1
+    
+    return (next_ID, prev_ID)
 
 
 def login(username, password):
