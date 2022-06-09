@@ -39,7 +39,8 @@ def home():
                 return "Schueler auswählen"
             else:
                 schueler, buecher = manage_data.book_by_user(ID)
-                return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"])
+                next_ID, prev_ID = manage_data.next_schueler(ID)
+                return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"], ID_next=next_ID, ID_prev=prev_ID)
         
         elif site=="search":
             name=request.args.get("term")

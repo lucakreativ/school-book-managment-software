@@ -109,3 +109,30 @@ th {
 #book_ins {
     width: 100%;
 }
+
+#next {
+    z-index: 1;
+    height: 65px;
+    padding-top: 10px;
+    bottom: 0;
+    width: 100%;
+    overflow:hidden;
+    float: bottom;
+    position: absolute;
+}
+
+#left {
+    padding-top: 14px;
+    width: 50%;
+    float: left;
+}
+#right {
+    padding-top: 14px;
+    width: 50%;
+    float: right;
+}
+
+#but_next {
+    font-size: 16;
+    width: 60px;
+}

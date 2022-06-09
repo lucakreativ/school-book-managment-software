@@ -13,6 +13,22 @@
         </div>
 
     </body>
+    <div id="next">
+        <div id="left">
+            <form action="/">
+                <input type="hidden" name="site" value="schueler">
+                <input type="hidden" name="ID" value="{{ID_prev}}">
+                <input type="submit" value="zurück" id="but_next">
+            </form>
+        </div>
+        <div id="right">
+            <form action="/">
+                <input type="hidden" name="site" value="schueler">
+                <input type="hidden" name="ID" value="{{ID_next}}">
+                <input type="submit" value="vor" id="but_next">
+            </form>
+        </div>
+    </div>
 
     {% include "footer.html" %}
 </html>
