@@ -3,6 +3,7 @@ import pandas as pd
 
 from read_config import read_db_config
 from hash_func import hash_func
+import cryption
 
 def re_connect():
     dbconfig = read_db_config()
@@ -56,6 +57,7 @@ def book_by_ISBN(ISBN):
 
 
 def insert_taken_book_add(Sch_ID, ISBN, Anzahl=1):
+    cryption.decrypt(Sch_ID)
     cursor, conn = re_connect()
     cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
     result=cursor.fetchall()
@@ -69,6 +71,7 @@ def insert_taken_book_add(Sch_ID, ISBN, Anzahl=1):
 
 
 def insert_taken_book_absolute(Sch_ID, ISBN, Anzahl=1):
+    Sch_ID=cryption.decrypt(Sch_ID)
     cursor, conn = re_connect()
     cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
     result=cursor.fetchall()
@@ -88,6 +91,7 @@ def delete_zero_taken_books():
 
 
 def book_by_user(ID):
+    ID=cryption.decrypt(ID)
     cursor, conn = re_connect()
     cursor.execute("""SELECT schueler.Stufe, schueler.Klasse, schueler.Vorname, schueler.Nachname, schueler.Religion, schueler.Fremdsp1, schueler.Fremdsp2, schueler.Fremdsp3 FROM schueler WHERE schueler.ID = '%s'""" % (ID))
     data = cursor.fetchall()
@@ -110,6 +114,7 @@ def book_by_user(ID):
 
 
 def next_schueler(ID):
+    ID=cryption.decrypt(ID)
     cursor, conn = re_connect()
     cursor.execute("""SELECT Stufe, Klasse FROM schueler WHERE ID = '%s'""" % (ID))
     data=cursor.fetchall()[0]
@@ -132,7 +137,8 @@ def next_schueler(ID):
                 
             prev_ID=data[prev_i][2]
         i+=1
-    
+    next_ID=cryption.encrypt(next_ID)
+    prev_ID=cryption.encrypt(prev_ID)
     return (next_ID, prev_ID)
 
 
