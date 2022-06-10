@@ -50,6 +50,16 @@ def home():
                 schueler=manage_data.search_schueler(name)
                 return render_template("search_student.html", tables=[schueler.to_html(escape=False)], titles=["Schueler"], term=name)
 
+        elif site=="books":
+            search=request.args.get("search")
+            
+            if search==None:
+                data=manage_data.print_books()
+                return render_template("book.html", search="", tables=[data.to_html(escape=False)], titles=["Bücher"])
+
+            else:
+                data=manage_data.search_book(search)
+                return render_template("book.html", search=search, tables=[data.to_html(escape=False)], titles=["Bücher"])
 
 
         elif site=="save":
