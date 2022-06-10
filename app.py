@@ -31,7 +31,7 @@ def home():
     else:
         site=request.args.get("site")
         if site==None:
-            return "Startseite"
+            return render_template("main.html")
 
         elif site=="schueler":
             ID=request.args.get("ID")
