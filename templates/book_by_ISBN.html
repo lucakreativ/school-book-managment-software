@@ -1,0 +1,23 @@
+<html>
+    {% include "header.html" %}
+
+    <body>
+        <div id="main">
+            <h2>Buch bearbeiten</h2>
+            <p>Bitte mit vorsicht behandeln, Änderungen können nicht rückgänig gemacht werden!</p>
+            <form action="" method="get">
+                <input type="hidden" name="site" value="book_by_ISBN">
+                <input type="hidden" name="save" value="1">
+                <input type="text" name="ISBN" value="{{ISBN}}" autofocus>
+                <textarea name="Titel">{{Titel}}</textarea>
+                <input type="text" name="verlag" value="{{Verlag}}" placeholder="Verlag">
+                <input tyep="number" name="preis" value="{{Preis}}" placeholder="Preis">
+                <input type="submit" value="speichern">
+            </form>
+
+        </div>
+
+    </body>
+
+    {% include "footer.html" %}
+</html>

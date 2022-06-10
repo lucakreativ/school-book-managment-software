@@ -61,6 +61,31 @@ def home():
                 data=manage_data.search_book(search)
                 return render_template("book.html", search=search, tables=[data.to_html(escape=False)], titles=["Bücher"])
 
+        elif site=="insert_book":
+            verlag=request.args.get("verlag")
+            ISBN=request.args.get("ISBN")
+            titel=request.args.get("titel")
+            preis=float(request.args.get("preis"))
+
+            manage_data.insert_book(ISBN, titel, verlag, preis)
+            return redirect("/?site=book_by_ISBN&ISBN=%s" % (ISBN))
+
+        elif site=="insert":
+            return render_template("insert.html")
+
+        elif site=="book_by_ISBN":
+            save=request.args.get("save")
+            ISBN=request.args.get("ISBN")
+            Titel=request.args.get("Titel")
+            Verlag=request.args.get("verlag")
+            preis=request.args.get("preis")
+
+            if save=="1":
+                manage_data.update_book(ISBN, Titel, Verlag, preis)
+
+            data=manage_data.book_by_ISBN(ISBN)
+            print(data)
+            return render_template("book_by_ISBN.html", ISBN=data[0], Titel=data[1], Verlag=data[2], Preis=data[3])
 
         elif site=="save":
             ID_e=request.args.get("ID")
