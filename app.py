@@ -66,6 +66,10 @@ def home():
             if klasse==None:
                 data=manage_data.get_klassen()
                 return render_template("klassen.html", tables=[data.to_html(escape=False)], titles=["Klassen"])
+            else:
+                data=manage_data.schueler_by_class(klasse)
+                return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"])
+
 
         elif site=="insert_book":
             verlag=request.args.get("verlag")

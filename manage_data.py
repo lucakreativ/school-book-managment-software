@@ -187,6 +187,34 @@ def get_klassen():
     return data
 
 
+def schueler_by_class(klasse):
+    schueler=[]
+    cursor, conn = re_connect()
+
+    if klasse[0:2]!="J1" and klasse[0:2]!="J2":
+        stufe=klasse[0:-1]
+        klasse=klasse[-1:]
+    else:
+        stufe=klasse[0:2]
+        klasse=""
+
+    cursor.execute("SELECT Vorname, Nachname, ID FROM schueler WHERE Stufe='%s' AND Klasse='%s'" % (stufe, klasse))
+    data=cursor.fetchall()
+    data.sort(key=lambda x:x[1])
+
+    for list_l in data:
+        list_l=list(list_l)
+        list_l[2]=cryption.encrypt(list_l[2])
+        list_l[0]+=" "+list_l[1]
+        list_l.pop(1)
+        schueler.append(list_l)
+
+    #sortieren
+    data=pd.DataFrame(schueler, columns=["Name", "Seite"])
+    data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" methond="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
+    return data
+
+
 
 def search_schueler(name):
     schueler=[]
@@ -224,4 +252,4 @@ def login(username, password):
     except:
         return False
 
-get_klassen()
+schueler_by_class("8a")
