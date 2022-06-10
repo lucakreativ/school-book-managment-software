@@ -61,6 +61,12 @@ def home():
                 data=manage_data.search_book(search)
                 return render_template("book.html", search=search, tables=[data.to_html(escape=False)], titles=["Bücher"])
 
+        elif site=="klassen":
+            klasse=request.args.get("k")
+            if klasse==None:
+                data=manage_data.get_klassen()
+                return render_template("klassen.html", tables=[data.to_html(escape=False)], titles=["Klassen"])
+
         elif site=="insert_book":
             verlag=request.args.get("verlag")
             ISBN=request.args.get("ISBN")

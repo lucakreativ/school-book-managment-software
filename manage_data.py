@@ -157,6 +157,37 @@ def next_schueler(ID):
     return (next_ID, prev_ID)
 
 
+def get_klassen():
+    cursor, conn = re_connect()
+    cursor.execute("SELECT Stufe FROM schueler t WHERE t.ID = (SELECT min(t1.ID) FROM schueler t1 WHERE t1.Stufe=t.Stufe)")
+    data=cursor.fetchall()
+
+    Klassen={}
+    data=sorted(data)
+    for i in data:
+        Stufe=i[0]
+        cursor.execute("SELECT Klasse FROM schueler t WHERE t.ID = (SELECT min(t1.ID) FROM schueler t1 WHERE t1.Klasse=t.Klasse AND Stufe='%s')" % (Stufe))
+        data2=cursor.fetchall()
+        data2=sorted(data2)
+        Klassen_a=[]
+        for j in data2:
+            
+            Klasse=j[0]
+            if Klasse==" ":
+                Klasse=""
+            comp=Stufe+Klasse
+            Klassen_a.append('<form action="/" method="get"><input type="hidden" name="site" value="klassen"><input type="hidden" name="k" value="%s"><input type="submit" value="%s"></form>' % (comp, comp))
+
+        Klassen[Stufe]=Klassen_a
+
+    
+    data=pd.DataFrame.from_dict(Klassen, orient='index')
+    data=data.transpose()
+    data=data.fillna("")
+    return data
+
+
+
 def search_schueler(name):
     schueler=[]
     cursor, conn = re_connect()
@@ -192,3 +223,5 @@ def login(username, password):
     
     except:
         return False
+
+get_klassen()

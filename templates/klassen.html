@@ -1,0 +1,29 @@
+<html>
+    {% include "header.html" %}
+
+    <body>
+        <div id="main">
+            <h2>Klassen</h2>
+            {% for table in tables %}
+            <h2>{{titles[loop.index]}}</h2>
+            {{ table|safe }}
+                {% endfor %}
+
+        </div>
+
+    </body>
+
+    {% include "footer.html" %}
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
