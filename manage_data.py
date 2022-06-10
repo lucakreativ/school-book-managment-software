@@ -56,18 +56,21 @@ def book_by_ISBN(ISBN):
     cursor.execute("SELECT ISBN, Titel, Verlag, preis FROM buecher WHERE ISBN='%s'" % (ISBN))
 
 
+#does not function
 def insert_taken_book_add(Sch_ID, ISBN, Anzahl=1):
-    cryption.decrypt(Sch_ID)
+    print(Anzahl)
     cursor, conn = re_connect()
     cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
     result=cursor.fetchall()
     if len(result)!=0:
-        books=result[0][0]
-        cursor.execute("""UPDATE ausgeliehen SET Anzahl=%s WHERE ID='%s' AND ISBN=%s""" % (books+Anzahl, Sch_ID, ISBN))
+        books=int(result[0][0])
+        Anzahl=int(books+Anzahl)
+        print(Anzahl)
+        cursor.execute("""DELETE FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
         conn.commit()
-    else:
-        cursor.execute("""INSERT INTO ausgeliehen (ID, ISBN, Anzahl) VALUES ('%s', %s, %s)""" % (Sch_ID, ISBN, Anzahl))
-        conn.commit()
+
+    #cursor.execute("""INSERT INTO ausgeliehen (ID, ISBN, Anzahl) VALUES ('%s', %s, %s)""" % (Sch_ID, ISBN, Anzahl))
+    conn.commit()
 
 
 def insert_taken_book_absolute(Sch_ID, ISBN, Anzahl=1):

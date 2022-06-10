@@ -55,10 +55,21 @@ def home():
         elif site=="save":
             ID_e=request.args.get("ID")
             ID=cryption.decrypt(ID_e)
+
+            ISBN_zu=request.args.get("zu")
+            ISBN_ei=request.args.get("ei")
+            print(ISBN_zu)
+            print(ISBN_ei)
+            if ISBN_zu!="":
+                print("1")
+                manage_data.insert_taken_book_absolute(ID, ISBN_zu, 0)
+            if ISBN_ei!="":
+                print("2")
+                manage_data.insert_taken_book_absolute(ID, ISBN_ei, 1)
+
             con=False
             i=0
             while con==False:
-                print("hi")
                 ISBN=request.args.get("b"+str(i))
                 Anzahl=request.args.get("a"+str(i))
                 if ISBN!=None and Anzahl!=None:

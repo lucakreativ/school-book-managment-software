@@ -3,6 +3,7 @@
 
     <body>
         <div id="main">
+            <br>
             <form action="/" method="get" id="save_book">
                 <input type="hidden" name="site" value="save">
                 <input type="hidden" name="ID" value="{{ID}}"
@@ -11,8 +12,22 @@
                 
                 {{ table|safe }}
                     {% endfor %}
-                <input type="submit">
+                
+
+                <input type="hidden" name="site" value="save_a">
+                <div id="ISBN_a">
+                    <div class="inline">
+                        <h2>Zurückgeben</h2>
+                        <input type="text" name="zu" placeholder="ISBN">
+                    </div>
+                    <div class="inline">
+                        <h2>Eintragen</h2>
+                        <input type="text" name="ei" placeholder="ISBN">
+                    </div>
+                </div>
+            <input type="submit">
             </form>
+
         </div>
 
     </body>
