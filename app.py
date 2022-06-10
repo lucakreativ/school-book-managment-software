@@ -101,17 +101,7 @@ def home():
             ID_e=request.args.get("ID")
             ID=cryption.decrypt(ID_e)
 
-            ISBN_zu=request.args.get("zu")
-            ISBN_ei=request.args.get("ei")
-            print(ISBN_zu)
-            print(ISBN_ei)
-            if ISBN_zu!="":
-                print("1")
-                manage_data.insert_taken_book_absolute(ID, ISBN_zu, 0)
-            if ISBN_ei!="":
-                print("2")
-                manage_data.insert_taken_book_absolute(ID, ISBN_ei, 1)
-
+            
             con=False
             i=0
             while con==False:
@@ -120,9 +110,16 @@ def home():
                 if ISBN!=None and Anzahl!=None:
                     manage_data.insert_taken_book_absolute(ID, ISBN, Anzahl)
                 else:
-                    return redirect("/?site=schueler&ID=%s" % (ID_e))
+                    con=True
                 i+=1
 
+            ISBN_zu=request.args.get("zu")
+            ISBN_ei=request.args.get("ei")
+            if ISBN_zu!="":
+                manage_data.insert_taken_book_add(ID, ISBN_zu, str(-1))
+            if ISBN_ei!="":
+                manage_data.insert_taken_book_add(ID, ISBN_ei, str(1))
+            return redirect("/?site=schueler&ID=%s" % (ID_e))
 
 
 @app.route("/login")
@@ -152,7 +149,6 @@ def validate():
 
 
 def check_login():
-    return True
     if session.get("login")==2:
         if check_inactivity()==True:
             return True

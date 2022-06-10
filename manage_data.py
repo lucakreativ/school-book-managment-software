@@ -57,21 +57,18 @@ def book_by_ISBN(ISBN):
     data=cursor.fetchall()[0]
     return data
 
-#does not function
+
 def insert_taken_book_add(Sch_ID, ISBN, Anzahl=1):
-    print(Anzahl)
     cursor, conn = re_connect()
     cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
     result=cursor.fetchall()
     if len(result)!=0:
-        books=int(result[0][0])
-        Anzahl=int(books+Anzahl)
-        print(Anzahl)
-        cursor.execute("""DELETE FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
+        books=result[0][0]
+        cursor.execute("""UPDATE ausgeliehen SET Anzahl=%s WHERE ID='%s' AND ISBN=%s""" % (str(int(Anzahl)+int(books)), Sch_ID, ISBN))
         conn.commit()
-
-    #cursor.execute("""INSERT INTO ausgeliehen (ID, ISBN, Anzahl) VALUES ('%s', %s, %s)""" % (Sch_ID, ISBN, Anzahl))
-    conn.commit()
+    else:
+        cursor.execute("""INSERT INTO ausgeliehen (ID, ISBN, Anzahl) VALUES ('%s', %s, %s)""" % (Sch_ID, ISBN, Anzahl))
+        conn.commit()
 
 
 def insert_taken_book_absolute(Sch_ID, ISBN, Anzahl=1):
@@ -251,5 +248,3 @@ def login(username, password):
     
     except:
         return False
-
-schueler_by_class("8a")
