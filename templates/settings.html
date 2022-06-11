@@ -1,0 +1,35 @@
+<html>
+    {% include "header.html" %}
+
+    <body>
+        <div id="main">
+
+            <h1>Einstellungen</h1>
+            <h2>Passwort ändern</h2>
+            <p>{{Message}}</p>
+            <form action="/save_setting" method="post">
+                <input type="hidden" name="order" value="change_pass">
+                <input type="password" name="old_pass" placeholder="Altes Passwort" required>
+                <input type="password" name="new1_pass" placeholder="Neues Passwort" required>
+                <input type="password" name="new2_pass" placeholder="Wiederholen" required>
+                <input type="submit" value="ändern">
+            </form>
+
+        </div>
+
+    </body>
+
+    {% include "footer.html" %}
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

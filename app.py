@@ -122,6 +122,47 @@ def home():
             return redirect("/?site=schueler&ID=%s" % (ID_e))
 
 
+        elif site=="settings":                      #Einstllungen werden aufgerufen
+            message=request.args.get("message")     #Nachricht die angezeigt werden soll wird geholt
+            if message!=None:                       #Wenn es eine gibt
+                if message=="0":                    #0=Erfolgreich
+                    me="Passwort wurde erfolgreich geändert"
+                elif message=="1":                  #1=Fehler
+                    me="Altes Passwort stimmt nicht überein"
+                elif message=="2":                  #2=Fehler
+                    me="Die neuen Passwörter stimmen nicht überein"
+
+                return render_template("settings.html", Message=me)     #laden der HTML-Seite mit der Nachricht
+
+            else:                                                       #wenn keine mitgegeben wird
+                return render_template("settings.html")                 #laden der HTML-Seite ohne Nachricht
+                
+
+        elif site=="logout":                #ausloggen wird aufgerufe
+            session.clear()                 #alle Daten werden gelöscht
+            return(redirect("/login"))      #wird zur Login-Seite weitergeleitet
+
+        else:                               #keine gültige Seite wurde aufgerufen
+            return("Seite nicht gefunden")  #404-Page wird angezeigt
+
+
+@app.route("/save_setting", methods=["POST"])       #Änderungen werden gepseichert und mit der Methode Post übergeben
+def save_settting():                                #wird ausgeführt, wenn @app.route richtig ist
+    if check_login():                               #überprüft, ob der Nutzer eingeloggt ist
+        username=session["user"]                    #bekommt den angemeldeten Benutzer
+        olrder=request.form.get("order")            #was geändert werden soll
+        old_pass=request.form.get("old_pass")       #altes Passwort zu verifizierung
+        new1_pass=request.form.get("new1_pass")     #neues Passwort
+        new2_pass=request.form.get("new2_pass")     #neues Passwort wiederholung
+
+        re=manage_data.change_password(username, old_pass, new1_pass, new2_pass)   #Übergibt die Werte und bekommt message zurück
+
+        return redirect("/?site=settings&message=%s" % (re))                    #wird zu Eintellungen weitergeleitet und message wird übergeben
+    
+    else:                                   #wenn man nicht eingeloggt ist
+        return redirect("/login")           #wird man zur Login-Seite weitergeleitet
+
+
 @app.route("/login")
 def login():
     return render_template("login.html")
