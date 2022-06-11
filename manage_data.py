@@ -208,9 +208,8 @@ def schueler_by_class(klasse):
 
     #sortieren
     data=pd.DataFrame(schueler, columns=["Name", "Seite"])
-    data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" methond="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
+    data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" method="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
     return data
-
 
 
 def search_schueler(name):
@@ -229,7 +228,40 @@ def search_schueler(name):
 
 
     data=pd.DataFrame(schueler, columns=["Name", "Seite"])
-    data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" methond="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
+    data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" method="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
+    return data
+
+
+def add_book_stufe(Stufe, ISBN):
+    cursor, conn = re_connect()
+    cursor.execute("INSERT INTO buchstufe (stufe, ISBN) VALUES ('%s', %s)" % (Stufe, ISBN))
+    conn.commit()
+
+def remove_book_stufe(Stufe, ISBN):
+    cursor, conn = re_connect()
+    cursor.execute("DELETE FROM buchstufe WHERE Stufe='%s' AND ISBN=%s" % (Stufe, ISBN))
+    conn.commit()
+
+def select_book_stufe(Stufe):
+    cursor, conn = re_connect()
+    cursor.execute("SELECT ISBN FROM buchstufe WHERE Stufe='%s'" % (Stufe))
+    data=cursor.fetchall()
+    data=pd.DataFrame(data, columns=["Buch"])
+    data["ent"]=data["Buch"]
+
+    for index in data.iterrows():
+        num=index[0]
+        ISBN=data.iloc[num]["ent"]
+
+        temp='<form action="/" method="get"><input type="hidden" name="site" value="remove_stufe"><input type="hidden" name="stufe" value="%s"><input type="hidden" name="ISBN" value="%s"><input type="submit" value="X" id="remove_stufe"></form>' % (Stufe, ISBN)
+
+        data.at[num, "ent"]=temp
+
+        cursor.execute("SELECT Titel FROM buecher WHERE ISBN=%s" % (ISBN))
+        title=cursor.fetchall()
+        if len(title)!=0:
+            data.at[num, "Buch"]=title[0][0]
+            
     return data
 
 
@@ -267,3 +299,7 @@ def change_password(username, old_pass, new1_pass, new2_pass):
             return 2
     else:
         return 1
+
+#add_book_stufe(1,1)
+#remove_book_stufe(8,1)
+select_book_stufe(1)

@@ -97,6 +97,26 @@ def home():
             print(data)
             return render_template("book_by_ISBN.html", ISBN=data[0], Titel=data[1], Verlag=data[2], Preis=data[3])
 
+        elif site=="stufe":
+            stufe=request.args.get("stufe")
+            if stufe==None:
+                return "Stufe auswählen"
+            else:
+                data=manage_data.select_book_stufe(stufe)
+                return render_template("stufe_exakt.html", Stufe=stufe, tables=[data.to_html(escape=False)], titles=["Bucher"])
+
+        elif site=="remove_stufe":
+            stufe=request.args.get("stufe")
+            ISBN=request.args.get("ISBN")
+            manage_data.remove_book_stufe(stufe, ISBN)
+            return redirect("/?site=stufe&stufe="+stufe)
+        
+        elif site=="add_stufe":
+            stufe=request.args.get("stufe")
+            ISBN=request.args.get("ISBN")
+            manage_data.add_book_stufe(stufe, ISBN)
+            return redirect("/?site=stufe&stufe="+stufe)
+
         elif site=="save":
             ID_e=request.args.get("ID")
             ID=cryption.decrypt(ID_e)
@@ -136,7 +156,7 @@ def home():
 
             else:                                                       #wenn keine mitgegeben wird
                 return render_template("settings.html")                 #laden der HTML-Seite ohne Nachricht
-                
+
 
         elif site=="logout":                #ausloggen wird aufgerufe
             session.clear()                 #alle Daten werden gelöscht
