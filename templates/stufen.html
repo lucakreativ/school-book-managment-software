@@ -1,0 +1,38 @@
+<html>
+    {% include "header.html" %}
+
+    <body>
+        <div id="main">
+            
+            <h2>Klassen</h2>
+            <div id="stufen_gro">
+            {% for i in klassen %}
+            
+                <div id="stufen_card">
+                    <form action="/" method="get">
+                        <input type="hidden" name="site" value="stufe">
+                        <input type="hidden" name="stufe" value="{{i}}">
+                        <input type="submit" value="{{i}}">
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+
+    </body>
+    {% include "footer.html" %}
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

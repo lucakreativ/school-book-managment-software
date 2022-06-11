@@ -261,9 +261,18 @@ def select_book_stufe(Stufe):
         title=cursor.fetchall()
         if len(title)!=0:
             data.at[num, "Buch"]=title[0][0]
-            
+
     return data
 
+def get_stufe():
+    stufen=[]
+    cursor, conn = re_connect()
+    cursor.execute("SELECT Stufe FROM schueler t WHERE t.ID = (SELECT min(t1.ID) FROM schueler t1 WHERE t1.Stufe=t.Stufe)")
+    data=cursor.fetchall()
+    for i in data:
+        stufen.append(i[0])
+        
+    return stufen
 
 def login(username, password):
     cursor, conn = re_connect()
@@ -300,6 +309,8 @@ def change_password(username, old_pass, new1_pass, new2_pass):
     else:
         return 1
 
-#add_book_stufe(1,1)
-#remove_book_stufe(8,1)
-select_book_stufe(1)
+def check_rechte(username):
+    cursor, conn = re_connect()
+    cursor.execute("SELECT privileges FROM user WHERE username='%s'" % (username))
+    data=int(cursor.fetchall()[0][0])
+    return data

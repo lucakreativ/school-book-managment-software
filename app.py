@@ -98,24 +98,34 @@ def home():
             return render_template("book_by_ISBN.html", ISBN=data[0], Titel=data[1], Verlag=data[2], Preis=data[3])
 
         elif site=="stufe":
-            stufe=request.args.get("stufe")
-            if stufe==None:
-                return "Stufe auswählen"
+            if check_rechte(0):
+                stufe=request.args.get("stufe")
+                if stufe==None:
+                    data=manage_data.get_stufe()
+                    return render_template("stufen.html", klassen=data)
+                else:
+                    data=manage_data.select_book_stufe(stufe)
+                    return render_template("stufe_exakt.html", Stufe=stufe, tables=[data.to_html(escape=False)], titles=["Bucher"])
             else:
-                data=manage_data.select_book_stufe(stufe)
-                return render_template("stufe_exakt.html", Stufe=stufe, tables=[data.to_html(escape=False)], titles=["Bucher"])
+                return render_template("rechte_un.html")
 
         elif site=="remove_stufe":
-            stufe=request.args.get("stufe")
-            ISBN=request.args.get("ISBN")
-            manage_data.remove_book_stufe(stufe, ISBN)
-            return redirect("/?site=stufe&stufe="+stufe)
+            if check_rechte(0):
+                stufe=request.args.get("stufe")
+                ISBN=request.args.get("ISBN")
+                manage_data.remove_book_stufe(stufe, ISBN)
+                return redirect("/?site=stufe&stufe="+stufe)
+            else:
+                return redirect("/?site=stufe")
         
         elif site=="add_stufe":
-            stufe=request.args.get("stufe")
-            ISBN=request.args.get("ISBN")
-            manage_data.add_book_stufe(stufe, ISBN)
-            return redirect("/?site=stufe&stufe="+stufe)
+            if check_rechte(0):
+                stufe=request.args.get("stufe")
+                ISBN=request.args.get("ISBN")
+                manage_data.add_book_stufe(stufe, ISBN)
+                return redirect("/?site=stufe&stufe="+stufe)
+            else:
+                return redirect("/?site=stufe")
 
         elif site=="save":
             ID_e=request.args.get("ID")
@@ -223,6 +233,13 @@ def check_inactivity():
     delta=time.time()-float(session.get("login_time"))
     if delta<max_time_in_s:
         session["login_time"]=time.time()
+        return True
+    else:
+        return False
+
+def check_rechte(erford):
+    username=session.get("user")
+    if erford>=manage_data.check_rechte(username):
         return True
     else:
         return False
