@@ -1,17 +1,38 @@
-import os
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Cipher import AES
+from datetime import datetime
 import base64
+import pyotp
 from read_config import read_aes_config
 
 KEYSIZE = 16
 BLOCKSIZE = 16
 plaintext1 = "Hello! Welcome to The Security Buddy!!"
 
-def encrypt(plaintext):
+
+def totp():
     config=read_aes_config()
+
     key=config["password"]
     iv=config["iv"]
+    day=int(config["day"])
+    month=int(config["month"])
+    year=int(config["year"])
+
+    dt1=datetime(day=day, month=month, year=year)
+    now=datetime.now()
+    timedelta=now-dt1
+    days=timedelta.days
+
+    hotp=pyotp.HOTP(key)
+    key_hotp=hotp.at(days)
+
+    return key_hotp, iv
+
+
+def encrypt(plaintext):
+    key, iv=totp()
+    
     key=key.encode("ascii")
     iv=iv.encode("ascii")
 
@@ -22,9 +43,8 @@ def encrypt(plaintext):
     return ciphertext
 
 def decrypt(ciphertext):
-    config=read_aes_config()
-    key=config["password"]
-    iv=config["iv"]
+    key, iv=totp()
+
     key=key.encode("ascii")
     iv=iv.encode("ascii")
 
