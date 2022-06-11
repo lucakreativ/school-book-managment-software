@@ -2,8 +2,9 @@ from Crypto.Util.Padding import pad, unpad
 from Crypto.Cipher import AES
 from datetime import datetime
 import base64
-import pyotp
+from binascii import unhexlify, b2a_base64
 from read_config import read_aes_config
+import hashlib
 
 KEYSIZE = 16
 BLOCKSIZE = 16
@@ -24,10 +25,11 @@ def totp():
     timedelta=now-dt1
     days=timedelta.days
 
-    hotp=pyotp.HOTP(key)
-    key_hotp=hotp.at(days)
+    hash_res=hashlib.sha512((str(key)+str(days)).encode("utf-8")).hexdigest()
+    
+    key=hash_res[0:16]
 
-    return key_hotp, iv
+    return key, iv
 
 
 def encrypt(plaintext):
