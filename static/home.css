@@ -162,3 +162,38 @@ th {
 #cards ul {
     padding-left: 0;
 }
+
+
+#remove_stufe {
+    color: red;
+    font-weight: bold;
+}
+
+#red {
+    color: red;
+    font-weight: bold;
+    padding-top: 100px;
+}
+
+
+#stufen_gro {
+    width: 600px;
+    margin: 0 auto;
+}
+
+#stufen_card ul li {
+    width: 100px;
+    float: left;
+    margin: 5px 10px;
+    border-radius: 5px;
+    background-color: #cacaca;
+}
+
+#stufen_card_but {
+    margin-top: 10px;
+    margin-bottom: -5px;
+    font-size: 14;
+    font-weight: bold;
+    height: 40px;
+    width: 60px;
+}

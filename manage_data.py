@@ -272,6 +272,7 @@ def get_stufe():
     for i in data:
         stufen.append(i[0])
         
+    stufen=sorted(stufen)
     return stufen
 
 def login(username, password):
