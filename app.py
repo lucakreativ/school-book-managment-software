@@ -75,7 +75,9 @@ def home():
             verlag=request.args.get("verlag")
             ISBN=request.args.get("ISBN")
             titel=request.args.get("titel")
-            preis=float(request.args.get("preis"))
+            preis=request.args.get("preis")
+            if preis=="":
+                preis=0
 
             manage_data.insert_book(ISBN, titel, verlag, preis)
             return redirect("/?site=book_by_ISBN&ISBN=%s" % (ISBN))
