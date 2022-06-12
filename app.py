@@ -134,6 +134,14 @@ def home():
             else:
                 return redirect("/?site=stufe")
 
+        elif site=="execute_stufe":
+            if check_rechte(0):
+                stufe=request.args.get("stufe")
+                manage_data.execute_stufe()
+                return redirect("/?site=stufe&stufe="+stufe)
+            else:
+                return redirect("/?site=stufe")
+
         elif site=="save":
             ID_e=request.args.get("ID")
             ID=cryption.decrypt(ID_e)

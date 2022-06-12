@@ -91,6 +91,34 @@ def delete_zero_taken_books():
     cursor.execute("""DELETE FROM ausgeliehen WHERE Anzahl=0""")
     conn.commit()
 
+def execute_stufe():
+    stufen=[]
+    schueler={}
+    delete_zero_taken_books()
+    cursor, conn = re_connect()
+    cursor.execute("SELECT * FROM buchstufe")
+    data=cursor.fetchall()
+    
+    for i in data:
+        stufe=i[0]
+        stufen.append(stufe)
+
+    stufen=list(dict.fromkeys(stufen))
+    for stufe in stufen:
+        schule=[]
+        cursor.execute("SELECT ID FROM schueler WHERE Stufe='%s'" % (stufe))
+        schul=cursor.fetchall()
+        for sch in schul:
+            schule.append(sch[0])
+        
+        schueler[stufe]=schule
+
+    for i in data:
+        stufe=i[0]
+        ISBN=i[1]
+        IDs=schueler[stufe]
+        for ID in IDs:
+            insert_taken_book_add(ID, ISBN, 0)
 
 def book_by_user(ID):
     ID=cryption.decrypt(ID)
