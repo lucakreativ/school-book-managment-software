@@ -227,7 +227,6 @@ def validate():
 
 
 def check_login():
-    return True
     if session.get("login")==2:
         if check_inactivity()==True:
             return True
