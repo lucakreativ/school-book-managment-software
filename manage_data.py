@@ -37,8 +37,9 @@ def search_book(search_term):
     cursor, conn = re_connect()
     cursor.execute("SELECT ISBN, Titel, Verlag, preis FROM buecher WHERE Titel LIKE '%"+search_term+"%' OR ISBN LIKE '%"+search_term+"%'")
     data=cursor.fetchall()
-    data=pd.DataFrame(data, columns=["ISBN", "Titel", "Verlag", "preis"])
+    data=pd.DataFrame(data, columns=["ISBN", "Titel", "Verlag", "Preis"])
     data["ISBN"]=data["ISBN"].apply(lambda x:'<a href="/?site=book_by_ISBN&ISBN={0}">{0}</a>'.format(x))
+    data["Preis"]=data["Preis"].apply(lambda x:'{0} €'.format(x))
     return data
 
 
@@ -48,6 +49,7 @@ def print_books():
     data=cursor.fetchall()
     data=pd.DataFrame(data, columns=["ISBN", "Titel", "Verlag", "Preis"])
     data["ISBN"]=data["ISBN"].apply(lambda x:'<a href="/?site=book_by_ISBN&ISBN={0}">{0}</a>'.format(x))
+    data["Preis"]=data["Preis"].apply(lambda x:'{0} €'.format(x))
     return data
 
 

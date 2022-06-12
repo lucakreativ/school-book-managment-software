@@ -13,9 +13,10 @@
             </form>
             <form action="" method="get">
                 <input type="hidden" name="site" value="insert">
-                <input type="submit" value="Buch hinzufügen" id="book_ins">
+                <p>Buch hinzufügen:</p><input type="submit" value="hinzufügen" id="book_ins">
             </form>
             </div>
+            <p>ISBN anklicken um Buch zu bearbeiten</p>
             {% for table in tables %}
             <h2>{{titles[loop.index]}}</h2>
             {{ table|safe }}

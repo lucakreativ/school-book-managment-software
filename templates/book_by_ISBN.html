@@ -3,9 +3,10 @@
 
     <body>
         <div id="main">
+            <p id="remove_stufe">{{msg}}</p>
             <h2>Buch bearbeiten</h2>
             <p>Bitte mit vorsicht behandeln, Änderungen können nicht rückgänig gemacht werden!</p>
-            <form action="" method="get">
+            <form action="" method="get" onsubmit="komma()">
                 <input type="hidden" name="site" value="book_by_ISBN">
                 <input type="hidden" name="save" value="1">
                 <input type="text" name="ISBN" value="{{ISBN}}" autofocus>
@@ -20,4 +21,13 @@
     </body>
 
     {% include "footer.html" %}
+
+
+    <script>
+        function komma(){
+            let text=document.getElementById("preis").value;
+            let r=text.replace(",", ".");
+            document.getElementById("preis").value=r;
+        }
+    </script>
 </html>

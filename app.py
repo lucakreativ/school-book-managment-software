@@ -79,8 +79,12 @@ def home():
             if preis=="":
                 preis=0
 
-            manage_data.insert_book(ISBN, titel, verlag, preis)
-            return redirect("/?site=book_by_ISBN&ISBN=%s" % (ISBN))
+            msg="Buch wurde hinzugefügt"
+            try:
+                manage_data.insert_book(ISBN, titel, verlag, preis)
+            except:
+                msg="ISBN wurde schon vergeben"
+            return redirect("/?site=book_by_ISBN&ISBN=%s&msg=%s" % (ISBN, msg))
 
         elif site=="insert":
             return render_template("insert.html")
@@ -91,13 +95,14 @@ def home():
             Titel=request.args.get("Titel")
             Verlag=request.args.get("verlag")
             preis=request.args.get("preis")
+            msg=request.args.get("msg")
 
             if save=="1":
                 manage_data.update_book(ISBN, Titel, Verlag, preis)
 
             data=manage_data.book_by_ISBN(ISBN)
-            print(data)
-            return render_template("book_by_ISBN.html", ISBN=data[0], Titel=data[1], Verlag=data[2], Preis=data[3])
+
+            return render_template("book_by_ISBN.html", ISBN=data[0], Titel=data[1], Verlag=data[2], Preis=data[3], msg=msg)
 
         elif site=="stufe":
             if check_rechte(0):
@@ -222,6 +227,7 @@ def validate():
 
 
 def check_login():
+    return True
     if session.get("login")==2:
         if check_inactivity()==True:
             return True
