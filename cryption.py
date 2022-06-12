@@ -41,7 +41,7 @@ def encrypt(plaintext):
     cipher1 = AES.new(key, AES.MODE_CBC, iv)
     ciphertext = cipher1.encrypt(pad(plaintext.encode(), BLOCKSIZE))
 
-    ciphertext=(base64.b64encode(ciphertext)).decode("ascii")
+    ciphertext=(base64.urlsafe_b64encode(ciphertext)).decode("ascii")
     return ciphertext
 
 def decrypt(ciphertext):
@@ -51,7 +51,7 @@ def decrypt(ciphertext):
     iv=iv.encode("ascii")
 
     ciphertext=ciphertext.encode("ascii")
-    ciphertext=base64.b64decode(ciphertext)
+    ciphertext=base64.urlsafe_b64decode(ciphertext)
 
     cipher2 = AES.new(key, AES.MODE_CBC, iv)
     plaintext2 = unpad(cipher2.decrypt(ciphertext), BLOCKSIZE)
