@@ -4,6 +4,7 @@ import os.path
 
 from read_config import read_db_config
 from hash_func import hash_func
+from write_protocol import write_protocol
 import cryption
 
 def re_connect():
@@ -62,6 +63,8 @@ def book_by_ISBN(ISBN):
 
 
 def insert_taken_book_add(Sch_ID, ISBN, Anzahl=1):
+    if Anzahl!=0:
+        write_protocol(0, Sch_ID, ISBN, Anzahl)
     cursor, conn = re_connect()
     cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
     result=cursor.fetchall()
@@ -75,6 +78,7 @@ def insert_taken_book_add(Sch_ID, ISBN, Anzahl=1):
 
 
 def insert_taken_book_absolute(Sch_ID, ISBN, Anzahl=1):
+    write_protocol(1, Sch_ID, ISBN, Anzahl)
     cursor, conn = re_connect()
     cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
     result=cursor.fetchall()
