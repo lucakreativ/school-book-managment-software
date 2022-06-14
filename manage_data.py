@@ -1,5 +1,6 @@
 from mysql.connector import MySQLConnection
 import pandas as pd
+import os.path
 
 from read_config import read_db_config
 from hash_func import hash_func
@@ -211,6 +212,14 @@ def get_klassen():
     data=pd.DataFrame.from_dict(Klassen, orient='index')
     data=data.transpose()
     data=data.fillna("")
+    data.to_pickle("data/klassen.pkl")
+
+
+def print_klassen():
+    if os.path.exists("data/klassen.pkl")==False:
+        get_klassen()
+    
+    data=pd.read_pickle("data/klassen.pkl")
     return data
 
 
@@ -232,7 +241,7 @@ def schueler_by_class(klasse):
     for list_l in data:
         list_l=list(list_l)
         list_l[2]=cryption.encrypt(list_l[2])
-        list_l[0]+=" "+list_l[1]
+        list_l[0]=list_l[1]+" "+list_l[0]
         list_l.pop(1)
         schueler.append(list_l)
 
@@ -251,7 +260,7 @@ def search_schueler(name):
     for list_l in data:
         list_l=list(list_l)
         list_l[2]=cryption.encrypt(list_l[2])
-        list_l[0]+=" "+list_l[1]
+        list_l[0]=list_l[1]+" "+list_l[0]
         list_l.pop(1)
         schueler.append(list_l)
 
