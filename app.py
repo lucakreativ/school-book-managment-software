@@ -63,6 +63,10 @@ def home():
 
         elif site=="klassen":
             klasse=request.args.get("k")
+            b=request.args.get("b")
+            if b=="1":
+                manage_data.get_klassen()
+                
             if klasse==None:
                 data=manage_data.print_klassen()
                 return render_template("klassen.html", tables=[data.to_html(escape=False)], titles=["Klassen"])

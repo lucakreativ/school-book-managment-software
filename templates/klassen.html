@@ -9,6 +9,12 @@
             {{ table|safe }}
                 {% endfor %}
 
+            <form action="/" method="get">
+                <input type="hidden" name="site" value="klassen">
+                <input type="hidden" name="b" value="1">
+                <input type="submit" value="Neu berechnen">
+            </form>
+
         </div>
 
     </body>
