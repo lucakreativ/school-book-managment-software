@@ -7,6 +7,8 @@ import os
 import cryption
 import manage_data
 
+from write_protocol import write_login
+
 
 
 max_time_in_m=10
@@ -149,7 +151,7 @@ def home():
         elif site=="save":
             ID_e=request.args.get("ID")
             ID=cryption.decrypt(ID_e)
-
+            user=user_get()
             
             con=False
             i=0
@@ -157,7 +159,7 @@ def home():
                 ISBN=request.args.get("b"+str(i))
                 Anzahl=request.args.get("a"+str(i))
                 if ISBN!=None and Anzahl!=None:
-                    manage_data.insert_taken_book_absolute(ID, ISBN, Anzahl)
+                    manage_data.insert_taken_book_absolute(ID, ISBN, user, Anzahl)
                 else:
                     con=True
                 i+=1
@@ -165,9 +167,9 @@ def home():
             ISBN_zu=request.args.get("zu")
             ISBN_ei=request.args.get("ei")
             if ISBN_zu!="":
-                manage_data.insert_taken_book_add(ID, ISBN_zu, str(-1))
+                manage_data.insert_taken_book_add(ID, ISBN_zu, user, str(-1))
             if ISBN_ei!="":
-                manage_data.insert_taken_book_add(ID, ISBN_ei, str(1))
+                manage_data.insert_taken_book_add(ID, ISBN_ei, user, str(1))
             return redirect("/?site=schueler&ID=%s" % (ID_e))
 
 
@@ -227,6 +229,7 @@ def validate():
     username=request.form.get("username")
     password=request.form.get("password")
     if manage_data.login(username, password)==True:
+        write_login(username, 1)
         session["login"]=2
         session["login_time"]=time.time()
         session["user"]=username
@@ -234,6 +237,7 @@ def validate():
         return(redirect("/"))
 
     else:
+        write_login(username, 0)
         return(redirect("/loginf"))
 
 
@@ -263,6 +267,9 @@ def check_rechte(erford):
     else:
         return False
 
+def user_get():
+    username=session.get("user")
+    return username
 
 port=int(os.environ.get("PORT", 5000))
 app.run(host="0.0.0.0", port=port)

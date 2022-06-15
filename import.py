@@ -15,7 +15,7 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 
-with open("./export.csv", "r") as file:
+with open("../export.csv", "r") as file:
     csvFile=csv.reader(file)
     next(csvFile)
     
