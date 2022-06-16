@@ -1,6 +1,7 @@
 from mysql.connector import MySQLConnection
 import pandas as pd
 import os.path
+import random
 
 from read_config import read_db_config
 from hash_func import hash_func
@@ -15,6 +16,23 @@ def re_connect():
     return cursor, conn
 
 
+def get_unused_ID():
+    cursor, conn = re_connect()
+    ID=random.randint(10**6, 9*10**6)
+    cursor.exectue("SELECT * FROM addedstudent WHERE ID='%s'" % (ID))
+    schueler=cursor.fetchall()
+    if len(schueler)!=0:
+        ID=get_unused_ID()
+    
+    return ID
+
+def add_student(Stufe, Klasse, Vorname, Nachname, Religion="", Fremdsp1="", Fremdsp2="", Fremdsp3=""):
+    cursor, conn = re_connect()
+    ID=get_unused_ID()
+    cursor.execute("INSERT INTO schueler (ID, Stufe, Klasse, Vorname, Nachname, Religion, Fremdsp1, Fremdsp2, Fremdsp3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)" % (ID, Stufe, Klasse, Vorname, Nachname, Religion, Fremdsp1, Fremdsp2, Fremdsp3))
+    conn.commit()
+    cursor.execute("INSERT INTO addedstudent (ID, Stufe, Klasse, Vorname, Nachname, Religion, Fremdsp1, Fremdsp2, Fremdsp3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)" % (ID, Stufe, Klasse, Vorname, Nachname, Religion, Fremdsp1, Fremdsp2, Fremdsp3))
+    conn.commit()
 
 def delete_book(ISBN):
     cursor, conn = re_connect()
