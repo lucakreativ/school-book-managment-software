@@ -114,7 +114,7 @@ def delete_zero_taken_books():
     cursor.execute("""DELETE FROM ausgeliehen WHERE Anzahl=0""")
     conn.commit()
 
-def execute_stufe():
+def execute_stufe(user):
     stufen=[]
     schueler={}
     delete_zero_taken_books()
@@ -141,7 +141,7 @@ def execute_stufe():
         ISBN=i[1]
         IDs=schueler[stufe]
         for ID in IDs:
-            insert_taken_book_add(ID, ISBN, 0)
+            insert_taken_book_add(ID, ISBN, user, 0)
 
 def book_by_user(ID):
     ID=cryption.decrypt(ID)

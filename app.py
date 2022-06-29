@@ -141,9 +141,10 @@ def home():
                 return redirect("/?site=stufe")
 
         elif site=="execute_stufe":
+            user=user_get()
             if check_rechte(0):
                 stufe=request.args.get("stufe")
-                manage_data.execute_stufe()
+                manage_data.execute_stufe(user)
                 return redirect("/?site=stufe&stufe="+stufe)
             else:
                 return redirect("/?site=stufe")
