@@ -4,7 +4,7 @@
     <body>
         <div id="main">
             <br>
-            <form action="/" method="get" id="save_book">
+            <form action="/" method="get" id="save_book" target="hidden-form">
                 <input type="hidden" name="site" value="save">
                 <input type="hidden" name="ID" value="{{ID}}">
                 {% for table in tables %}            
@@ -38,7 +38,7 @@
                             <li>
                                 <div id="card1sp">
                                     <h2>Bemerkung</h2>
-                                    <textarea name="bemerkung" rows="5" cols="50" placeholder="Bemerkungen" {{dis}}>{{bemerkung}}</textarea>
+                                    <textarea name="bemerkung" rows="5" cols="50" placeholder="Bemerkungen" onchange="submitform()" {{disabled}}>{{bemerkung}}</textarea>
                                 </div>
                             </li>
                         </ul>
@@ -46,13 +46,15 @@
                             <li>
                                 <div id="card2sp">
                                     <h2>Gebühren</h2>
-                                    <input type="text" name="geld" placeholder="Gebühren" value="{{geld}}" {{dis}}>
+                                    <input type="text" name="geld" placeholder="Gebühren" value="{{geld}}" onchange="submitform()" {{dis}}>
                                 </div>
                             </li>
                         </ul>
-                    </div></div>
-                <input type="submit">
+                    </div>
+                </div>
+                <input type="submit" value="speichern">
             </form>
+            <iframe style="display:none" name="hidden-form"></iframe>
         </div>
 
     </body>

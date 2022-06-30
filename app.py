@@ -177,6 +177,12 @@ def home():
                 manage_data.insert_taken_book_add(ID, ISBN_zu, user, str(-1))
             if ISBN_ei!="":
                 manage_data.insert_taken_book_add(ID, ISBN_ei, user, str(1))
+
+            if check_rechte(0):
+                geld=request.args.get("geld")
+                bemerkung=request.args.get("bemerkung")
+                manage_data.bemgeld_up(ID_e, bemerkung, geld)
+
             return redirect("/?site=schueler&ID=%s" % (ID_e))
 
 

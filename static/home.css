@@ -55,7 +55,7 @@ th {
 
 #main {
     height: auto;
-    margin-bottom: 100px;
+    margin-bottom: 270px;
 }
 
 #left {
@@ -165,7 +165,7 @@ th {
 
 #card2 {
     width: 100%;
-    height: auto;
+    height: 200px;
 }
 
 #cards2 {
@@ -176,7 +176,6 @@ th {
 #cards2 ul li {
     float: left;
     height: auto;
-    
 }
 
 #card1sp {
