@@ -336,6 +336,32 @@ def get_stufe():
     stufen=sorted(stufen)
     return stufen
 
+def bemgeld(id):
+    cursor, conn = re_connect()
+    cursor.execute("SELECT bemerkung, schaden FROM bemgeld WHERE ID='%s'" % (id))
+    data=cursor.fetchall()[0]
+
+    if len(data)==0:
+        bemerkung=""
+        geld=0.00
+    else:
+        bemerkung=data[0]
+        geld=data[1]
+
+    return (bemerkung, geld)
+
+def bemgeld_up(id, bemerkung="", geld=0):
+    cursor, conn = re_connect()
+    cursor.execute("SELECT ID FROM bemgeld WHERE ID='%s'" % (id))
+    data=cursor.fetchall()
+    if len(data)!=0:
+        cursor.execute("UPDATE bemgeld SET bemerkung='%s', schaden=%s WHERE ID='%s'" % (bemerkung, geld, id))
+        conn.commit()
+    else:  
+        cursor.execute("INSERT INTO bemgeld (ID, bemerkung, schaden) VALUES ('%s', '%s', %s)" % (id, bemerkung, geld))
+        conn.commit()
+
+
 def login(username, password):
     cursor, conn = re_connect()
     try:
