@@ -37,15 +37,6 @@ CREATE TABLE `addedstudent` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `addedstudent`
---
-
-LOCK TABLES `addedstudent` WRITE;
-/*!40000 ALTER TABLE `addedstudent` DISABLE KEYS */;
-/*!40000 ALTER TABLE `addedstudent` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `ausgeliehen`
 --
 
@@ -60,13 +51,19 @@ CREATE TABLE `ausgeliehen` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `ausgeliehen`
+-- Table structure for table `bemgeld`
 --
 
-LOCK TABLES `ausgeliehen` WRITE;
-/*!40000 ALTER TABLE `ausgeliehen` DISABLE KEYS */;
-/*!40000 ALTER TABLE `ausgeliehen` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `bemgeld`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `bemgeld` (
+  `ID` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `bemerkung` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `schaden` double(7,2) DEFAULT '0.00',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `buchstufe`
@@ -81,15 +78,6 @@ CREATE TABLE `buchstufe` (
   PRIMARY KEY (`stufe`,`ISBN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `buchstufe`
---
-
-LOCK TABLES `buchstufe` WRITE;
-/*!40000 ALTER TABLE `buchstufe` DISABLE KEYS */;
-/*!40000 ALTER TABLE `buchstufe` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `buecher`
@@ -108,15 +96,6 @@ CREATE TABLE `buecher` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `buecher`
---
-
-LOCK TABLES `buecher` WRITE;
-/*!40000 ALTER TABLE `buecher` DISABLE KEYS */;
-/*!40000 ALTER TABLE `buecher` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `protocolaus`
 --
 
@@ -132,17 +111,8 @@ CREATE TABLE `protocolaus` (
   `unix` int DEFAULT NULL,
   `user` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=554 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `protocolaus`
---
-
-LOCK TABLES `protocolaus` WRITE;
-/*!40000 ALTER TABLE `protocolaus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `protocolaus` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `protocollogin`
@@ -157,17 +127,8 @@ CREATE TABLE `protocollogin` (
   `unix` int DEFAULT NULL,
   `erfolgreich` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `protocollogin`
---
-
-LOCK TABLES `protocollogin` WRITE;
-/*!40000 ALTER TABLE `protocollogin` DISABLE KEYS */;
-/*!40000 ALTER TABLE `protocollogin` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `schueler`
@@ -191,15 +152,6 @@ CREATE TABLE `schueler` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `schueler`
---
-
-LOCK TABLES `schueler` WRITE;
-/*!40000 ALTER TABLE `schueler` DISABLE KEYS */;
-/*!40000 ALTER TABLE `schueler` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `user`
 --
 
@@ -213,15 +165,6 @@ CREATE TABLE `user` (
   PRIMARY KEY (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `user`
---
-
-LOCK TABLES `user` WRITE;
-/*!40000 ALTER TABLE `user` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -232,4 +175,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-06-20 20:27:28
+-- Dump completed on 2022-06-30 22:15:34
