@@ -337,20 +337,23 @@ def get_stufe():
     return stufen
 
 def bemgeld(id):
+    id=cryption.decrypt(id)
     cursor, conn = re_connect()
     cursor.execute("SELECT bemerkung, schaden FROM bemgeld WHERE ID='%s'" % (id))
-    data=cursor.fetchall()[0]
+    data=cursor.fetchall()
 
     if len(data)==0:
         bemerkung=""
         geld=0.00
     else:
+        data=data[0]
         bemerkung=data[0]
         geld=data[1]
 
     return (bemerkung, geld)
 
 def bemgeld_up(id, bemerkung="", geld=0):
+    id=cryption.decrypt(id)
     cursor, conn = re_connect()
     cursor.execute("SELECT ID FROM bemgeld WHERE ID='%s'" % (id))
     data=cursor.fetchall()

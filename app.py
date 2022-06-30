@@ -40,9 +40,15 @@ def home():
             if ID==None:
                 return "Schueler auswählen"
             else:
+                if check_rechte(0):
+                    dis=""
+                else:
+                    dis="disabled"
+
+                bemerkung, geld = manage_data.bemgeld(ID)
                 schueler, buecher = manage_data.book_by_user(ID)
                 next_ID, prev_ID = manage_data.next_schueler(ID)
-                return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"], ID_next=next_ID, ID_prev=prev_ID, ID=ID)
+                return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"], ID_next=next_ID, ID_prev=prev_ID, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld)
         
         elif site=="search":
             name=request.args.get("term")
