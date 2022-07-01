@@ -148,6 +148,7 @@ def book_by_user(ID):
     cursor, conn = re_connect()
     cursor.execute("""SELECT schueler.Stufe, schueler.Klasse, schueler.Vorname, schueler.Nachname, schueler.Religion, schueler.Fremdsp1, schueler.Fremdsp2, schueler.Fremdsp3 FROM schueler WHERE schueler.ID = '%s'""" % (ID))
     data = cursor.fetchall()
+    stufe=data[0][0]
     schueler=pd.DataFrame(data, columns=["Stufe", "Klasse", "Vorname", "Nachname", "Religion", "Fremdsp1", "Fremdsp2", "Fremdsp3"])
     schueler["Klasse"]=schueler["Stufe"].astype(str)+schueler["Klasse"].astype(str)
     schueler.drop(schueler.columns[[0]], axis=1, inplace=True)
@@ -167,13 +168,21 @@ def book_by_user(ID):
         num=index[0]
         ISBN=buecher.iloc[num]["ISBN"]
         temp='<input type="hidden" name="b%s" value="%s">' % (num, ISBN)
-        buecher.at[num, "ISBN"]=temp
+        cursor.execute("SELECT stufe FROM buchstufe WHERE stufe='%s' AND ISBN='%s' AND abgeben=1" % (stufe, ISBN))
+        data=cursor.fetchall()
+        if len(data)>0:
+            print("hi")
+            buecher.at[num, "ISBN"]='<div id="abgabebuch">'
+            buecher.at[num, "ISBN"]+=temp
+        else:
+            buecher.at[num, "ISBN"]=temp
+
         cursor.execute("""SELECT Titel FROM buecher WHERE ISBN = %s""" % (ISBN))
         data=cursor.fetchall()
         if len(data)>0:
             ISBN=data[0][0]
 
-        buecher.at[num, "ISBN"]+=ISBN
+        buecher.at[num, "ISBN"]+=str(ISBN)+"</div>"
 
     return (schueler, buecher)
 
