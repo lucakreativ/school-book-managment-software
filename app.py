@@ -123,8 +123,8 @@ def home():
                     data=manage_data.get_stufe()
                     return render_template("stufen.html", klassen=data)
                 else:
-                    data=manage_data.select_book_stufe(stufe)
-                    return render_template("stufe_exakt.html", Stufe=stufe, tables=[data.to_html(escape=False)], titles=["Bucher"])
+                    bekommen, abgeben=manage_data.select_book_stufe(stufe)
+                    return render_template("stufe_exakt.html", Stufe=stufe, tables=[bekommen.to_html(escape=False), abgeben.to_html(escape=False)], titles=["Bücher", "Bekommen", "Abgeben"])
             else:
                 return render_template("rechte_un.html")
 
@@ -132,7 +132,8 @@ def home():
             if check_rechte(0):
                 stufe=request.args.get("stufe")
                 ISBN=request.args.get("ISBN")
-                manage_data.remove_book_stufe(stufe, ISBN)
+                ab=request.args.get("ab")
+                manage_data.remove_book_stufe(stufe, ISBN, ab)
                 return redirect("/?site=stufe&stufe="+stufe)
             else:
                 return redirect("/?site=stufe")
@@ -142,6 +143,15 @@ def home():
                 stufe=request.args.get("stufe")
                 ISBN=request.args.get("ISBN")
                 manage_data.add_book_stufe(stufe, ISBN)
+                return redirect("/?site=stufe&stufe="+stufe)
+            else:
+                return redirect("/?site=stufe")
+
+        elif site=="re_stufe":
+            if check_rechte(0):
+                stufe=request.args.get("stufe")
+                ISBN=request.args.get("ISBN")
+                manage_data.add_book_stufe(stufe, ISBN, 1)
                 return redirect("/?site=stufe&stufe="+stufe)
             else:
                 return redirect("/?site=stufe")
