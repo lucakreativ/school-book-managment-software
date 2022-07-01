@@ -183,18 +183,23 @@ def home():
 
             ISBN_zu=request.args.get("zu")
             ISBN_ei=request.args.get("ei")
-            if ISBN_zu!="":
+            if ISBN_zu!="" and ISBN_zu!=None:
                 manage_data.insert_taken_book_add(ID, ISBN_zu, user, str(-1))
-            if ISBN_ei!="":
+            if ISBN_ei!="" and ISBN_ei!=None:
                 manage_data.insert_taken_book_add(ID, ISBN_ei, user, str(1))
 
             if check_rechte(0):
                 geld=request.args.get("geld")
                 bemerkung=request.args.get("bemerkung")
-                manage_data.bemgeld_up(ID_e, bemerkung, geld)
+                if geld!=None and bemerkung!=None:
+                    manage_data.bemgeld_up(ID_e, bemerkung, geld)
 
             return redirect("/?site=schueler&ID=%s" % (ID_e))
 
+        elif site=="weiter":
+            id=request.args.get("ID")
+            time.sleep(0.5)
+            return redirect("/?site=schueler&ID=%s" % (id))
 
         elif site=="settings":                      #Einstllungen werden aufgerufen
             message=request.args.get("message")     #Nachricht die angezeigt werden soll wird geholt

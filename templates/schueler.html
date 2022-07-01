@@ -4,6 +4,10 @@
     <body>
         <div id="main">
             <br>
+            <form action="/" method="get" id="insert">
+                <input type="hidden" name="site" value="save">
+                <input type="hidden" name="ID" value="{{ID}}">
+            </form>
             <form action="/" method="get" id="save_book" target="hidden-form">
                 <input type="hidden" name="site" value="save">
                 <input type="hidden" name="ID" value="{{ID}}">
@@ -20,13 +24,13 @@
                     <ul>
                         <li>
                             <h2>Zurückgeben</h2>
-                            <input type="text" name="zu" placeholder="ISBN">
+                            <input type="text" name="zu" placeholder="ISBN" onchange="reload()" form="insert">
                         </li>
                     </ul>
                     <ul>
                         <li>
                             <h2>Eintragen</h2>
-                            <input type="text" name="ei" placeholder="ISBN">
+                            <input type="text" name="ei" placeholder="ISBN" onchange="reload()" form="insert">
                         </li>
                     </ul>
                 </div></div>
@@ -53,7 +57,7 @@
                     </div>
                 </div>
                 <input type="submit" value="speichern">
-            </form>
+            </form></form>
             <iframe style="display:none" name="hidden-form"></iframe>
         </div>
 
@@ -81,6 +85,10 @@
 
             function submitform(){
               document.forms["save_book"].submit();
+            }
+
+            function reload(){
+                document.forms["insert"].submit();
             }
 
     </script>

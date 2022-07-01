@@ -171,7 +171,6 @@ def book_by_user(ID):
         cursor.execute("SELECT stufe FROM buchstufe WHERE stufe='%s' AND ISBN='%s' AND abgeben=1" % (stufe, ISBN))
         data=cursor.fetchall()
         if len(data)>0:
-            print("hi")
             buecher.at[num, "ISBN"]='<div id="abgabebuch">'
             buecher.at[num, "ISBN"]+=temp
         else:
