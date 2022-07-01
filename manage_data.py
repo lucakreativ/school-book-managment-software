@@ -253,7 +253,7 @@ def print_klassen():
     return data
 
 
-def schueler_by_class(klasse):
+def schueler_by_class(klasse, fehlend=0, stufe_t=0):
     schueler=[]
     cursor, conn = re_connect()
 
@@ -264,8 +264,17 @@ def schueler_by_class(klasse):
         stufe=klasse[0:2]
         klasse=""
 
-    cursor.execute("SELECT Vorname, Nachname, ID FROM schueler WHERE Stufe='%s' AND Klasse='%s'" % (stufe, klasse))
-    data=cursor.fetchall()
+    if fehlend==1:
+        if stufe_t==1:
+            cursor.execute("SELECT schueler.Vorname, schueler.Nachname, schueler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe='%s' AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1" % (stufe))
+            data=cursor.fetchall()
+        else:
+            cursor.execute("SELECT schueler.Vorname, schueles.Nachname, schuler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe='%s' AND schueler.Klasse='%s' AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1" % (stufe, klasse))
+            data=cursor.fetchall()
+    else:
+        cursor.execute("SELECT Vorname, Nachname, ID FROM schueler WHERE Stufe='%s' AND Klasse='%s'" % (stufe, klasse))
+        data=cursor.fetchall()
+
     data.sort(key=lambda x:x[1])
 
     for list_l in data:

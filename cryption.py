@@ -8,7 +8,6 @@ import hashlib
 
 KEYSIZE = 16
 BLOCKSIZE = 16
-plaintext1 = "Hello! Welcome to The Security Buddy!!"
 
 
 def totp():
