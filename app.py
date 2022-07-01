@@ -82,6 +82,14 @@ def home():
                 data=manage_data.schueler_by_class(klasse)
                 return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"])
 
+        elif site=="fbuch":
+            stufe=request.args.get("stufe")
+            if stufe==None:
+                data=manage_data.get_stufe()
+                return render_template("stufen.html", klassen=data, site="fbuch")
+            else:
+                data=manage_data.schueler_by_class(stufe+"a", 1, 1)
+                return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"])
 
         elif site=="insert_book":
             verlag=request.args.get("verlag")
@@ -121,7 +129,7 @@ def home():
                 stufe=request.args.get("stufe")
                 if stufe==None:
                     data=manage_data.get_stufe()
-                    return render_template("stufen.html", klassen=data)
+                    return render_template("stufen.html", klassen=data, site="stufe")
                 else:
                     bekommen, abgeben=manage_data.select_book_stufe(stufe)
                     return render_template("stufe_exakt.html", Stufe=stufe, tables=[bekommen.to_html(escape=False), abgeben.to_html(escape=False)], titles=["Bücher", "Bekommen", "Abgeben"])
