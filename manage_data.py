@@ -364,13 +364,8 @@ def select_book_stufe(Stufe):
 
 
 def get_stufe():
-    stufen=[]
-    cursor, conn = re_connect()
-    cursor.execute("SELECT Stufe FROM schueler t WHERE t.ID = (SELECT min(t1.ID) FROM schueler t1 WHERE t1.Stufe=t.Stufe)")
-    data=cursor.fetchall()
-    for i in data:
-        stufen.append(i[0])
-        
+    data=print_klassen()
+    stufen=list(data.columns.values)     
     stufen=sorted(stufen)
     return stufen
 
