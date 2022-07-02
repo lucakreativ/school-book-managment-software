@@ -86,7 +86,7 @@ def home():
             stufe=request.args.get("stufe")
             if stufe==None:
                 data=manage_data.get_stufe()
-                return render_template("stufen.html", klassen=data, site="fbuch")
+                return render_template("stufen.html", klassen=data, site="fbuch", titel="Fehlende Bücher")
             else:
                 data=manage_data.schueler_by_class(stufe+"a", 1, 1)
                 return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"])
@@ -129,7 +129,7 @@ def home():
                 stufe=request.args.get("stufe")
                 if stufe==None:
                     data=manage_data.get_stufe()
-                    return render_template("stufen.html", klassen=data, site="stufe")
+                    return render_template("stufen.html", klassen=data, site="stufe", titel="Stufenverwaltung")
                 else:
                     bekommen, abgeben=manage_data.select_book_stufe(stufe)
                     return render_template("stufe_exakt.html", Stufe=stufe, tables=[bekommen.to_html(escape=False), abgeben.to_html(escape=False)], titles=["Bücher", "Bekommen", "Abgeben"])
