@@ -9,15 +9,17 @@ cursor = conn.cursor()
 username=input("Benutzername: ")
 passwort=input("Passwort: ")
 priv=int(input("Rechte (niedriger = mehr Rechte): "))
+outside=int(input("ausen zugreifen? (1=Ja, 0=nein): "))
 
 print("Benutzername: '"+username+"'")
 print("Passwort: '"+passwort+"'")
 print("Rechte: "+ str(priv))
+print("Außen: "+str(outside))
 
 hash_i=hash_func(passwort)
 print("Hash: '"+ hash_i+"'")
 
-cursor.execute("""INSERT INTO user (username, hash, privileges) VALUES (%s, %s, %s)""", (username, hash_i, priv))
+cursor.execute("""INSERT INTO user (username, hash, privileges, outside) VALUES (%s, %s, %s, %s)""", (username, hash_i, priv, outside))
 conn.commit()
 
 print("Success") 

@@ -4,6 +4,7 @@ import time
 import os
 
 
+import outside
 import cryption
 import manage_data
 
@@ -265,12 +266,18 @@ def validate():
     username=request.form.get("username")
     password=request.form.get("password")
     if manage_data.login(username, password)==True:
-        write_login(username, 1)
-        session["login"]=2
-        session["login_time"]=time.time()
-        session["user"]=username
+        ip_addr = request.remote_addr
+        if (outside.check_ip(ip_addr)==False and outside.check_data(username)==True) or outside.check_ip(ip_addr)==True:
 
-        return(redirect("/"))
+            write_login(username, 1)
+            session["login"]=2
+            session["login_time"]=time.time()
+            session["user"]=username
+
+            return(redirect("/"))
+        else:
+            write_login(username, 0)
+            return(redirect("/loginf"))
 
     else:
         write_login(username, 0)
