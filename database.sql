@@ -126,6 +126,7 @@ CREATE TABLE `protocollogin` (
   `user` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `unix` int DEFAULT NULL,
   `erfolgreich` tinyint(1) DEFAULT NULL,
+  `IP` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -176,4 +177,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-07-04 22:03:33
+-- Dump completed on 2022-07-05 20:59:24
