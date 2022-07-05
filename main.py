@@ -265,22 +265,22 @@ def loginf():
 def validate():
     username=request.form.get("username")
     password=request.form.get("password")
+    ip_addr = request.remote_addr
     if manage_data.login(username, password)==True:
-        ip_addr = request.remote_addr
         if (outside.check_ip(ip_addr)==False and outside.check_data(username)==True) or outside.check_ip(ip_addr)==True:
 
-            write_login(username, 1)
+            write_login(username, 1, ip_addr)
             session["login"]=2
             session["login_time"]=time.time()
             session["user"]=username
 
             return(redirect("/"))
         else:
-            write_login(username, 0)
+            write_login(username, 0, ip_addr)
             return(redirect("/loginf"))
 
     else:
-        write_login(username, 0)
+        write_login(username, 0, ip_addr)
         return(redirect("/loginf"))
 
 
