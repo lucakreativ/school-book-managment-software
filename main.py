@@ -84,13 +84,17 @@ def home():
                 return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"])
 
         elif site=="fbuch":
-            stufe=request.args.get("stufe")
-            if stufe==None:
-                data=manage_data.get_stufe()
-                return render_template("stufen.html", klassen=data, site="fbuch", titel="Fehlende Bücher")
+            if check_rechte(0):
+                stufe=request.args.get("stufe")
+                if stufe==None:
+                    data=manage_data.get_stufe()
+                    return render_template("stufen.html", klassen=data, site="fbuch", titel="Fehlende Bücher")
+                else:
+                    data=manage_data.schueler_by_class(stufe+"a", 1, 1)
+                    return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"])
             else:
-                data=manage_data.schueler_by_class(stufe+"a", 1, 1)
-                return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"])
+                return render_template("rechte_un.html")
+
 
         elif site=="insert_book":
             verlag=request.args.get("verlag")
