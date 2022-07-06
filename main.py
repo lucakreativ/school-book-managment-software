@@ -270,22 +270,25 @@ def validate():
     username=request.form.get("username")
     password=request.form.get("password")
     ip_addr = request.remote_addr
-    if manage_data.login(username, password)==True:
-        if (login_v.check_ip(ip_addr)==False and login_v.check_data(username)==True) or login_v.check_ip(ip_addr)==True:
+    if login_v.abfragen(ip_addr):
+        if manage_data.login(username, password)==True:
+            if (login_v.check_ip(ip_addr)==False and login_v.check_data(username)==True) or login_v.check_ip(ip_addr)==True:
 
-            write_login(username, 1, ip_addr)
-            session["login"]=2
-            session["login_time"]=time.time()
-            session["user"]=username
+                write_login(username, 1, ip_addr)
+                session["login"]=2
+                session["login_time"]=time.time()
+                session["user"]=username
 
-            return(redirect("/"))
+                return(redirect("/"))
+            else:
+                write_login(username, 0, ip_addr)
+                return(redirect("/loginf"))
+
         else:
             write_login(username, 0, ip_addr)
             return(redirect("/loginf"))
-
     else:
-        write_login(username, 0, ip_addr)
-        return(redirect("/loginf"))
+        return("Zu viele Versuche: Bitte warten Sie ca. 10 Minuten")
 
 
 

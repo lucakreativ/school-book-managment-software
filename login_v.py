@@ -1,4 +1,5 @@
 import os
+import time
 import socket
 import struct
 from mysql.connector import MySQLConnection
@@ -48,3 +49,22 @@ def check_ip(check_ip):
         i+=1
 
     return con
+
+def abfragen(ip):
+    status=[]
+    cursor, conn = re_connect()
+    ab=time.time()-60*10
+    cursor.execute("SELECT erfolgreich FROM protocollogin WHERE IP='%s' AND unix>=%s" % (ip, ab))
+    data=cursor.fetchall()[::-1]
+
+    if len(data)>=20:
+        data=data[0:20]
+        for i in data:
+            status.append(i[0])
+
+        if 1 in status:
+            return True
+        else:
+            return False
+    else:
+        return True
