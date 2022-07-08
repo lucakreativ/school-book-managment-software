@@ -38,6 +38,7 @@ def check_ip(check_ip):
 
     check_ip=''.join([bin(int(x)+256)[3:] for x in check_ip.split('.')])
     mask=''.join([bin(int(x)+256)[3:] for x in mask.split('.')])
+    ip=''.join([bin(int(x)+256)[3:] for x in ip.split('.')])
 
 
     con=True
