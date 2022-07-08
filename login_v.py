@@ -27,14 +27,8 @@ def check_data(user):
 
 def check_ip(check_ip):
 
-    ip="192.168.6.0"
-
-    sysip = os.popen("ip -o -f inet addr show | awk '/scope global/ {print $4}'").read()
-
-    net_bits = sysip.split('/')[1]
-    host_bits = 32 - int(net_bits)
-    mask = socket.inet_ntoa(struct.pack('!I', (1 << 32) - (1 << host_bits)))
-
+    ip="192.168.0.1"
+    mask="255.255.0.0"
 
     check_ip=''.join([bin(int(x)+256)[3:] for x in check_ip.split('.')])
     mask=''.join([bin(int(x)+256)[3:] for x in mask.split('.')])
