@@ -134,7 +134,8 @@ th {
 
 #but_next {
     font-size: 16;
-    width: 60px;
+    min-width: 100px;
+    height: 30px;
 }
 
 #buchstufe {
