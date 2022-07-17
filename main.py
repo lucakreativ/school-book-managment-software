@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, session
+from werkzeug.utils import secure_filename
 import random
 import time
 import os
@@ -6,6 +7,7 @@ import os
 
 import login_v
 import cryption
+import import_data
 import manage_data
 
 from write_protocol import write_login
@@ -25,6 +27,7 @@ for i in range(16):
 app = Flask(__name__)
 app.secret_key=random_string
 
+app.config["UPLOAD_FOLDER"] = "files/"
 
 
 @app.route("/")
@@ -209,10 +212,12 @@ def home():
 
             return redirect("/?site=schueler&ID=%s" % (ID_e))
 
-        elif site=="weiter":
-            id=request.args.get("ID")
-            time.sleep(0.5)
-            return redirect("/?site=schueler&ID=%s" % (id))
+        elif site=="upload":
+            if check_rechte(0):
+                return render_template("upload.html")
+            else:
+                return render_template("rechte_un.html")
+
 
         elif site=="settings":                      #Einstllungen werden aufgerufen
             message=request.args.get("message")     #Nachricht die angezeigt werden soll wird geholt
@@ -237,6 +242,25 @@ def home():
         else:                               #keine gültige Seite wurde aufgerufen
             return("Seite nicht gefunden")  #404-Page wird angezeigt
 
+
+@app.route("/save_file", methods=["POST"])
+def save_file():
+    if check_login:
+        if check_rechte(0):
+            f=request.files["file"]
+            filename=secure_filename(f.filename)
+            filename=str(round(time.time(), 2))+"-"+filename
+            path=app.config["UPLOAD_FOLDER"]+filename
+            f.save(path)
+
+            import_data.filename(path)
+            manage_data.get_klassen()
+            return redirect("/?site=upload")
+
+        else:
+            return redirect("/?site=upload")
+    else:
+        return redirect("/login")
 
 @app.route("/save_setting", methods=["POST"])       #Änderungen werden gepseichert und mit der Methode Post übergeben
 def save_settting():                                #wird ausgeführt, wenn @app.route richtig ist

@@ -17,7 +17,10 @@ def re_conn():
 
     return mycursor, mydb
 
-
+def delete():
+    cursor, conn = re_conn()
+    cursor.execute("DELETE FROM schueler")
+    conn.commit()
     
 def exe(data):
     cursor, conn = re_conn()
@@ -58,7 +61,7 @@ def exe(data):
     values.append(frem2)
     values.append(frem3)
 
-    print(values)
+    #print(values)
 
     cursor.execute(state, values)
     conn.commit()
@@ -66,13 +69,15 @@ def exe(data):
 
 
 def filename(name):
+    delete()
+
     end=name[-6:]
     end=end.split(".")[1]
 
     if end=="xls" or end=="xlsx":
         df=pandas.read_excel(name, sheet_name=0)
     elif end=="csv":
-        df=pandas.read_csv(name, sheet_name=0)
+        df=pandas.read_csv(name)
 
     df=df.fillna("")
 
@@ -82,6 +87,3 @@ def filename(name):
             data.append(i)
 
         exe(data)
-
-
-filename("../export.xls")
