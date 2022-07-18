@@ -1,0 +1,33 @@
+<html>
+    {% include "header.html" %}
+
+    <body>
+        <div id="main">
+            <h1>Admin Funktionen</h1>
+
+            <form action="/" method="get">
+                <h2>Stufenverwaltung</h2>
+                <input type="hidden" name="site" value="stufe">
+                <input type="submit" value="Stufenverwaltung" id="square">
+            </form>
+
+            <form action="/" method="get">
+                <h2>Fehlende Bücher</h2>
+                <input type="hidden" name="site" value="fbuch">
+                <input type="submit" value="Fehlende Bücher" id="square">
+            </form>
+
+            <form action="/save_file" method="post" enctype="multipart/form-data">
+                <h2>Schüler aktualisieren</h2>
+                <input type="file" name="file">
+                <br><br>
+                <input type="submit" value="Schüler Aktualisieren">
+                <input type="reset">
+            </form>
+
+        </div>
+
+    </body>
+
+    {% include "footer.html" %}
+</html>

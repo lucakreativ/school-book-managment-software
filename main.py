@@ -212,12 +212,12 @@ def home():
 
             return redirect("/?site=schueler&ID=%s" % (ID_e))
 
-        elif site=="upload":
+
+        elif site=="admin":
             if check_rechte(0):
-                return render_template("upload.html")
+                return render_template("admin.html")
             else:
                 return render_template("rechte_un.html")
-
 
         elif site=="settings":                      #Einstllungen werden aufgerufen
             message=request.args.get("message")     #Nachricht die angezeigt werden soll wird geholt
@@ -255,10 +255,10 @@ def save_file():
 
             import_data.filename(path)
             manage_data.get_klassen()
-            return redirect("/?site=upload")
+            return redirect("/?site=admin")
 
         else:
-            return redirect("/?site=upload")
+            return redirect("/?site=admin")
     else:
         return redirect("/login")
 

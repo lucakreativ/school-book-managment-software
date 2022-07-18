@@ -268,3 +268,22 @@ th {
 #abgabebuch {
     color: red;
 }
+
+#square {
+    height: 50px;
+    min-width: 200px;
+    border-radius: 0px;
+    font-size: 20px;
+    background-color: #dddddd;
+}
+
+#square:hover {
+    animation-name: colorchange;
+    animation-duration: 1s;
+    background-color: #c7caca;
+}
+
+@keyframes colorchange {
+    from {background-color: #dddddd;}
+    to {background-color: #c7caca;}
+}
