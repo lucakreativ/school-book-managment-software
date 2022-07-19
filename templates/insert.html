@@ -10,7 +10,13 @@
                 <input type="text" name="ISBN" placeholder="ISBN" required autofocus>
                 <textarea name="titel" placeholder="Titel" required></textarea>
                 <input type="text" name="verlag" placeholder="Verlag" required>
-                <input tyep="number" name="preis" placeholder="Preis" id="preis">
+                <input type="number" name="preis" placeholder="Preis" id="preis">
+                <select name="Fach">
+                    <option value="" selected>Kein Religionsbuch</option>
+                    {% for i in religion %}
+                        <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
                 <input type="submit" value="speichern">
             </form>
 

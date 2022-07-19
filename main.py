@@ -7,6 +7,7 @@ import os
 
 import login_v
 import cryption
+import constants
 import import_data
 import manage_data
 
@@ -104,18 +105,19 @@ def home():
             ISBN=request.args.get("ISBN")
             titel=request.args.get("titel")
             preis=request.args.get("preis")
+            Fach=request.args.get("Fach")
             if preis=="":
                 preis=0
 
             msg="Buch wurde hinzugefügt"
             try:
-                manage_data.insert_book(ISBN, titel, verlag, preis)
+                manage_data.insert_book(ISBN, titel, verlag, Fach, preis)
             except:
                 msg="ISBN wurde schon vergeben"
             return redirect("/?site=book_by_ISBN&ISBN=%s&msg=%s" % (ISBN, msg))
 
         elif site=="insert":
-            return render_template("insert.html")
+            return render_template("insert.html", religion=constants.faecher)
 
         elif site=="book_by_ISBN":
             save=request.args.get("save")
@@ -123,14 +125,21 @@ def home():
             Titel=request.args.get("Titel")
             Verlag=request.args.get("verlag")
             preis=request.args.get("preis")
+            Fach=request.args.get("Fach")
             msg=request.args.get("msg")
+            if msg==None:
+                msg=""
 
             if save=="1":
-                manage_data.update_book(ISBN, Titel, Verlag, preis)
+                manage_data.update_book(ISBN, Titel, Verlag, preis, Fach)
 
             data=manage_data.book_by_ISBN(ISBN)
+            if data[4]=="":
+                fachn="Kein Religionsbuch"
+            else:
+                fachn=data[4]
 
-            return render_template("book_by_ISBN.html", ISBN=data[0], Titel=data[1], Verlag=data[2], Preis=data[3], msg=msg)
+            return render_template("book_by_ISBN.html", ISBN=data[0], Titel=data[1], Verlag=data[2], Preis=data[3], msg=msg, Fach=data[4], Fachn=fachn, faecher=constants.faecher)
 
         elif site=="stufe":
             if check_rechte(0):

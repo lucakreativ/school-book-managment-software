@@ -40,16 +40,16 @@ def delete_book(ISBN):
     conn.commit()
 
 
-def insert_book(ISBN, Titel, Verlag, preis=0):
+def insert_book(ISBN, Titel, Verlag, Fach, preis=0):
     cursor, conn = re_connect()
-    values=[ISBN, Titel, Verlag, preis]
-    cursor.execute("INSERT INTO buecher (ISBN, Titel, Verlag, preis) VALUES (%s, %s, %s, %s)", values)
+    values=[ISBN, Titel, Verlag, preis, Fach]
+    cursor.execute("INSERT INTO buecher (ISBN, Titel, Verlag, preis, Fach) VALUES (%s, %s, %s, %s, %s)", values)
     conn.commit()
 
 
-def update_book(ISBN, Titel, Verlag, preis):
+def update_book(ISBN, Titel, Verlag, preis, Fach):
     cursor, conn = re_connect()
-    cursor.execute("""UPDATE buecher SET Titel='%s', Verlag='%s', preis=%s WHERE ISBN=%s""" % (Titel, Verlag, preis, ISBN))
+    cursor.execute("""UPDATE buecher SET Titel='%s', Verlag='%s', preis=%s, Fach='%s' WHERE ISBN=%s""" % (Titel, Verlag, preis, Fach, ISBN))
     conn.commit()
 
 
@@ -75,7 +75,7 @@ def print_books():
 
 def book_by_ISBN(ISBN):
     cursor, conn = re_connect()
-    cursor.execute("SELECT ISBN, Titel, Verlag, preis FROM buecher WHERE ISBN='%s'" % (ISBN))
+    cursor.execute("SELECT ISBN, Titel, Verlag, preis, Fach FROM buecher WHERE ISBN='%s'" % (ISBN))
     data=cursor.fetchall()[0]
     return data
 

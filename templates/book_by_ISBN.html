@@ -13,6 +13,13 @@
                 <textarea name="Titel">{{Titel}}</textarea>
                 <input type="text" name="verlag" value="{{Verlag}}" placeholder="Verlag">
                 <input tyep="number" name="preis" value="{{Preis}}" placeholder="Preis">
+                <select name="Fach">
+                    <option value="{{Fach}}" hidden selected disabled>{{Fachn}}</option>
+                    <option value="">Kein Religionsbuch</option>
+                    {% for i in faecher %}
+                        <option value="{{i}}">{{i}}</option>
+                    {% endfor %}
+                </select>
                 <input type="submit" value="speichern">
             </form>
 
