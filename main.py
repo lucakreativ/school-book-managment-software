@@ -224,7 +224,18 @@ def home():
 
         elif site=="admin":
             if check_rechte(0):
-                return render_template("admin.html")
+                msg=session.get("msg")
+                farbe=session.get("farbe")
+                if farbe==0:
+                    farbe="green"
+                elif farbe==1:
+                    farbe="red"
+
+                if msg==None:
+                    msg=""
+
+
+                return render_template("admin.html", msg=msg, farbe=farbe)
             else:
                 return render_template("rechte_un.html")
 
@@ -256,13 +267,17 @@ def home():
 def save_file():
     if check_login:
         if check_rechte(0):
+            username=session.get("user")
+
             f=request.files["file"]
             filename=secure_filename(f.filename)
-            filename=str(round(time.time(), 2))+"-"+filename
+            filename=str(round(time.time(), 2))+"-"+username+"-"+filename
             path=app.config["UPLOAD_FOLDER"]+filename
             f.save(path)
 
-            import_data.filename(path)
+            msg, farbe=import_data.filename(path)
+            session["msg"]=msg
+            session["farbe"]=farbe
             manage_data.get_klassen()
             return redirect("/?site=admin")
 

@@ -66,21 +66,28 @@ def exe(data):
 
 
 def filename(name):
-    delete()
+    try:
+        delete()
 
-    end=name[-6:]
-    end=end.split(".")[1]
+        end=name[-6:]
+        end=end.split(".")[1]
 
-    if end=="xls" or end=="xlsx":
-        df=pandas.read_excel(name, sheet_name=0)
-    elif end=="csv":
-        df=pandas.read_csv(name)
+        if end=="xls" or end=="xlsx":
+            df=pandas.read_excel(name, sheet_name=0)
+        elif end=="csv":
+            df=pandas.read_csv(name)
 
-    df=df.fillna("")
+        df=df.fillna("")
 
-    for index, rows in df.iterrows():
-        data=[]
-        for i in rows:
-            data.append(i)
+        for index, rows in df.iterrows():
+            data=[]
+            for i in rows:
+                data.append(i)
 
-        exe(data)
+            exe(data)
+    
+    except Exception as e:
+        return (str(e), 1)
+
+    else:
+        return ("Schülerliste wurde aktualisiert.", 0)
