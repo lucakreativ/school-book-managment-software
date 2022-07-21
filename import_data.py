@@ -87,7 +87,7 @@ def filename(name):
             exe(data)
     
     except Exception as e:
-        return (str(e), 1)
+        return ("Problem, bitte melden: "+str(e), 1)
 
     else:
         return ("Schülerliste wurde aktualisiert.", 0)
