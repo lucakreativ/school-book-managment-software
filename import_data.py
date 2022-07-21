@@ -1,21 +1,18 @@
-import csv
-import mysql.connector
+from mysql.connector import MySQLConnection
 import pandas
+
+
+from read_config import read_db_config
 
 
 state="INSERT INTO schueler (ID, Stufe, Klasse, Vorname, Nachname, Religion, Fremdsp1, Fremdsp2, Fremdsp3) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
 def re_conn():
-    mydb = mysql.connector.connect(
-    host="localhost",
-    user="user",
-    password="test",
-    database="create_test"
-    )
+    dbconfig = read_db_config()
+    conn = MySQLConnection(**dbconfig)
+    cursor = conn.cursor()
 
-    mycursor = mydb.cursor()
-
-    return mycursor, mydb
+    return cursor, conn
 
 def delete():
     cursor, conn = re_conn()
