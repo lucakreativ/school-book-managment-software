@@ -235,9 +235,9 @@ def home():
 
                 if msg==None:
                     msg=""
-                else:
-                    session.pop("msg")
-
+                    
+                session["msg"]=None
+                session["farbe"]=None
 
                 return render_template("admin.html", msg=msg, farbe=farbe)
             else:
