@@ -7,6 +7,7 @@ mysql-connector-python==8.0.29
 numpy==1.23.1
 pandas==1.4.3
 protobuf==4.21.2
+openpyxl==3.0.10
 pycryptodome==3.15.0
 python-dateutil==2.8.2
 pytz==2022.1
