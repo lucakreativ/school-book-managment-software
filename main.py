@@ -226,6 +226,8 @@ def home():
             if check_rechte(0):
                 msg=session.get("msg")
                 farbe=session.get("farbe")
+                session.pop("msg")
+                session.pop("farbe")
                 if farbe==0:
                     farbe="green"
                 elif farbe==1:
