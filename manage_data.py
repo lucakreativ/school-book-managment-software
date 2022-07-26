@@ -268,10 +268,10 @@ def schueler_by_class(klasse, fehlend=0, stufe_t=0):
 
     if fehlend==1:
         if stufe_t==1:
-            cursor.execute("SELECT schueler.Vorname, schueler.Nachname, schueler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe='%s' AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1" % (stufe))
+            cursor.execute("SELECT schueler.Vorname, schueler.Nachname, schueler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe='%s' AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1 AND ausgeliehen.Anzahl>=1" % (stufe))
             data=cursor.fetchall()
         else:
-            cursor.execute("SELECT schueler.Vorname, schueles.Nachname, schuler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe='%s' AND schueler.Klasse='%s' AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1" % (stufe, klasse))
+            cursor.execute("SELECT schueler.Vorname, schueles.Nachname, schuler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe='%s' AND schueler.Klasse='%s' AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1 AND ausgeliehen.Anzahl>=1" % (stufe, klasse))
             data=cursor.fetchall()
     else:
         cursor.execute("SELECT Vorname, Nachname, ID FROM schueler WHERE Stufe='%s' AND Klasse='%s'" % (stufe, klasse))
