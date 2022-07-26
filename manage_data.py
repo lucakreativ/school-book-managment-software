@@ -55,7 +55,17 @@ def update_book(ISBN, Titel, Verlag, preis, Fach):
 
 def search_book(search_term):
     cursor, conn = re_connect()
-    cursor.execute("SELECT ISBN, Titel, Verlag, preis FROM buecher WHERE Titel LIKE '%"+search_term+"%' OR ISBN LIKE '%"+search_term+"%'")
+    term="SELECT ISBN, Titel, Verlag, preis FROM buecher WHERE Titel LIKE '%"+search_term+"%' OR ISBN LIKE '%"+search_term+"%' OR ("
+    terms=search_term.split(" ")
+
+    term+="Titel LIKE '%"+terms[0]+"%'"
+    if len(terms)>1:
+        for i in terms[1::]:
+            print(i)
+            term+=" AND Titel LIKE '%"+i+"%'"
+    
+    term+=")"
+    cursor.execute(term)
     data=cursor.fetchall()
     data=pd.DataFrame(data, columns=["ISBN", "Titel", "Verlag", "Preis"])
     data["ISBN"]=data["ISBN"].apply(lambda x:'<a href="/?site=book_by_ISBN&ISBN={0}">{0}</a>'.format(x))
