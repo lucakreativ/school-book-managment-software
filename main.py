@@ -131,6 +131,8 @@ def home():
                 msg=""
 
             if save=="1":
+                if Fach==None:
+                    Fach=""
                 manage_data.update_book(ISBN, Titel, Verlag, preis, Fach)
 
             data=manage_data.book_by_ISBN(ISBN)
