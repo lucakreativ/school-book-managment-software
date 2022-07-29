@@ -8,6 +8,8 @@ from hash_func import hash_func
 from write_protocol import write_protocol
 import cryption
 
+import threading
+
 def re_connect():
     dbconfig = read_db_config()
     conn = MySQLConnection(**dbconfig)
@@ -90,10 +92,11 @@ def book_by_ISBN(ISBN):
     return data
 
 
-def insert_taken_book_add(Sch_ID, ISBN, user, Anzahl=1, ):
+def insert_taken_book_add(Sch_ID, ISBN, user, Anzahl=1, cursor=None, conn=None):
     if Anzahl!=0:
         write_protocol(0, Sch_ID, ISBN, Anzahl, user)
-    cursor, conn = re_connect()
+    if cursor==None:
+        cursor, conn = re_connect()
     cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
     result=cursor.fetchall()
     if len(result)!=0:
@@ -124,7 +127,19 @@ def delete_zero_taken_books():
     cursor.execute("""DELETE FROM ausgeliehen WHERE Anzahl=0""")
     conn.commit()
 
+def execute_second(i, schueler, user):
+    cursor, conn =re_connect()
+    stufe=i[0]
+    ISBN=i[1]
+    IDs=schueler[stufe]
+    for ID in IDs:
+        insert_taken_book_add(ID, ISBN, user, 0, cursor, conn)
+
 def execute_stufe(user):
+    cursor, conn =re_connect()
+
+    threads=[]
+
     stufen=[]
     schueler={}
     delete_zero_taken_books()
@@ -136,7 +151,9 @@ def execute_stufe(user):
         stufe=i[0]
         stufen.append(stufe)
 
+
     stufen=list(dict.fromkeys(stufen))
+
     for stufe in stufen:
         schule=[]
         cursor.execute("SELECT ID FROM schueler WHERE Stufe='%s'" % (stufe))
@@ -147,11 +164,17 @@ def execute_stufe(user):
         schueler[stufe]=schule
 
     for i in data:
-        stufe=i[0]
-        ISBN=i[1]
-        IDs=schueler[stufe]
-        for ID in IDs:
-            insert_taken_book_add(ID, ISBN, user, 0)
+        th=1
+        if th==1:
+            t=threading.Thread(target=execute_second, args=(i, schueler, user))
+            threads.append(t)
+            t.start()
+        else:
+            execute_second(i, schueler, user)
+
+    if th==1:
+        for t in threads:
+            t.join()
 
 def book_by_user(ID):
     ID=cryption.decrypt(ID)
