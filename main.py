@@ -137,7 +137,7 @@ def home():
 
             data=manage_data.book_by_ISBN(ISBN)
             if data[4]=="":
-                fachn="Kein Religionsbuch"
+                fachn="Nicht Fachspezifisch"
             else:
                 fachn=data[4]
 

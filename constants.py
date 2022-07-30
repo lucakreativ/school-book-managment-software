@@ -1,1 +1,1 @@
-faecher=["RRK", "ETH", "REV"]
+faecher=["RK", "ETH", "EV", "L", "F", "SPA"]
