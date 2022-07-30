@@ -375,5 +375,8 @@ def user_get():
     username=session.get("user")
     return username
 
-port=int(os.environ.get("PORT", 5100))
-app.run(host="0.0.0.0", port=port)
+
+
+if __name__ == '__main__':
+    port=int(os.environ.get("PORT", 5100))
+    app.run(host="0.0.0.0", port=port)
