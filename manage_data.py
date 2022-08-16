@@ -310,6 +310,7 @@ def schueler_by_class(klasse, fehlend=0, stufe_t=0):
         cursor.execute("SELECT Vorname, Nachname, ID FROM schueler WHERE Stufe='%s' AND Klasse='%s'" % (stufe, klasse))
         data=cursor.fetchall()
 
+    data=list(dict.fromkeys(data))
     data.sort(key=lambda x:x[1])
 
     for list_l in data:
