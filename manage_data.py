@@ -127,13 +127,18 @@ def delete_zero_taken_books():
     cursor.execute("""DELETE FROM ausgeliehen WHERE Anzahl=0""")
     conn.commit()
 
+
 def execute_second(i, schueler, user):
     cursor, conn =re_connect()
     stufe=i[0]
     ISBN=i[1]
+    Fach=i[3]
     IDs=schueler[stufe]
-    for ID in IDs:
-        insert_taken_book_add(ID, ISBN, user, 0, cursor, conn)
+    for sch in IDs:
+        ID=sch[0]
+        Fach_s=sch[1:]
+        if Fach in Fach_s:
+            insert_taken_book_add(ID, ISBN, user, 0, cursor, conn)
 
 def execute_stufe(user):
     cursor, conn =re_connect()
@@ -144,7 +149,7 @@ def execute_stufe(user):
     schueler={}
     delete_zero_taken_books()
     cursor, conn = re_connect()
-    cursor.execute("SELECT * FROM buchstufe")
+    cursor.execute("SELECT buchstufe.stufe, buchstufe.ISBN, buchstufe.abgeben, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN")
     data=cursor.fetchall()
     
     for i in data:
@@ -156,15 +161,15 @@ def execute_stufe(user):
 
     for stufe in stufen:
         schule=[]
-        cursor.execute("SELECT ID FROM schueler WHERE Stufe='%s'" % (stufe))
+        cursor.execute("SELECT ID, Religion, Fremdsp1, Fremdsp2, Fremdsp3 FROM schueler WHERE Stufe='%s'" % (stufe))
         schul=cursor.fetchall()
         for sch in schul:
-            schule.append(sch[0])
+            schule.append(sch)
         
         schueler[stufe]=schule
 
     for i in data:
-        th=1
+        th=0
         if th==1:
             t=threading.Thread(target=execute_second, args=(i, schueler, user))
             threads.append(t)
