@@ -48,12 +48,17 @@ def find_student(stufe, vorname, nachname, leistungsfach, basisfach, jahr):
         test_namen[test_name]=student_test[0]
         i+=1
 
-    closest=difflib.get_close_matches(name, test_namen, n=1, cutoff=0.6)[0]
+    closest=difflib.get_close_matches(name, test_namen, n=1, cutoff=0.1)[0]
     id=test_namen[closest]
+
+    cursor.execute("SELECT Nachname, Vorname FROM schueler WHERE ID='%s' " % (id))
+    data=cursor.fetchall()[0]
+    vorname=data[1]
+    nachname=data[0]
 
     insert_student(id, vorname, nachname, leistungsfach, basisfach, jahr)
 
-def Oberstufe(path, stufe, jahr):
+def Oberstufe(path, stufe, abschlussjahr):
     pdf=camelot.read_pdf(path)
     dataframe=pdf[0].df
 
@@ -97,10 +102,10 @@ def Oberstufe(path, stufe, jahr):
             i+=2
 
             
-            find_student(stufe, vorname, nachname, leistun_Fach, basis_Fach, jahr)
+            find_student(stufe, vorname, nachname, leistun_Fach, basis_Fach, abschlussjahr)
 
     except Exception as e:
         print("Fehler:",e)
 
 
-Oberstufe("../pdf/pdfsmall.pdf", "J1", 2023)
+Oberstufe()
