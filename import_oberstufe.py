@@ -58,7 +58,7 @@ def Oberstufe(path, stufe, jahr):
     dataframe=pdf[0].df
 
 
-    if True:
+    try:
         i=3
         max_column=len(list(dataframe.columns))
         Faecher=[]
@@ -99,8 +99,8 @@ def Oberstufe(path, stufe, jahr):
             
             find_student(stufe, vorname, nachname, leistun_Fach, basis_Fach, jahr)
 
-    #except Exception as e:
-    #    print("Fehler:",e)
+    except Exception as e:
+        print("Fehler:",e)
 
 
 Oberstufe("../pdf/pdfsmall.pdf", "J1", 2023)
