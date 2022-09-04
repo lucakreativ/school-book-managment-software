@@ -187,9 +187,16 @@ def book_by_user(ID):
     cursor.execute("""SELECT schueler.Stufe, schueler.Klasse, schueler.Vorname, schueler.Nachname, schueler.Religion, schueler.Fremdsp1, schueler.Fremdsp2, schueler.Fremdsp3 FROM schueler WHERE schueler.ID = '%s'""" % (ID))
     data = cursor.fetchall()
     stufe=data[0][0]
-    schueler=pd.DataFrame(data, columns=["Stufe", "Klasse", "Vorname", "Nachname", "Religion", "Fremdsp1", "Fremdsp2", "Fremdsp3"])
-    schueler["Klasse"]=schueler["Stufe"].astype(str)+schueler["Klasse"].astype(str)
-    schueler.drop(schueler.columns[[0]], axis=1, inplace=True)
+
+    if stufe[0]=="J":
+        cursor.execute("SELECT schueler.Stufe, oberstufe.vorname, oberstufe.nachname, oberstufe.l, oberstufe.m, oberstufe.abiturjahr FROM oberstufe, schueler WHERE oberstufe.studentid='%s' AND schueler.ID='%s'" % (ID, ID))
+        data=cursor.fetchall()
+        schueler=pd.DataFrame(data, columns=["Stufe", "Vorname", "Nachname", "Leistungsfächer", "Basisfächer", "Abschlussjahr"])
+
+    else:
+        schueler=pd.DataFrame(data, columns=["Stufe", "Klasse", "Vorname", "Nachname", "Religion", "Fremdsp1", "Fremdsp2", "Fremdsp3"])
+        schueler["Klasse"]=schueler["Stufe"].astype(str)+schueler["Klasse"].astype(str)
+        schueler.drop(schueler.columns[[0]], axis=1, inplace=True)
 
     cursor.execute("""SELECT ISBN, Anzahl FROM ausgeliehen WHERE ID = '%s'""" % (ID))
     data=cursor.fetchall()
