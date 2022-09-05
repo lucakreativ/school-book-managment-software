@@ -190,8 +190,17 @@ def book_by_user(ID):
 
     if stufe[0]=="J":
         cursor.execute("SELECT schueler.Stufe, oberstufe.vorname, oberstufe.nachname, oberstufe.l, oberstufe.m, oberstufe.abiturjahr FROM oberstufe, schueler WHERE oberstufe.studentid='%s' AND schueler.ID='%s'" % (ID, ID))
-        data=cursor.fetchall()
-        schueler=pd.DataFrame(data, columns=["Stufe", "Vorname", "Nachname", "Leistungsfächer", "Basisfächer", "Abschlussjahr"])
+        data2=cursor.fetchall()
+        if len(data2)!=0:
+            schueler=pd.DataFrame(data2, columns=["Stufe", "Vorname", "Nachname", "Leistungsfächer", "Basisfächer", "Abschlussjahr"])
+        else:
+            data=list(data[0])
+            data.insert(0, "Oberstufendaten nicht gefunden")
+            data=[data]
+            schueler=pd.DataFrame(data, columns=["Fehler","Stufe", "Klasse", "Vorname", "Nachname", "Religion", "Fremdsp1", "Fremdsp2", "Fremdsp3"])
+            schueler["Klasse"]=schueler["Stufe"].astype(str)+schueler["Klasse"].astype(str)
+            schueler.drop(schueler.columns[[1]], axis=1, inplace=True)
+
 
     else:
         schueler=pd.DataFrame(data, columns=["Stufe", "Klasse", "Vorname", "Nachname", "Religion", "Fremdsp1", "Fremdsp2", "Fremdsp3"])
