@@ -262,6 +262,8 @@ def home():
                     me="Altes Passwort stimmt nicht überein"
                 elif message=="2":                  #2=Fehler
                     me="Die neuen Passwörter stimmen nicht überein"
+                elif message=="3":
+                    me="Das Passwort muss mind. 6 Zeichen enthalten, Großbuchstaben, Kleinbuchstaben und Zahlen enthalten."
 
                 return render_template("settings.html", Message=me)     #laden der HTML-Seite mit der Nachricht
 

@@ -472,6 +472,30 @@ def login(username, password):
         return False
 
 
+def check_password_strength(passwd):
+    SpecialSym =['$', '@', '#', '%']
+    val = True
+      
+    if len(passwd) < 6:
+        #length should be at least 6
+        val = False
+          
+    if not any(char.isdigit() for char in passwd):
+        #Password should have at least one numeral
+        val = False
+          
+    if not any(char.isupper() for char in passwd):
+        #Password should have at least one uppercase letter
+        val = False
+          
+    if not any(char.islower() for char in passwd):
+        #Password should have at least one lowercase letter
+        val = False
+
+
+    return val
+
+
 def change_password(username, old_pass, new1_pass, new2_pass):
     cursor, conn = re_connect()
     cursor.execute("""SELECT hash FROM user WHERE username = '%s'""" % (username))
@@ -480,11 +504,14 @@ def change_password(username, old_pass, new1_pass, new2_pass):
     old_hash=hash_func(old_pass)
     if old_hash==database_pass:
         if new1_pass==new2_pass:
-            new_pass_hash=hash_func(new1_pass)
-            cursor.execute("""UPDATE user SET hash = '%s' WHERE username = '%s'""" % (new_pass_hash, username))
-            conn.commit()
+            if check_password_strength(new1_pass):
+                new_pass_hash=hash_func(new1_pass)
+                cursor.execute("""UPDATE user SET hash = '%s' WHERE username = '%s'""" % (new_pass_hash, username))
+                conn.commit()
             
-            return 0
+                return 0
+            else:
+                return 3
         else:
             return 2
     else:
