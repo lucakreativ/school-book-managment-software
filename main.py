@@ -131,9 +131,10 @@ def home():
                 msg=""
 
             if save=="1":
-                if Fach==None:
-                    Fach=""
-                manage_data.update_book(ISBN, Titel, Verlag, preis, Fach)
+                if check_rechte(0):
+                    if Fach==None:
+                        Fach=""
+                    manage_data.update_book(ISBN, Titel, Verlag, preis, Fach)
 
             data=manage_data.book_by_ISBN(ISBN)
             if data[4]=="":
@@ -141,7 +142,14 @@ def home():
             else:
                 fachn=data[4]
 
-            return render_template("book_by_ISBN.html", ISBN=data[0], Titel=data[1], Verlag=data[2], Preis=data[3], msg=msg, Fach=data[4], Fachn=fachn, faecher=constants.faecher)
+
+            if check_rechte(0):
+                disabled=""
+            else:
+                disabled="disabled"
+
+
+            return render_template("book_by_ISBN.html", ISBN=data[0], Titel=data[1], Verlag=data[2], Preis=data[3], msg=msg, Fach=data[4], Fachn=fachn, faecher=constants.faecher, disabled=disabled)
 
         elif site=="stufe":
             if check_rechte(0):
