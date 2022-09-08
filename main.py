@@ -34,6 +34,7 @@ app.config["UPLOAD_FOLDER"] = "files/"
 @app.route("/")
 def home():
     if not check_login():
+        session["url"]=request.url
         return (redirect("/login"))
     else:
         site=request.args.get("site")
@@ -343,7 +344,12 @@ def validate():
                 session["login_time"]=time.time()
                 session["user"]=username
 
-                return(redirect("/"))
+                url=session["url"]
+                print(url)
+                if url==None:
+                    return(redirect("/"))
+                else:
+                    return(redirect(url))
             else:
                 write_login(username, 0, ip_addr)
                 return(redirect("/loginf"))
