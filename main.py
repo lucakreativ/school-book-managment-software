@@ -66,14 +66,20 @@ def home():
 
         elif site=="books":
             search=request.args.get("search")
-            
+
+            if check_rechte(0):
+                disabled=""
+            else:
+                disabled="disabled"
+
+
             if search==None:
                 data=manage_data.print_books()
-                return render_template("book.html", search="", tables=[data.to_html(escape=False)], titles=["Bücher"])
+                return render_template("book.html", search="", tables=[data.to_html(escape=False)], titles=["Bücher"], disabled=disabled)
 
             else:
                 data=manage_data.search_book(search)
-                return render_template("book.html", search=search, tables=[data.to_html(escape=False)], titles=["Bücher"])
+                return render_template("book.html", search=search, tables=[data.to_html(escape=False)], titles=["Bücher"], disabled=disabled)
 
         elif site=="klassen":
             klasse=request.args.get("k")
@@ -112,7 +118,8 @@ def home():
 
             msg="Buch wurde hinzugefügt"
             try:
-                manage_data.insert_book(ISBN, titel, verlag, Fach, preis)
+                if check_rechte(0):
+                    manage_data.insert_book(ISBN, titel, verlag, Fach, preis)
             except:
                 msg="ISBN wurde schon vergeben"
             return redirect("/?site=book_by_ISBN&ISBN=%s&msg=%s" % (ISBN, msg))
@@ -344,8 +351,7 @@ def validate():
                 session["login_time"]=time.time()
                 session["user"]=username
 
-                url=session["url"]
-                print(url)
+                url=session.get("url")
                 if url==None:
                     return(redirect("/"))
                 else:
