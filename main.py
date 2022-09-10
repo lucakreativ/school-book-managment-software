@@ -124,6 +124,13 @@ def home():
                 msg="ISBN wurde schon vergeben"
             return redirect("/?site=book_by_ISBN&ISBN=%s&msg=%s" % (ISBN, msg))
 
+        elif site=="delete_book":
+            if check_rechte(0):
+                ISBN=request.args.get("ISBN")
+                manage_data.delete_book(ISBN)
+
+            return redirect("/?site=books")
+
         elif site=="insert":
             return render_template("insert.html", religion=constants.faecher)
 

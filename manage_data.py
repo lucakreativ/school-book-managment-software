@@ -48,6 +48,10 @@ def insert_book(ISBN, Titel, Verlag, Fach, preis=0):
     cursor.execute("INSERT INTO buecher (ISBN, Titel, Verlag, preis, Fach) VALUES (%s, %s, %s, %s, %s)", values)
     conn.commit()
 
+def delete_book(ISBN):
+    cursor, conn = re_connect()
+    cursor.execute("DELETE FROM buecher WHERE ISBN=%s" % (ISBN))
+    conn.commit()
 
 def update_book(ISBN, Titel, Verlag, preis, Fach):
     cursor, conn = re_connect()

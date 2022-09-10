@@ -12,7 +12,7 @@
                 <input type="text" name="ISBN" value="{{ISBN}}" autofocus>
                 <textarea name="Titel">{{Titel}}</textarea>
                 <input type="text" name="verlag" value="{{Verlag}}" placeholder="Verlag">
-                <input tyep="number" name="preis" value="{{Preis}}" placeholder="Preis">
+                <input type="number" name="preis" value="{{Preis}}" placeholder="Preis">
                 <select name="Fach">
                     <option value="{{Fach}}" hidden selected>{{Fachn}}</option>
                     <option value="">Nicht Fachspezifisch</option>
@@ -22,6 +22,8 @@
                 </select>
                 <input type="submit" value="speichern" {{disabled}}>
             </form>
+
+            <input type="submit" value="Buch löschen" onclick="confirmf({{ISBN}})" {{disabled}}>
 
         </div>
 
@@ -35,6 +37,13 @@
             let text=document.getElementById("preis").value;
             let r=text.replace(",", ".");
             document.getElementById("preis").value=r;
+        }
+
+        function confirmf(ISBN){ 
+            var proceed = confirm("Wollen Sie das Buch wirklich löschen?");
+            if (proceed) {
+                window.location = "/?site=delete_book&ISBN="+ISBN;
+            }
         }
     </script>
 </html>
