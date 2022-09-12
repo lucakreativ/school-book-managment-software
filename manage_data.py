@@ -153,7 +153,7 @@ def execute_stufe(user):
     schueler={}
     delete_zero_taken_books()
     cursor, conn = re_connect()
-    cursor.execute("SELECT buchstufe.stufe, buchstufe.ISBN, buchstufe.abgeben, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN")
+    cursor.execute("SELECT buchstufe.stufe, buchstufe.ISBN, buchstufe.abgeben, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND buchstufe.abgeben=0")
     data=cursor.fetchall()
     
     for i in data:
@@ -173,7 +173,7 @@ def execute_stufe(user):
         schueler[stufe]=schule
 
     for i in data:
-        th=0
+        th=1
         if th==1:
             t=threading.Thread(target=execute_second, args=(i, schueler, user))
             threads.append(t)
@@ -186,6 +186,8 @@ def execute_stufe(user):
             t.join()
 
 def book_by_user(ID):
+    abgeben=False
+
     ID=cryption.decrypt(ID)
     cursor, conn = re_connect()
     cursor.execute("""SELECT schueler.Stufe, schueler.Klasse, schueler.Vorname, schueler.Nachname, schueler.Religion, schueler.Fremdsp1, schueler.Fremdsp2, schueler.Fremdsp3 FROM schueler WHERE schueler.ID = '%s'""" % (ID))
@@ -229,7 +231,10 @@ def book_by_user(ID):
         cursor.execute("SELECT stufe FROM buchstufe WHERE stufe='%s' AND ISBN='%s' AND abgeben=1" % (stufe, ISBN))
         data=cursor.fetchall()
         if len(data)>0:
-            buecher.at[num, "ISBN"]='<div id="abgabebuch">'
+            if abgeben==True:
+                buecher.at[num, "ISBN"]='<div id="abgabebuch">'
+            else:
+                buecher.at[num, "ISBN"]='<div>'
             buecher.at[num, "ISBN"]+=temp
         else:
             buecher.at[num, "ISBN"]=temp
