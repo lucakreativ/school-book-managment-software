@@ -15,7 +15,7 @@ from write_protocol import write_login
 
 
 
-max_time_in_m=10
+max_time_in_m=20
 max_time_in_s=max_time_in_m*60
 
 

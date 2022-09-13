@@ -64,7 +64,7 @@ def Oberstufe(path, stufe, abschlussjahr):
 
 
     try:
-        i=3
+        i=2
         max_column=len(list(dataframe.columns))
         Faecher=[]
         while i<max_column:
@@ -108,4 +108,4 @@ def Oberstufe(path, stufe, abschlussjahr):
         print("Fehler:",e)
 
 
-Oberstufe()
+Oberstufe("../J1.pdf", "J1", 2024)
