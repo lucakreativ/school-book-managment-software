@@ -141,7 +141,7 @@ def execute_second(i, schueler, user):
     for sch in IDs:
         ID=sch[0]
         Fach_s=sch[1:]
-        if Fach in Fach_s:
+        if Fach in Fach_s or Fach=="":
             insert_taken_book_add(ID, ISBN, user, 0, cursor, conn)
 
 def execute_stufe(user):
