@@ -346,7 +346,7 @@ def schueler_by_class(klasse, fehlend=0, stufe_t=0):
     for list_l in data:
         list_l=list(list_l)
         list_l[2]=cryption.encrypt(list_l[2])
-        list_l[0]=list_l[1]+" "+list_l[0]
+        list_l[0]=list_l[1]+", "+list_l[0]
         list_l.pop(1)
         schueler.append(list_l)
 
@@ -359,19 +359,21 @@ def schueler_by_class(klasse, fehlend=0, stufe_t=0):
 def search_schueler(name):
     schueler=[]
     cursor, conn = re_connect()
-    cursor.execute("SELECT Vorname, Nachname, ID FROM schueler WHERE Nachname LIKE '%"+name+"%'")
+    cursor.execute("SELECT Vorname, Nachname, ID, Stufe, Klasse FROM schueler WHERE Nachname LIKE '%"+name+"%'")
     data=cursor.fetchall()
 
     for list_l in data:
         list_l=list(list_l)
         list_l[2]=cryption.encrypt(list_l[2])
-        list_l[0]=list_l[1]+" "+list_l[0]
-        list_l.pop(1)
+        list_l[0]=list_l[1]+", "+list_l[0]
+        list_l[1]=list_l[3]+list_l[4]
+        list_l.pop(3)
+        list_l.pop(3)
         schueler.append(list_l)
 
 
 
-    data=pd.DataFrame(schueler, columns=["Name", "Seite"])
+    data=pd.DataFrame(schueler, columns=["Name", "Klasse", "Seite"])
     data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" method="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
     return data
 
