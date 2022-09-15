@@ -266,14 +266,14 @@ def next_schueler(ID):
         if data[i][2]==ID:
             next_i=(i+1)%len(data)
             next_ID=data[next_i][2]
-            next_name=data[next_i][0]
+            next_name=data[next_i][0]+", "+data[next_i][1]
 
             prev_i=i-1
             if i<0:
                 prev_i=len(data)-1
                 
             prev_ID=data[prev_i][2]
-            prev_name=data[prev_i][0]
+            prev_name=data[prev_i][0]+", "+data[prev_i][1]
         i+=1
     next_ID=cryption.encrypt(next_ID)
     prev_ID=cryption.encrypt(prev_ID)
