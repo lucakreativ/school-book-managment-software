@@ -3,6 +3,13 @@
 
     <body>
         <div id="main">
+            {% for result in messages %}
+            <div id="msg">
+                <div id="{{ result[0] }}">
+                    <p>{{ result[1] }}</p>
+                </div>
+            </div>
+            {% endfor %}
             <br>
             <form action="/" method="get" id="insert">
                 <input type="hidden" name="site" value="save">

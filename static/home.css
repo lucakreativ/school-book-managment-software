@@ -294,6 +294,10 @@ th {
 }
 
 #msg p {
+    margin-bottom: 0px;
+}
+
+#msg p {
     padding-top: 5px;
     padding-bottom: 5px;
     margin-top: 0;
@@ -308,5 +312,14 @@ th {
 }
 
 #green {
+    background-color: green;
+}
+
+
+#warning {
+    background-color: orange;
+}
+
+#ok {
     background-color: green;
 }

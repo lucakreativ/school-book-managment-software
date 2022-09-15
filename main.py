@@ -52,9 +52,9 @@ def home():
                     dis="disabled"
 
                 bemerkung, geld = manage_data.bemgeld(ID)
-                schueler, buecher = manage_data.book_by_user(ID)
+                schueler, buecher, stufe, klasse, return_mess = manage_data.book_by_user(ID)
                 next_ID, next_name, prev_ID, prev_name = manage_data.next_schueler(ID)
-                return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"], ID_next=next_ID, ne_name=next_name, ID_prev=prev_ID, vor_name=prev_name, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld)
+                return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"], ID_next=next_ID, ne_name=next_name, ID_prev=prev_ID, vor_name=prev_name, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld, messages=return_mess)
         
         elif site=="search":
             name=request.args.get("term")

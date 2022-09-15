@@ -193,6 +193,9 @@ def book_by_user(ID):
     cursor.execute("""SELECT schueler.Stufe, schueler.Klasse, schueler.Vorname, schueler.Nachname, schueler.Religion, schueler.Fremdsp1, schueler.Fremdsp2, schueler.Fremdsp3 FROM schueler WHERE schueler.ID = '%s'""" % (ID))
     data = cursor.fetchall()
     stufe=data[0][0]
+    klasse=data[0][1]
+
+    faecher=[data[0][4], data[0][5], data[0][6], data[0][7], ""]
 
     if stufe[0]=="J":
         cursor.execute("SELECT schueler.Stufe, oberstufe.vorname, oberstufe.nachname, oberstufe.l, oberstufe.m, oberstufe.abiturjahr FROM oberstufe, schueler WHERE oberstufe.studentid='%s' AND schueler.ID='%s'" % (ID, ID))
@@ -246,7 +249,43 @@ def book_by_user(ID):
 
         buecher.at[num, "ISBN"]+=str(ISBN)+"</div>"
 
-    return (schueler, buecher)
+
+    return_mess=[]
+
+    cursor.execute("SELECT COUNT(*) FROM ausgeliehen WHERE ID='%s' AND Anzahl>=2" % (ID))
+    z=cursor.fetchall()[0][0]
+
+    if z>0:
+        return_mess.append(["warning", "Mehrere Bücher mit der gleichen ISBN wurden ausgeliehen."])
+    
+
+    if abgeben==False: sqlab=0
+    else: sqlab=1
+
+
+    cursor.execute("SELECT ISBN FROM ausgeliehen WHERE ID='%s' AND Anzahl>=1" % (ID))
+    buecher_check=cursor.fetchall()
+    buecher_check_l=[]
+    for buch in buecher_check:
+        buecher_check_l.append(buch[0])
+
+
+    cursor.execute("SELECT buchstufe.ISBN, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND stufe='%s' AND abgeben=%s" % (stufe, sqlab))
+    data=cursor.fetchall()
+
+
+    con=True
+    for i in data:
+        if i[1] in faecher:
+            if i[0] not in buecher_check_l:
+                con=False
+                break
+                
+    if con==True:
+        return_mess.append(["ok", "Alle Bücher wurden ausgeliehen."])
+
+
+    return (schueler, buecher, stufe, klasse, return_mess)
 
 
 def next_schueler(ID):
