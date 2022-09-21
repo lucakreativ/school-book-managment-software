@@ -1,0 +1,63 @@
+%\documentclass[11pt, titlepage]{scrreprt}
+\documentclass[12pt, titlepage, parskip=half-]{scrreprt}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage{float}
+\usepackage[a4paper,lmargin={2.5cm},rmargin={2.5cm},tmargin={2.5cm},bmargin = {2cm},footskip={1cm}]{geometry}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{wrapfig}
+\usepackage{calc}
+\usepackage{overcite} 
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{tabularx}
+\usepackage{siunitx}
+\usepackage[official]{eurosym}
+\usepackage{url}
+
+% Seminararbeit 
+\usepackage[onehalfspacing]{setspace}
+
+\renewcommand\citeform[1]{[#1]}
+
+\RedeclareSectionCommand[
+  style=section,
+  %indent=0pt,% kann ab KOMA-Script Version 3.24 weggelassen werden (Overleaf hat noch eine ältere Version)
+  beforeskip = -1\baselineskip plus -1ex minus -.2ex,
+  afterskip = 0.25\baselineskip plus -1sp minus 1sp,
+  font = \LARGE,
+]{chapter}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+
+% !TEX program = xelatex
+\begin{document}
+% \include{Title}
+\begin{titlepage}
+  \title{Titel}
+  \subtitle{sehr kurze Beschreibung}
+  \titlehead{}
+  
+  \author{Projekt von Luca Eckenfels}
+  \publishers{ Angefertigt am Schiller-Gymnasium Offenburg \\
+    \vspace*{2ex} Unterstützender Lehrer:\\ Herr Czernohous\\
+    
+  }
+  \date{\today}
+\end{titlepage}
+
+\maketitle
+
+\end{document}
