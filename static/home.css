@@ -318,8 +318,10 @@ th {
 
 #warning {
     background-color: orange;
+    color: white;
 }
 
 #ok {
     background-color: green;
+    color: white;
 }
