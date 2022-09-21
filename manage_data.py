@@ -505,6 +505,27 @@ def bemgeld_up(id, bemerkung="", geld=0):
         conn.commit()
 
 
+def book_usage():
+    cursor, conn = re_connect()
+    cursor.execute("SELECT ISBN, SUM(Anzahl) FROM ausgeliehen GROUP BY ISBN ORDER BY SUM(Anzahl) DESC")
+    data=cursor.fetchall()
+    buecher=pd.DataFrame(data, columns=["ISBN", "Anzahl"])
+    for index in buecher.iterrows():#get Titel from ISBN
+        num=index[0]
+        ISBN=buecher.iloc[num]["ISBN"]
+
+        
+        cursor.execute("""SELECT Titel FROM buecher WHERE ISBN = %s""" % (ISBN))
+        data=cursor.fetchall()
+        if len(data)>0:
+            Titel=data[0][0]
+
+            buecher.at[num, "ISBN"]=Titel
+
+    
+    return buecher
+
+
 def login(username, password):
     cursor, conn = re_connect()
     try:

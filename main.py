@@ -268,6 +268,14 @@ def home():
             else:
                 return render_template("rechte_un.html")
 
+        elif site=="statistics":
+            if check_rechte(0):
+                data=manage_data.book_usage()
+                return render_template("statistics.html", tables=[data.to_html(escape=False)], titles=["Daten"])
+            else:
+                return render_template("rechte_un.html")
+
+
         elif site=="settings":                      #Einstllungen werden aufgerufen
             message=request.args.get("message")     #Nachricht die angezeigt werden soll wird geholt
             if message!=None:                       #Wenn es eine gibt
