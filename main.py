@@ -299,7 +299,7 @@ def home():
             return(redirect("/login"))      #wird zur Login-Seite weitergeleitet
 
         else:                               #keine gültige Seite wurde aufgerufen
-            return("Seite nicht gefunden")  #404-Page wird angezeigt
+            return render_template("404.html")
 
 
 @app.route("/save_file", methods=["POST"])
@@ -381,6 +381,10 @@ def validate():
     else:
         return("Zu viele Versuche: Bitte warten Sie ca. 10 Minuten")
 
+
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("404.html")
 
 
 def check_login():
