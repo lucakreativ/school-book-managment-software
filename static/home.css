@@ -325,3 +325,10 @@ th {
     background-color: green;
     color: white;
 }
+
+#full_cell {
+    width: 100%;
+    border-radius: 0px;
+    font-weight: bolder;
+    font-size: 15;
+}

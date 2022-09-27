@@ -15,14 +15,14 @@
                 <input type="hidden" name="site" value="save">
                 <input type="hidden" name="ID" value="{{ID}}">
             </form>
+            <form action="/" method="get">
+            {{ table1|safe }}
+            </form>
             <form action="/" method="get" id="save_book" target="hidden-form">
                 <input type="hidden" name="site" value="save">
                 <input type="hidden" name="ID" value="{{ID}}">
-                {% for table in tables %}            
-                <h2>{{titles[loop.index]}}</h2>
-                
-                {{ table|safe }}
-                    {% endfor %}
+               
+                {{ table2|safe }}
                 
 
                 <input type="hidden" name="site" value="save_a">

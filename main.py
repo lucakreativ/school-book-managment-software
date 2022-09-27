@@ -55,7 +55,7 @@ def home():
                 bemerkung, geld = manage_data.bemgeld(ID)
                 schueler, buecher, stufe, klasse, return_mess = manage_data.book_by_user(ID)
                 next_ID, next_name, prev_ID, prev_name = manage_data.next_schueler(ID)
-                return render_template("schueler.html", tables=[schueler.to_html(escape=False), buecher.to_html(escape=False)], titles=["Test"], ID_next=next_ID, ne_name=next_name, ID_prev=prev_ID, vor_name=prev_name, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld, messages=return_mess)
+                return render_template("schueler.html", table1=schueler.to_html(escape=False), table2=buecher.to_html(escape=False), ID_next=next_ID, ne_name=next_name, ID_prev=prev_ID, vor_name=prev_name, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld, messages=return_mess)
         
         elif site=="search":
             name=request.args.get("term")

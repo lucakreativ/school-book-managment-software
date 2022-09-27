@@ -214,6 +214,7 @@ def book_by_user(ID):
     else:
         schueler=pd.DataFrame(data, columns=["Stufe", "Klasse", "Vorname", "Nachname", "Religion", "Fremdsp1", "Fremdsp2", "Fremdsp3"])
         schueler["Klasse"]=schueler["Stufe"].astype(str)+schueler["Klasse"].astype(str)
+        schueler["Klasse"]=schueler["Klasse"].apply(lambda x:'<input type="hidden" name="site" value="klassen"><input type="hidden" name="k" value={0}><input type="submit" value="{0}" id="full_cell">'.format(x))
         schueler.drop(schueler.columns[[0]], axis=1, inplace=True)
 
     cursor.execute("""SELECT ISBN, Anzahl FROM ausgeliehen WHERE ID = '%s'""" % (ID))
