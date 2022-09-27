@@ -1,0 +1,15 @@
+<html>
+    <link rel="stylesheet" href="/static/admin/home.css"
+    <body>
+        <div id="main">
+            <h2>Benutzerverwaltung</h2>
+            <p>ISBN anklicken, um Buch zu bearbeiten.</p>
+            {% for table in tables %}
+            <h2>{{titles[loop.index]}}</h2>
+            {{ table|safe }}
+                {% endfor %}
+
+        </div>
+
+    </body>
+</html>

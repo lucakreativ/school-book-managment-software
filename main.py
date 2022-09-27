@@ -10,6 +10,7 @@ import cryption
 import constants
 import import_data
 import manage_data
+import user_management
 
 from write_protocol import write_login
 
@@ -301,6 +302,14 @@ def home():
         else:                               #keine gültige Seite wurde aufgerufen
             return render_template("404.html")
 
+
+@app.route("/admin")
+def admin():
+    if session.get("user")=="admin":
+        data=user_management.show_user_data()
+        return render_template("admin/show_user.html", tables=[data.to_html(escape=False)], titles=["Benutzer"])
+    else:
+        return redirect("/login")
 
 @app.route("/save_file", methods=["POST"])
 def save_file():
