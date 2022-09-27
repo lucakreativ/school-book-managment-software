@@ -332,3 +332,20 @@ th {
     font-weight: bolder;
     font-size: 15;
 }
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+}
+  
+td, th {
+    border: 1px solid #6d6d6d;
+    text-align: left;
+    padding: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+  
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
