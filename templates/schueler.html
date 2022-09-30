@@ -3,14 +3,35 @@
 
     <body>
         <div id="main">
-            {% for result in messages %}
-            <div id="msg">
-                <div id="{{ result[0] }}">
-                    <p>{{ result[1] }}</p>
+            <div class="row">
+                <div class="columnss">
+                        <form action="/">
+                            <input type="hidden" name="site" value="schueler">
+                            <input type="hidden" name="ID" value="{{ID_prev}}">
+                            <input type="submit" value="{{vor_name}}" id="but_next_top">
+                        </form>
+
+                </div>
+                <div class="columnsw">
+                    {% for result in messages %}
+                    <div id="msg">
+                        <div id="{{ result[0] }}">
+                            <p>{{ result[1] }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <br>
+                </div>
+                <div class="columnss">
+
+                        <form action="/">
+                            <input type="hidden" name="site" value="schueler">
+                            <input type="hidden" name="ID" value="{{ID_next}}">
+                            <input type="submit" value="{{ne_name}}" id="but_next_top">
+                        </form>
+
                 </div>
             </div>
-            {% endfor %}
-            <br>
             <form action="/" method="get" id="insert">
                 <input type="hidden" name="site" value="save">
                 <input type="hidden" name="ID" value="{{ID}}">
