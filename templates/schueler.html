@@ -5,7 +5,7 @@
         <div id="main">
             <div class="row">
                 <div class="columnss">
-                        <form action="/">
+                        <form action="/" id="height_form">
                             <input type="hidden" name="site" value="schueler">
                             <input type="hidden" name="ID" value="{{ID_prev}}">
                             <input type="submit" value="{{vor_name}}" id="but_next_top">
@@ -20,11 +20,11 @@
                         </div>
                     </div>
                     {% endfor %}
-                    <br>
+
                 </div>
                 <div class="columnss">
 
-                        <form action="/">
+                        <form action="/" id="height_form">
                             <input type="hidden" name="site" value="schueler">
                             <input type="hidden" name="ID" value="{{ID_next}}">
                             <input type="submit" value="{{ne_name}}" id="but_next_top">

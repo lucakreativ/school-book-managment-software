@@ -285,6 +285,9 @@ def book_by_user(ID):
     if con==True:
         return_mess.append(["ok", "Alle Bücher wurden ausgeliehen."])
 
+    if len(return_mess)==0:
+        return_mess.append(["", ""])
+
 
     return (schueler, buecher, stufe, klasse, return_mess)
 

@@ -353,6 +353,11 @@ tr:nth-child(even) {
 .columnss {
     float: left;
     width: 10%;
+    height: max-content;
+}
+
+#height_form {
+    margin-bottom: 0;
 }
 
 #but_next_top {
