@@ -71,4 +71,6 @@ def generate_password(length):
     password+=random.choices(characters, k=length-3)
     random.shuffle(password)
 
-    return password
+    password_string="".join(password)
+
+    return password_string
