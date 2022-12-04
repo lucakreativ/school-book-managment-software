@@ -29,6 +29,10 @@ def show_user_data():
             df.at[num, "Außen*"]='<input type="checkbox" onclick="return false;">'
         else:
             df.at[num, "Außen*"]='<input type="checkbox" onclick="return false;" checked>'
+
+        
+        benutzername=df.iloc[num]["Benutzername"]
+        df.at[num, ""]="""<input type="submit" value="Passwort Zürücksetzen" id="admin_reset_password" onclick="confirmf('%s')">""" % (benutzername)
     
     return df
 
@@ -69,7 +73,7 @@ def reset_password(username):
     
     password=cryption.generate_password(8)
 
-    cursor.execute("UPDATE user SET password='%s' WHERE username='%s'" % (password, username))
+    cursor.execute("UPDATE user SET hash='%s' WHERE username='%s'" % (password, username))
     conn.commit()
 
     return password

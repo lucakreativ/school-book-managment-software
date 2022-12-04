@@ -306,8 +306,23 @@ def home():
 @app.route("/admin")
 def admin():
     if session.get("user")=="admin":
-        data=user_management.show_user_data()
-        return render_template("admin/show_user.html", tables=[data.to_html(escape=False)], titles=["Benutzer"])
+        site=request.args.get("site")
+        if site==None:
+            q=request.args.get("q")
+            if q=="0":
+                data=session.get("reset_password")
+                username, new_password = data
+                mess="Passwort für %s ist: %s" % (username, new_password)
+            else:
+                mess=""
+
+            data=user_management.show_user_data()
+            return render_template("admin/show_user.html", tables=[data.to_html(escape=False)], titles=["Benutzer"], message=mess)
+        elif site=="resetpassword":
+            username=request.args.get("username")
+            new_password=user_management.reset_password(username)
+            session["reset_password"]=[username,new_password]
+            return redirect("/admin?q=0")
     else:
         return redirect("/login")
 
@@ -395,6 +410,10 @@ def validate():
 def not_found(e):
     return render_template("404.html")
 
+@app.errorhandler(500)
+def not_found(e):
+    return "Internal Server Error"
+
 
 def check_login():
     if session.get("login")==2:
@@ -429,4 +448,4 @@ def user_get():
 
 if __name__ == '__main__':
     port=int(os.environ.get("PORT", 5100))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)

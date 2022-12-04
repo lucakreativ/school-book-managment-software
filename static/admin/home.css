@@ -4,6 +4,8 @@ table {
 }
 table td {
 	padding: 15px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 table thead td {
 	background-color: #54585d;
@@ -21,4 +23,20 @@ table tbody tr {
 }
 table tbody tr:nth-child(odd) {
 	background-color: #ffffff;
+}
+
+
+#admin_reset_password {
+	width: 100px;
+	white-space: normal;
+}
+
+form {
+	margin-bottom: 0;
+}
+
+#green_back {
+	background-color: green;
+	width: max-content;
+	color: white;
 }

@@ -1,9 +1,10 @@
 <html>
-    <link rel="stylesheet" href="/static/admin/home.css"
+    <link rel="stylesheet" href="/static/admin/home.css">
     <body>
         <div id="main">
             <h2>Benutzerverwaltung</h2>
-            <p>ISBN anklicken, um Buch zu bearbeiten.</p>
+            <p>Folgend sind die Benutzer im System gespeichert.</p>
+            <p id="green_back">{{message}}</p>
             {% for table in tables %}
             <h2>{{titles[loop.index]}}</h2>
             {{ table|safe }}
@@ -12,4 +13,14 @@
         </div>
 
     </body>
+
+
+    <script>
+        function confirmf(username){ 
+            var proceed = confirm('Wollen Sie wirklich das Passowrt für "'+username+'" zurücksetzen?');
+            if (proceed) {
+                window.location = "/admin?site=resetpassword&username="+username;
+            }
+        }
+    </script>
 </html>
