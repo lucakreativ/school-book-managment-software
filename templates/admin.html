@@ -24,7 +24,8 @@
 
             <form action="/save_file" method="post" enctype="multipart/form-data">
                 <h2>Schüler aktualisieren</h2>
-                <input type="file" name="file">
+                <input type="file" name="file" required>
+                <input type="text" name="password" placeholder="Passwort, fals vorhanden">
                 <br><br>
                 <input type="submit" value="Schüler Aktualisieren">
                 <input type="reset">

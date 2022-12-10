@@ -1,6 +1,8 @@
 from mysql.connector import MySQLConnection
 import pandas
-
+import msoffcrypto
+import io
+import xlrd
 
 from read_config import read_db_config
 
@@ -65,19 +67,35 @@ def exe(data):
 
 
 
-def filename(name):
+def filename(name, password):
     try:
-        delete()
-
         end=name[-6:]
         end=end.split(".")[1]
 
         if end=="xls" or end=="xlsx":
-            df=pandas.read_excel(name, sheet_name=0)
+            if password!=None and password!="":
+                temp = io.BytesIO()
+                with open(name, 'rb') as f:
+                    excel = msoffcrypto.OfficeFile(f)
+                    excel.load_key(password)
+                    excel.decrypt(temp)
+
+                df=pandas.read_excel(temp, sheet_name=0)
+
+                del temp
+
+
+            else:
+
+                df=pandas.read_excel(name, sheet_name=0)
+
+
         elif end=="csv":
             df=pandas.read_csv(name)
 
         df=df.fillna("")
+
+        delete() #löscht alle Schüler
 
         for index, rows in df.iterrows():
             data=[]
@@ -85,6 +103,13 @@ def filename(name):
                 data.append(i)
 
             exe(data)
+
+
+    except msoffcrypto.exceptions.InvalidKeyError:
+        return ("Falsches Passwort", 1)
+
+    except xlrd.biffh.XLRDError:
+        return ("Bitte Passwort eingeben", 1)
     
     except Exception as e:
         return ("Problem, bitte melden: "+str(e), 1)

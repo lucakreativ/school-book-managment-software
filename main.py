@@ -332,13 +332,15 @@ def save_file():
         if check_rechte(0):
             username=session.get("user")
 
+
+            password=request.form["password"]
             f=request.files["file"]
             filename=secure_filename(f.filename)
             filename=str(round(time.time(), 2))+"-"+username+"-"+filename
             path=app.config["UPLOAD_FOLDER"]+filename
             f.save(path)
 
-            msg, farbe=import_data.filename(path)
+            msg, farbe=import_data.filename(path, password)
             session["msg"]=msg
             session["farbe"]=farbe
             manage_data.get_klassen()
@@ -448,4 +450,4 @@ def user_get():
 
 if __name__ == '__main__':
     port=int(os.environ.get("PORT", 5100))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port, debug=False)

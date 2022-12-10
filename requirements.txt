@@ -14,3 +14,4 @@ pytz==2022.1
 six==1.16.0
 Werkzeug==2.1.2
 xlrd==2.0.1
+msoffcrypto-tool==5.0.0
