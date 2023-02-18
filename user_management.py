@@ -13,6 +13,35 @@ def re_connect():
 
     return cursor, conn
 
+def show_one_user(username):
+    cursor, conn = re_connect()
+    cursor.execute("SELECT username, privileges, outside FROM user WHERE username='%s'" % (username))
+    data=cursor.fetchall()[0]
+
+    if data[2]==0:
+        zero="selected"
+        one=""
+    else:
+        zero=""
+        one="selected"
+
+    pandas_temp=[]
+    pandas_temp.append("""<input type="hidden" name="username" value="%s">%s""" % (data[0], data[0]))
+    pandas_temp.append("""<input type="number" name="privileges" value="%s">""" % (data[1]))
+    pandas_temp.append("""<select name="outside">
+                            <option value="0" %s>Nein</option>
+                            <option value="1" %s>Ja</option>
+                            """ % (zero, one))
+    pandas_temp.append("""<input type="submit" value="Speichern" id="usersp"><br><input type="reset" value="Zurücksetzen">""")
+    df=pd.DataFrame([pandas_temp], columns=["username", "Rechte", "Außen", ""])
+
+    return df
+
+def edit_user_data(username, privileges, outside):
+    cursor, conn = re_connect()
+    cursor.execute("UPDATE user SET privileges=%s, outside=%s WHERE username='%s'" % (privileges, outside, username))
+    conn.commit()
+
 
 def show_user_data():
     cursor, conn = re_connect()
@@ -32,7 +61,8 @@ def show_user_data():
 
         
         benutzername=df.iloc[num]["Benutzername"]
-        df.at[num, ""]="""<input type="submit" value="Passwort Zürücksetzen" id="admin_reset_password" onclick="confirmf('%s')">""" % (benutzername)
+        df.at[num, "PW zurücksetzen"]="""<input type="submit" value="Passwort zurücksetzen" id="admin_reset_password" onclick="confirmf('%s')">""" % (benutzername)
+        df.at[num, "Bearbeiten/Löschen"]="""<form action="/admin" method="post"><input type="hidden" name="site" value="bea"><input type="hidden" name="username" value="%s"><input type="submit" value="Bearbeiten/Löschen" id="admin_bea_losch"></form>""" % (benutzername)
     
     return df
 

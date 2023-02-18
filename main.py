@@ -303,26 +303,52 @@ def home():
             return render_template("404.html")
 
 
-@app.route("/admin")
+@app.route("/admin", methods=["POST", "GET"])
 def admin():
-    if session.get("user")=="admin":
-        site=request.args.get("site")
-        if site==None:
-            q=request.args.get("q")
-            if q=="0":
-                data=session.get("reset_password")
-                username, new_password = data
-                mess="Passwort für %s ist: %s" % (username, new_password)
+    if True:
+    #if session.get("user")=="admin":
+        if request.method=="POST":
+            site=request.form["site"]
+            if site=="bea":
+                username=request.form["username"]
+                data=user_management.show_one_user(username)
+                return render_template("admin/edit_user.html", tables=[data.to_html(escape=False)], titles=["Benutzer"], username=username)   
+            elif site=="edituser":
+                username=request.form["username"]
+                privileges=int(request.form["privileges"])
+                outside=int(request.form["outside"])
+                user_management.edit_user_data(username, privileges, outside)
+                session["username_edit"]=username
+                return redirect("/admin?q=1")
+            else:
+                return "Seite nicht gefunden"
+
+           
+        else:
+            site=request.args.get("site")
+            if site==None:
+                q=request.args.get("q")
+                if q=="0":
+                    data=session.get("reset_password")
+                    username, new_password = data
+                    mess="Passwort für %s ist: %s" % (username, new_password)
+                elif q=="1":
+                    username=session.get("username_edit")
+                    mess="Rechte aktualisiert für %s" % (username)
+                else:
+                    mess=""
+
+            elif site=="resetpassword":
+                username=request.args.get("username")
+                new_password=user_management.reset_password(username)
+                session["reset_password"]=[username,new_password]
+                return redirect("/admin?q=0")            
             else:
                 mess=""
 
             data=user_management.show_user_data()
-            return render_template("admin/show_user.html", tables=[data.to_html(escape=False)], titles=["Benutzer"], message=mess)
-        elif site=="resetpassword":
-            username=request.args.get("username")
-            new_password=user_management.reset_password(username)
-            session["reset_password"]=[username,new_password]
-            return redirect("/admin?q=0")
+            return render_template("admin/show_users.html", tables=[data.to_html(escape=False)], titles=["Benutzer"], message=mess)         
+
     else:
         return redirect("/login")
 

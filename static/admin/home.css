@@ -25,10 +25,19 @@ table tbody tr:nth-child(odd) {
 	background-color: #ffffff;
 }
 
+table th {
+	text-align: left;
+}
+
+
 
 #admin_reset_password {
 	width: 100px;
 	white-space: normal;
+}
+
+#admin_bear_losch {
+	width: auto;
 }
 
 form {
@@ -39,4 +48,30 @@ form {
 	background-color: green;
 	width: max-content;
 	color: white;
+	margin: auto;
+}
+
+#orange_back {
+	background-color: orange;
+	width: max-content;
+	color: white;
+	margin: auto;
+}
+
+#main {
+	margin:auto;
+	width: max-content;
+	text-align: center;
+}
+
+
+
+#usersp {
+	width: 100%;
+	height: 40px;
+	font-size: 17;
+}
+
+#usercan {
+	font-size: 13;
 }
