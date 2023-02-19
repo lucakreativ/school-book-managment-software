@@ -320,6 +320,24 @@ def admin():
                 user_management.edit_user_data(username, privileges, outside)
                 session["username_edit"]=username
                 return redirect("/admin?q=1")
+            elif site=="deleteuser":
+                username=request.form["username"]
+                session["username_delete"]=username
+                user_management.delete_user(username)
+                return redirect("/admin?q=2")
+            elif site=="adduser":
+                return render_template("admin/adduser.html")
+            elif site=="adduserdata":
+                username=request.form["username"]
+                privileges=request.form["privileges"]
+                outside=request.form["outside"]
+
+                password=user_management.create_user(username, privileges, outside)
+
+                session["data"]=[username, password]
+
+                return redirect("/admin?q=3")
+
             else:
                 return "Seite nicht gefunden"
 
@@ -335,6 +353,12 @@ def admin():
                 elif q=="1":
                     username=session.get("username_edit")
                     mess="Rechte aktualisiert für %s" % (username)
+                elif q=="2":
+                    username=session.get("username_delete")
+                    mess="Benutzer gelöscht: %s" % (username)
+                elif q=="3":
+                    username, password=session.get("data")
+                    mess="Benutzer hinzugefügt: %s mit Passwort: %s" % (username, password)
                 else:
                     mess=""
 
@@ -476,4 +500,4 @@ def user_get():
 
 if __name__ == '__main__':
     port=int(os.environ.get("PORT", 5100))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(host="0.0.0.0", port=port, debug=True)

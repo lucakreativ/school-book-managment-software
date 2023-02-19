@@ -1,0 +1,40 @@
+<html>
+    {% include "admin/header.html" %}
+
+    <body>
+        <div id="main">
+            <h2>Benutzerverwaltung</h2>
+            <p>Daten einfügen und den Benutzer hinzufügen.</p>
+            <form action="/admin" method="post">
+                <input type="hidden" name="site" value="adduserdata">
+                <table border="1" class="dataframe">
+                    <thead>
+                    <tr style="text-align: right;">
+                        <th>Benutzername</th>
+                        <th>Rechte</th>
+                        <th>Außen*</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+
+                        <td><input type="text" name="username" placeholder="Benutzername" required></td>
+                        <td><input type="number" name="privileges" placeholder="niedriger = mehr Rechte" required></td>
+                        <td>
+                            <select name="outside" required>
+                                <option value="0" >Nein</option>
+                                <option value="1" selected>Ja</option>
+                            </select>
+                        </td>
+                        <td><input type="submit" value="hinzufügen" id="usersp2"></form></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+              <p>*Wenn ja, kann von außerhalb zugegriffen werden</p>
+
+        </div>
+    </body>
+    {% include "footer.html" %}
+</html>

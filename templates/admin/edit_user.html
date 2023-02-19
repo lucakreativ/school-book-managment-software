@@ -1,18 +1,20 @@
 <html>
-    <link rel="stylesheet" href="/static/admin/home.css">
+    {% include "admin/header.html" %}
+    
     <body>
         <div id="main">
             <h2>Benutzerverwaltung</h2>
-            <p>Folgende Benutzer sind im System gespeichert.</p>
+            <p>Folgenden Benutzer bearbeiten.</p>
             <form action="/admin" method="post">
                 <input type="hidden" name="site" value="edituser">
                 {% for table in tables %}
                 <h2>{{titles[loop.index]}}</h2>
                 {{ table|safe }}
                     {% endfor %}
-            </form>
+            
         </div>
 
     </body>
+    {% include "footer.html" %}
 
 </html>

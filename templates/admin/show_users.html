@@ -1,9 +1,14 @@
 <html>
-    <link rel="stylesheet" href="/static/admin/home.css">
+    {% include "admin/header.html" %}
+
     <body>
         <div id="main">
             <h2>Benutzerverwaltung</h2>
-            <p>Folgenden Benutzer bearbeiten: {{username}}</p>
+            <p id="marginbottom">Folgende Benutzer sind im System gespeichert.</p>
+            <form action="/admin" method="post" id="marginbottom">
+                <input type="hidden" name="site" value="adduser">
+                <input type="submit" value="Benutzer hinzufügen">
+            </form>
             <p id="green_back">{{message}}</p>
             {% for table in tables %}
             <h2>{{titles[loop.index]}}</h2>
@@ -13,7 +18,7 @@
         </div>
 
     </body>
-
+    {% include "footer.html" %}
 
     <script>
         function confirmf(username){ 

@@ -31,9 +31,10 @@ def show_one_user(username):
     pandas_temp.append("""<select name="outside">
                             <option value="0" %s>Nein</option>
                             <option value="1" %s>Ja</option>
-                            """ % (zero, one))
-    pandas_temp.append("""<input type="submit" value="Speichern" id="usersp"><br><input type="reset" value="Zurücksetzen">""")
-    df=pd.DataFrame([pandas_temp], columns=["username", "Rechte", "Außen", ""])
+                            </select>""" % (zero, one))
+    pandas_temp.append("""<input type="submit" value="Speichern" id="usersp"><br><input type="reset" value="Zurücksetzen"></form>""")
+    pandas_temp.append("""<form action="/admin" method="post"><input type="hidden" name="site" value="deleteuser"><input type="hidden" name="username" value="%s"><input type="submit" value="Benutzer löschen"></form>""" % (username))
+    df=pd.DataFrame([pandas_temp], columns=["Benutzername", "Rechte", "Außen", "", ""])
 
     return df
 
@@ -67,13 +68,6 @@ def show_user_data():
     return df
 
 
-def exact_user(username):
-    cursor, conn = re_connect()
-    cursor.execute("SELECT username, privileges, outside FROM user WHERE username='%s'" % (username))
-    df=pd.DataFrame(cursor.fetchall(), columns=["Bentuzername", "Rechte", "Außen*"])
-    return df
-
-
 def create_user(username, privileges, outside):
     cursor, conn = re_connect()
 
@@ -81,8 +75,10 @@ def create_user(username, privileges, outside):
 
     hash=hash_func(password)
 
-    cursor.execute("INSERT INTO user ('%s', '%s', '%s', '%s')" % (username, password, privileges, outside))
+    cursor.execute("INSERT INTO user VALUES ('%s', '%s', %s, %s)" % (username, hash, privileges, outside))
     conn.commit()
+
+    return password
 
 
 def delete_user(username):
