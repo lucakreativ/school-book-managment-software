@@ -305,8 +305,8 @@ def home():
 
 @app.route("/admin", methods=["POST", "GET"])
 def admin():
-    if True:
-    #if session.get("user")=="admin":
+    #if True:
+    if session.get("user")=="admin":
         if request.method=="POST":
             site=request.form["site"]
             if site=="bea":
@@ -500,4 +500,4 @@ def user_get():
 
 if __name__ == '__main__':
     port=int(os.environ.get("PORT", 5100))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port, debug=False)
