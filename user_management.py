@@ -98,8 +98,9 @@ def reset_password(username):
     cursor, conn = re_connect()
     
     password=cryption.generate_password(8)
+    hash=hash_func(password)
 
-    cursor.execute("UPDATE user SET hash='%s' WHERE username='%s'" % (password, username))
+    cursor.execute("UPDATE user SET hash='%s' WHERE username='%s'" % (hash, username))
     conn.commit()
 
     return password
