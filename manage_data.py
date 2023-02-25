@@ -38,7 +38,7 @@ def add_student(Stufe, Klasse, Vorname, Nachname, Religion="", Fremdsp1="", Frem
 
 def delete_book(ISBN):
     cursor, conn = re_connect()
-    cursor.execute("DELETE FROM buecher WHERE ISBN='%s'" % (ISBN))
+    cursor.execute("DELETE FROM buecher WHERE ISBN=%s", (ISBN,))
     conn.commit()
 
 
@@ -48,30 +48,28 @@ def insert_book(ISBN, Titel, Verlag, Fach, preis=0):
     cursor.execute("INSERT INTO buecher (ISBN, Titel, Verlag, preis, Fach) VALUES (%s, %s, %s, %s, %s)", values)
     conn.commit()
 
-def delete_book(ISBN):
-    cursor, conn = re_connect()
-    cursor.execute("DELETE FROM buecher WHERE ISBN=%s" % (ISBN))
-    conn.commit()
 
 def update_book(ISBN, Titel, Verlag, preis, Fach):
     cursor, conn = re_connect()
-    cursor.execute("""UPDATE buecher SET Titel='%s', Verlag='%s', preis=%s, Fach='%s' WHERE ISBN=%s""" % (Titel, Verlag, preis, Fach, ISBN))
+    cursor.execute("""UPDATE buecher SET Titel=%s, Verlag=%s, preis=%s, Fach=%s WHERE ISBN=%s""", (Titel, Verlag, preis, Fach, ISBN))
     conn.commit()
 
 
 def search_book(search_term):
     cursor, conn = re_connect()
-    term="SELECT ISBN, Titel, Fach, Verlag, preis FROM buecher WHERE Titel LIKE '%"+search_term+"%' OR ISBN LIKE '%"+search_term+"%' OR ("
-    terms=search_term.split(" ")
+    term="SELECT ISBN, Titel, Fach, Verlag, preis FROM buecher WHERE Titel LIKE CONCAT('%', %s, '%') OR ISBN LIKE CONCAT('%', %s, '%') OR ("
 
-    term+="Titel LIKE '%"+terms[0]+"%'"
+    terms=search_term.split(" ")
+    data=[search_term, search_term, terms[0]]
+    term+="Titel LIKE CONCAT('%', %s, '%')"
     if len(terms)>1:
         for i in terms[1::]:
-            print(i)
-            term+=" AND Titel LIKE '%"+i+"%'"
+            data.append(i)
+            term+=" AND Titel LIKE CONCAT('%', %s, '%')"
     
     term+=")"
-    cursor.execute(term)
+    
+    cursor.execute(term, data)
     data=cursor.fetchall()
     data=pd.DataFrame(data, columns=["ISBN", "Titel", "Fach", "Verlag", "Preis"])
     data["ISBN"]=data["ISBN"].apply(lambda x:'<a href="/?site=book_by_ISBN&ISBN={0}">{0}</a>'.format(x))
@@ -91,7 +89,7 @@ def print_books():
 
 def book_by_ISBN(ISBN):
     cursor, conn = re_connect()
-    cursor.execute("SELECT ISBN, Titel, Verlag, preis, Fach FROM buecher WHERE ISBN='%s'" % (ISBN))
+    cursor.execute("SELECT ISBN, Titel, Verlag, preis, Fach FROM buecher WHERE ISBN=%s", [ISBN,])
     data=cursor.fetchall()[0]
     return data
 
@@ -101,28 +99,28 @@ def insert_taken_book_add(Sch_ID, ISBN, user, Anzahl=1, cursor=None, conn=None):
         write_protocol(0, Sch_ID, ISBN, Anzahl, user)
     if cursor==None:
         cursor, conn = re_connect()
-    cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
+    cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID=%s AND ISBN=%s""", [Sch_ID, ISBN])
     result=cursor.fetchall()
     if len(result)!=0:
         books=result[0][0]
-        cursor.execute("""UPDATE ausgeliehen SET Anzahl=%s WHERE ID='%s' AND ISBN=%s""" % (str(int(Anzahl)+int(books)), Sch_ID, ISBN))
+        cursor.execute("""UPDATE ausgeliehen SET Anzahl=%s WHERE ID=%s AND ISBN=%s""", [str(int(Anzahl)+int(books)), Sch_ID, ISBN])
         conn.commit()
     else:
-        cursor.execute("""INSERT INTO ausgeliehen (ID, ISBN, Anzahl) VALUES ('%s', %s, %s)""" % (Sch_ID, ISBN, Anzahl))
+        cursor.execute("""INSERT INTO ausgeliehen (ID, ISBN, Anzahl) VALUES (%s, %s, %s)""", [Sch_ID, ISBN, Anzahl])
         conn.commit()
 
 
 def insert_taken_book_absolute(Sch_ID, ISBN, user, Anzahl=1):
     write_protocol(1, Sch_ID, ISBN, Anzahl, user)
     cursor, conn = re_connect()
-    cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID='%s' AND ISBN=%s""" % (Sch_ID, ISBN))
+    cursor.execute("""SELECT Anzahl FROM ausgeliehen WHERE ID=%s AND ISBN=%s""", [Sch_ID, ISBN])
     result=cursor.fetchall()
     if len(result)!=0:
         books=result[0][0]
-        cursor.execute("""UPDATE ausgeliehen SET Anzahl=%s WHERE ID='%s' AND ISBN=%s""" % (Anzahl, Sch_ID, ISBN))
+        cursor.execute("""UPDATE ausgeliehen SET Anzahl=%s WHERE ID=%s AND ISBN=%s""", [Anzahl, Sch_ID, ISBN])
         conn.commit()
     else:
-        cursor.execute("""INSERT INTO ausgeliehen (ID, ISBN, Anzahl) VALUES ('%s', %s, %s)""" % (Sch_ID, ISBN, Anzahl))
+        cursor.execute("""INSERT INTO ausgeliehen (ID, ISBN, Anzahl) VALUES (%s, %s, %s)""", [Sch_ID, ISBN, Anzahl])
         conn.commit()
 
 
@@ -165,7 +163,7 @@ def execute_stufe(user):
 
     for stufe in stufen:
         schule=[]
-        cursor.execute("SELECT ID, Religion, Fremdsp1, Fremdsp2, Fremdsp3 FROM schueler WHERE Stufe='%s'" % (stufe))
+        cursor.execute("SELECT ID, Religion, Fremdsp1, Fremdsp2, Fremdsp3 FROM schueler WHERE Stufe=%s", [stufe])
         schul=cursor.fetchall()
         for sch in schul:
             schule.append(sch)
@@ -190,7 +188,7 @@ def book_by_user(ID):
 
     ID=cryption.decrypt(ID)
     cursor, conn = re_connect()
-    cursor.execute("""SELECT schueler.Stufe, schueler.Klasse, schueler.Vorname, schueler.Nachname, schueler.Religion, schueler.Fremdsp1, schueler.Fremdsp2, schueler.Fremdsp3 FROM schueler WHERE schueler.ID = '%s'""" % (ID))
+    cursor.execute("""SELECT schueler.Stufe, schueler.Klasse, schueler.Vorname, schueler.Nachname, schueler.Religion, schueler.Fremdsp1, schueler.Fremdsp2, schueler.Fremdsp3 FROM schueler WHERE schueler.ID = %s""", [ID,])
     data = cursor.fetchall()
     stufe=data[0][0]
     klasse=data[0][1]
@@ -198,7 +196,7 @@ def book_by_user(ID):
     faecher=[data[0][4], data[0][5], data[0][6], data[0][7], ""]
 
     if stufe[0]=="J":
-        cursor.execute("SELECT schueler.Stufe, oberstufe.vorname, oberstufe.nachname, oberstufe.l, oberstufe.m, oberstufe.abiturjahr FROM oberstufe, schueler WHERE oberstufe.studentid='%s' AND schueler.ID='%s'" % (ID, ID))
+        cursor.execute("SELECT schueler.Stufe, oberstufe.vorname, oberstufe.nachname, oberstufe.l, oberstufe.m, oberstufe.abiturjahr FROM oberstufe, schueler WHERE oberstufe.studentid=%s AND schueler.ID=%s", [ID, ID])
         data2=cursor.fetchall()
         if len(data2)!=0:
             schueler=pd.DataFrame(data2, columns=["Stufe", "Vorname", "Nachname", "Leistungsfächer", "Basisfächer", "Abschlussjahr"])
@@ -217,7 +215,7 @@ def book_by_user(ID):
         schueler["Klasse"]=schueler["Klasse"].apply(lambda x:'<input type="hidden" name="site" value="klassen"><input type="hidden" name="k" value={0}><input type="submit" value="{0}" id="full_cell">'.format(x))
         schueler.drop(schueler.columns[[0]], axis=1, inplace=True)
 
-    cursor.execute("""SELECT ISBN, Anzahl FROM ausgeliehen WHERE ID = '%s'""" % (ID))
+    cursor.execute("""SELECT ISBN, Anzahl FROM ausgeliehen WHERE ID = %s""", (ID,))
     data=cursor.fetchall()
 
     buecher=pd.DataFrame(data, columns=["ISBN", "Anzahl"])
@@ -232,7 +230,7 @@ def book_by_user(ID):
         num=index[0]
         ISBN=buecher.iloc[num]["ISBN"]
         temp='<input type="hidden" name="b%s" value="%s">' % (num, ISBN)
-        cursor.execute("SELECT stufe FROM buchstufe WHERE stufe='%s' AND ISBN='%s' AND abgeben=1" % (stufe, ISBN))
+        cursor.execute("SELECT stufe FROM buchstufe WHERE stufe=%s AND ISBN=%s AND abgeben=1", [stufe, ISBN])
         data=cursor.fetchall()
         if len(data)>0:
             if abgeben==True:
@@ -243,7 +241,7 @@ def book_by_user(ID):
         else:
             buecher.at[num, "ISBN"]=temp
 
-        cursor.execute("""SELECT Titel FROM buecher WHERE ISBN = %s""" % (ISBN))
+        cursor.execute("""SELECT Titel FROM buecher WHERE ISBN = %s""", [ISBN,])
         data=cursor.fetchall()
         if len(data)>0:
             ISBN=data[0][0]
@@ -253,7 +251,7 @@ def book_by_user(ID):
 
     return_mess=[]
 
-    cursor.execute("SELECT COUNT(*) FROM ausgeliehen WHERE ID='%s' AND Anzahl>=2" % (ID))
+    cursor.execute("SELECT COUNT(*) FROM ausgeliehen WHERE ID=%s AND Anzahl>=2", [ID,])
     z=cursor.fetchall()[0][0]
 
     if z>0:
@@ -264,14 +262,14 @@ def book_by_user(ID):
     else: sqlab=1
 
 
-    cursor.execute("SELECT ISBN FROM ausgeliehen WHERE ID='%s' AND Anzahl>=1" % (ID))
+    cursor.execute("SELECT ISBN FROM ausgeliehen WHERE ID=%s AND Anzahl>=1", [ID,])
     buecher_check=cursor.fetchall()
     buecher_check_l=[]
     for buch in buecher_check:
         buecher_check_l.append(buch[0])
 
 
-    cursor.execute("SELECT buchstufe.ISBN, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND stufe='%s' AND abgeben=%s" % (stufe, sqlab))
+    cursor.execute("SELECT buchstufe.ISBN, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND stufe=%s AND abgeben=%s", (stufe, sqlab))
     data=cursor.fetchall()
 
 
@@ -295,12 +293,12 @@ def book_by_user(ID):
 def next_schueler(ID):
     ID=cryption.decrypt(ID)
     cursor, conn = re_connect()
-    cursor.execute("""SELECT Stufe, Klasse FROM schueler WHERE ID = '%s'""" % (ID))
+    cursor.execute("""SELECT Stufe, Klasse FROM schueler WHERE ID = %s""", (ID,))
     data=cursor.fetchall()[0]
     Stufe=data[0]
     Klasse=data[1]
 
-    cursor.execute("""SELECT Nachname, Vorname, ID FROM schueler WHERE Stufe = '%s' AND Klasse = '%s'""" % (Stufe, Klasse))
+    cursor.execute("""SELECT Nachname, Vorname, ID FROM schueler WHERE Stufe = %s AND Klasse = %s""", (Stufe, Klasse))
     data=cursor.fetchall()
     data.sort()
     
@@ -332,7 +330,7 @@ def get_klassen():
     data=sorted(data)
     for i in data:
         Stufe=i[0]
-        cursor.execute("SELECT Klasse FROM schueler t WHERE t.ID = (SELECT min(t1.ID) FROM schueler t1 WHERE t1.Klasse=t.Klasse AND Stufe='%s')" % (Stufe))
+        cursor.execute("SELECT Klasse FROM schueler t WHERE t.ID = (SELECT min(t1.ID) FROM schueler t1 WHERE t1.Klasse=t.Klasse AND Stufe=%s)", (Stufe,))
         data2=cursor.fetchall()
         data2=sorted(data2)
         Klassen_a=[]
@@ -374,13 +372,13 @@ def schueler_by_class(klasse, fehlend=0, stufe_t=0):
 
     if fehlend==1:
         if stufe_t==1:
-            cursor.execute("SELECT schueler.Vorname, schueler.Nachname, schueler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe='%s' AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1 AND ausgeliehen.Anzahl>=1" % (stufe))
+            cursor.execute("SELECT schueler.Vorname, schueler.Nachname, schueler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe=%s AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1 AND ausgeliehen.Anzahl>=1", (stufe,))
             data=cursor.fetchall()
         else:
-            cursor.execute("SELECT schueler.Vorname, schueles.Nachname, schuler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe='%s' AND schueler.Klasse='%s' AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1 AND ausgeliehen.Anzahl>=1" % (stufe, klasse))
+            cursor.execute("SELECT schueler.Vorname, schueles.Nachname, schuler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe=%s AND schueler.Klasse=%s AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1 AND ausgeliehen.Anzahl>=1", (stufe, klasse))
             data=cursor.fetchall()
     else:
-        cursor.execute("SELECT Vorname, Nachname, ID FROM schueler WHERE Stufe='%s' AND Klasse='%s'" % (stufe, klasse))
+        cursor.execute("SELECT Vorname, Nachname, ID FROM schueler WHERE Stufe=%s AND Klasse=%s", (stufe, klasse))
         data=cursor.fetchall()
 
     data=list(dict.fromkeys(data))
@@ -402,7 +400,7 @@ def schueler_by_class(klasse, fehlend=0, stufe_t=0):
 def search_schueler(name):
     schueler=[]
     cursor, conn = re_connect()
-    cursor.execute("SELECT Vorname, Nachname, ID, Stufe, Klasse FROM schueler WHERE Nachname LIKE '%"+name+"%'")
+    cursor.execute("SELECT Vorname, Nachname, ID, Stufe, Klasse FROM schueler WHERE Nachname LIKE CONCAT('%', %s, '%')", (name,))
     data=cursor.fetchall()
 
     for list_l in data:
@@ -414,7 +412,7 @@ def search_schueler(name):
         list_l.pop(3)
         schueler.append(list_l)
 
-
+    schueler.sort(key=lambda x:x[0])
 
     data=pd.DataFrame(schueler, columns=["Name", "Klasse", "Seite"])
     data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" method="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
@@ -423,17 +421,17 @@ def search_schueler(name):
 
 def add_book_stufe(Stufe, ISBN, abgeben=0):
     cursor, conn = re_connect()
-    cursor.execute("INSERT INTO buchstufe (stufe, ISBN, abgeben) VALUES ('%s', %s, %s)" % (Stufe, ISBN, abgeben))
+    cursor.execute("INSERT INTO buchstufe (stufe, ISBN, abgeben) VALUES (%s, %s, %s)", (Stufe, ISBN, abgeben))
     conn.commit()
 
 def remove_book_stufe(Stufe, ISBN, abgeben=0):
     cursor, conn = re_connect()
-    cursor.execute("DELETE FROM buchstufe WHERE Stufe='%s' AND ISBN=%s AND abgeben=%s" % (Stufe, ISBN, abgeben))
+    cursor.execute("DELETE FROM buchstufe WHERE Stufe=%s AND ISBN=%s AND abgeben=%s", (Stufe, ISBN, abgeben))
     conn.commit()
 
 def select_book_stufe(Stufe):
     cursor, conn = re_connect()
-    cursor.execute("SELECT ISBN FROM buchstufe WHERE Stufe='%s' AND abgeben=0" % (Stufe))
+    cursor.execute("SELECT ISBN FROM buchstufe WHERE Stufe=%s AND abgeben=0", (Stufe,))
     data=cursor.fetchall()
     data=pd.DataFrame(data, columns=["Buch"])
     data["ent"]=data["Buch"]
@@ -446,13 +444,13 @@ def select_book_stufe(Stufe):
 
         data.at[num, "ent"]=temp
 
-        cursor.execute("SELECT Titel FROM buecher WHERE ISBN=%s" % (ISBN))
+        cursor.execute("SELECT Titel FROM buecher WHERE ISBN=%s", (ISBN,))
         title=cursor.fetchall()
         if len(title)!=0:
             data.at[num, "Buch"]=title[0][0]
     bekommen=data
 
-    cursor.execute("SELECT ISBN FROM buchstufe WHERE Stufe='%s' AND abgeben=1" % (Stufe))
+    cursor.execute("SELECT ISBN FROM buchstufe WHERE Stufe=%s AND abgeben=1", (Stufe,))
     data=cursor.fetchall()
     data=pd.DataFrame(data, columns=["Buch"])
     data["ent"]=data["Buch"]
@@ -465,7 +463,7 @@ def select_book_stufe(Stufe):
 
         data.at[num, "ent"]=temp
 
-        cursor.execute("SELECT Titel FROM buecher WHERE ISBN=%s" % (ISBN))
+        cursor.execute("SELECT Titel FROM buecher WHERE ISBN=%s", (ISBN,))
         title=cursor.fetchall()
         if len(title)!=0:
             data.at[num, "Buch"]=title[0][0]
@@ -483,7 +481,7 @@ def get_stufe():
 def bemgeld(id):
     id=cryption.decrypt(id)
     cursor, conn = re_connect()
-    cursor.execute("SELECT bemerkung, schaden FROM bemgeld WHERE ID='%s'" % (id))
+    cursor.execute("SELECT bemerkung, schaden FROM bemgeld WHERE ID=%s", (id,))
     data=cursor.fetchall()
 
     if len(data)==0:
@@ -499,13 +497,13 @@ def bemgeld(id):
 def bemgeld_up(id, bemerkung="", geld=0):
     id=cryption.decrypt(id)
     cursor, conn = re_connect()
-    cursor.execute("SELECT ID FROM bemgeld WHERE ID='%s'" % (id))
+    cursor.execute("SELECT ID FROM bemgeld WHERE ID=%s", (id,))
     data=cursor.fetchall()
     if len(data)!=0:
-        cursor.execute("UPDATE bemgeld SET bemerkung='%s', schaden=%s WHERE ID='%s'" % (bemerkung, geld, id))
+        cursor.execute("UPDATE bemgeld SET bemerkung=%s, schaden=%s WHERE ID=%s", (bemerkung, geld, id))
         conn.commit()
     else:  
-        cursor.execute("INSERT INTO bemgeld (ID, bemerkung, schaden) VALUES ('%s', '%s', %s)" % (id, bemerkung, geld))
+        cursor.execute("INSERT INTO bemgeld (ID, bemerkung, schaden) VALUES (%s, %s, %s)", (id, bemerkung, geld))
         conn.commit()
 
 
@@ -519,7 +517,7 @@ def book_usage():
         ISBN=buecher.iloc[num]["ISBN"]
 
         
-        cursor.execute("""SELECT Titel FROM buecher WHERE ISBN = %s""" % (ISBN))
+        cursor.execute("""SELECT Titel FROM buecher WHERE ISBN = %s""", (ISBN,))
         data=cursor.fetchall()
         if len(data)>0:
             Titel=data[0][0]
@@ -533,7 +531,7 @@ def book_usage():
 def login(username, password):
     cursor, conn = re_connect()
     try:
-        cursor.execute("SELECT hash FROM user WHERE username = '%s'" % (username))
+        cursor.execute("SELECT hash FROM user WHERE username = %s", (username,))
         hash_d=cursor.fetchall()
         hash_d=hash_d[0][0]
         hash_input=hash_func(password)
@@ -573,7 +571,7 @@ def check_password_strength(passwd):
 
 def change_password(username, old_pass, new1_pass, new2_pass):
     cursor, conn = re_connect()
-    cursor.execute("""SELECT hash FROM user WHERE username = '%s'""" % (username))
+    cursor.execute("""SELECT hash FROM user WHERE username = %s""" % (username))
     database_pass=cursor.fetchall()[0][0]
 
     old_hash=hash_func(old_pass)
@@ -581,7 +579,7 @@ def change_password(username, old_pass, new1_pass, new2_pass):
         if new1_pass==new2_pass:
             if check_password_strength(new1_pass):
                 new_pass_hash=hash_func(new1_pass)
-                cursor.execute("""UPDATE user SET hash = '%s' WHERE username = '%s'""" % (new_pass_hash, username))
+                cursor.execute("""UPDATE user SET hash = %s WHERE username = %s""" % (new_pass_hash, username))
                 conn.commit()
             
                 return 0
@@ -594,6 +592,6 @@ def change_password(username, old_pass, new1_pass, new2_pass):
 
 def check_rechte(username):
     cursor, conn = re_connect()
-    cursor.execute("SELECT privileges FROM user WHERE username='%s'" % (username))
+    cursor.execute("SELECT privileges FROM user WHERE username=%s", (username,))
     data=int(cursor.fetchall()[0][0])
     return data

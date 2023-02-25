@@ -15,7 +15,7 @@ def re_connect():
 
 def show_one_user(username):
     cursor, conn = re_connect()
-    cursor.execute("SELECT username, privileges, outside FROM user WHERE username='%s'" % (username))
+    cursor.execute("SELECT username, privileges, outside FROM user WHERE username=%s", (username,))
     data=cursor.fetchall()[0]
 
     if data[2]==0:
@@ -40,7 +40,7 @@ def show_one_user(username):
 
 def edit_user_data(username, privileges, outside):
     cursor, conn = re_connect()
-    cursor.execute("UPDATE user SET privileges=%s, outside=%s WHERE username='%s'" % (privileges, outside, username))
+    cursor.execute("UPDATE user SET privileges=%s, outside=%s WHERE username=%s", (privileges, outside, username))
     conn.commit()
 
 
@@ -49,7 +49,9 @@ def show_user_data():
 
     cursor.execute("SELECT username, privileges, outside FROM user WHERE username!='admin'")
     data=cursor.fetchall()
-    data=sorted(data)
+    data=list(dict.fromkeys(data))
+    data.sort(key=lambda x:x[0])
+
     df=pd.DataFrame(data, columns=["Benutzername", "Rechte", "Außen*"])
     
     for index in df.iterrows():
@@ -75,7 +77,7 @@ def create_user(username, privileges, outside):
 
     hash=hash_func(password)
 
-    cursor.execute("INSERT INTO user VALUES ('%s', '%s', %s, %s)" % (username, hash, privileges, outside))
+    cursor.execute("INSERT INTO user VALUES (%s, %s, %s, %s)", (username, hash, privileges, outside))
     conn.commit()
 
     return password
@@ -83,14 +85,14 @@ def create_user(username, privileges, outside):
 
 def delete_user(username):
     cursor, conn = re_connect()
-    cursor.execute("DELETE FROM user WHERE username='%s'" % (username))
+    cursor.execute("DELETE FROM user WHERE username=%s", (username,))
     conn.commit()
 
 
 def update_user(oldusername, username, privileges, outside):
     cursor, conn = re_connect()
 
-    cursor.execute("UPDATE user SET username='%s', privileges=%s, outside=%s WHERE username='%s'" % (username, privileges, outside, oldusername))
+    cursor.execute("UPDATE user SET username=%s, privileges=%s, outside=%s WHERE username=%s", (username, privileges, outside, oldusername))
     conn.commit()
 
 
@@ -100,7 +102,7 @@ def reset_password(username):
     password=cryption.generate_password(8)
     hash=hash_func(password)
 
-    cursor.execute("UPDATE user SET hash='%s' WHERE username='%s'" % (hash, username))
+    cursor.execute("UPDATE user SET hash=%s WHERE username=%s", (hash, username))
     conn.commit()
 
     return password

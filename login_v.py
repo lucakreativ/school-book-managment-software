@@ -15,7 +15,7 @@ def re_connect():
 def check_data(user):
     cursor, conn = re_connect()
     try:
-        cursor.execute("SELECT outside FROM user WHERE username='%s'" % (user))
+        cursor.execute("SELECT outside FROM user WHERE username=%s", (user,))
         data=cursor.fetchall()[0][0]
         if data==1:
             return True
@@ -50,7 +50,7 @@ def abfragen(ip):
     status=[]
     cursor, conn = re_connect()
     ab=time.time()-60*10
-    cursor.execute("SELECT erfolgreich FROM protocollogin WHERE IP='%s' AND unix>=%s" % (ip, ab))
+    cursor.execute("SELECT erfolgreich FROM protocollogin WHERE IP=%s AND unix>=%s", (ip, ab))
     data=cursor.fetchall()[::-1]
 
     if len(data)>=20:
