@@ -2,6 +2,7 @@ from mysql.connector import MySQLConnection
 import pandas as pd
 import os.path
 import random
+import time
 
 from read_config import read_db_config
 from hash_func import hash_func
@@ -215,10 +216,16 @@ def book_by_user(ID):
         schueler["Klasse"]=schueler["Klasse"].apply(lambda x:'<input type="hidden" name="site" value="klassen"><input type="hidden" name="k" value={0}><input type="submit" value="{0}" id="full_cell">'.format(x))
         schueler.drop(schueler.columns[[0]], axis=1, inplace=True)
 
-    cursor.execute("""SELECT ISBN, Anzahl FROM ausgeliehen WHERE ID = %s""", (ID,))
-    data=cursor.fetchall()
+    
+    
 
-    buecher=pd.DataFrame(data, columns=["ISBN", "Anzahl"])
+    cursor.execute("""SELECT b.Titel, a.Anzahl, a.ISBN FROM ausgeliehen a, buecher b WHERE ID = %s AND a.ISBN=b.ISBN ORDER BY b.Titel""", (ID,))
+    data=cursor.fetchall()
+    cursor.execute("""SELECT DISTINCT a.ISBN, a.Anzahl, a.ISBN FROM ausgeliehen a, buecher b WHERE ID = %s AND a.ISBN NOT IN (SELECT ISBN FROM buecher) ORDER BY a.ISBN""", (ID,))
+    data+=cursor.fetchall()
+
+
+    buecher=pd.DataFrame(data, columns=["Titel/ISBN", "Anzahl", "ISBN"])
 
     for index in buecher.iterrows():
         num=index[0]
@@ -226,28 +233,25 @@ def book_by_user(ID):
         temp='<input type="number" name="a%s" value="%s" onchange="submitform()">' % (num, anzahl)
         buecher.at[num, "Anzahl"]=temp
 
-    for index in buecher.iterrows():#get Titel from ISBN
-        num=index[0]
+
+
         ISBN=buecher.iloc[num]["ISBN"]
+        Titel=buecher.iloc[num]["Titel/ISBN"]
         temp='<input type="hidden" name="b%s" value="%s">' % (num, ISBN)
         cursor.execute("SELECT stufe FROM buchstufe WHERE stufe=%s AND ISBN=%s AND abgeben=1", [stufe, ISBN])
         data=cursor.fetchall()
         if len(data)>0:
             if abgeben==True:
-                buecher.at[num, "ISBN"]='<div id="abgabebuch">'
+                buecher.at[num, "Titel/ISBN"]='<div id="abgabebuch">'
             else:
-                buecher.at[num, "ISBN"]='<div>'
-            buecher.at[num, "ISBN"]+=temp
+                buecher.at[num, "Titel/ISBN"]='<div>'
+            buecher.at[num, "Titel/ISBN"]+=temp
         else:
-            buecher.at[num, "ISBN"]=temp
+            buecher.at[num, "Titel/ISBN"]=temp
 
-        cursor.execute("""SELECT Titel FROM buecher WHERE ISBN = %s""", [ISBN,])
-        data=cursor.fetchall()
-        if len(data)>0:
-            ISBN=data[0][0]
+        buecher.at[num, "Titel/ISBN"]+=Titel+"</div>"
 
-        buecher.at[num, "ISBN"]+=str(ISBN)+"</div>"
-
+    buecher.pop("ISBN")
 
     return_mess=[]
 
