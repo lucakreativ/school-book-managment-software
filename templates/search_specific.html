@@ -3,12 +3,14 @@
 
     <body>
         <div id="main">
-            <h2>Suche Schüler/in</h2>
+            <h2>Suche Bücher</h2>
             <div id="search">
             <form action="" method="get">
-                <input type="hidden" name="site" value="search">
-                <p>Nach Schüler/in suchen:</p>
-                <input type="text" name="term" value="{{term}}" placeholder="Nachname" autofocus>
+                <input type="hidden" name="site" value="search_specific">
+                <p>Nach Schüler suchen:</p>
+                <input type="text" name="ISBN" value="{{ISBN}}" placeholder="ISBN" required>
+                <input type="number" name="stufe" value="{{stufe}}" placeholder="Stufe" required>
+                <input type="text" name="class" value="{{klasse}}" placeholder="Klasse"><br>
                 <input type="submit" value="suchen">
             </form>
             </div>

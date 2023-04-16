@@ -65,6 +65,18 @@ def home():
                 schueler=manage_data.search_schueler(name)
                 return render_template("search_student.html", tables=[schueler.to_html(escape=False)], titles=["Schueler"], term=name)
 
+        elif site=="search_specific":
+            ISBN=request.args.get("ISBN")
+            stufe=request.args.get("stufe")
+            klasse=request.args.get("class")
+            print(klasse)
+            print(type(klasse))
+            if ISBN==None:
+                return render_template("search_specific.html")
+            else:
+                schueler=manage_data.search_settings(ISBN, klasse, stufe)
+                return render_template("search_specific.html", tables=[schueler.to_html(escape=False)], titles=["Schüler"], ISBN=ISBN, stufe=stufe, klasse=klasse)
+
         elif site=="books":
             search=request.args.get("search")
 

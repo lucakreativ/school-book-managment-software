@@ -422,6 +422,49 @@ def search_schueler(name):
     data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" method="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
     return data
 
+def search_settings(ISBN_Titel="", klasse="", stufe="", need_to_have=True):
+    cursor, conn = re_connect()
+    
+    schueler=[]
+    arguments=[]
+    needed_and=False
+    statement='SELECT schueler.Vorname, schueler.Nachname, schueler.ID, schueler.Stufe, schueler.Klasse FROM schueler, ausgeliehen WHERE '
+    if stufe!="":
+        statement+="schueler.Stufe = %s "
+        arguments.append(stufe)
+        needed_and=True
+    if klasse!="":
+        if needed_and==True:
+            statement+="AND "
+        statement+="schueler.Klasse = %s "
+        arguments.append(klasse)
+        needed_and=True
+    
+    if needed_and==True:
+        statement+="AND "
+    if need_to_have==True:
+        statement+="ausgeliehen.ISBN = %s AND ausgeliehen.ID=schueler.ID AND ausgeliehen.Anzahl > 0"
+        arguments.append(ISBN_Titel)
+
+
+    cursor.execute(statement, arguments)
+    data=cursor.fetchall()
+
+    for list_l in data:
+        list_l=list(list_l)
+        list_l[2]=cryption.encrypt(list_l[2])
+        list_l[0]=list_l[1]+", "+list_l[0]
+        list_l[1]=list_l[3]+list_l[4]
+        list_l.pop(3)
+        list_l.pop(3)
+        schueler.append(list_l)
+
+    schueler.sort(key=lambda x:x[0])
+
+    data=pd.DataFrame(schueler, columns=["Name", "Klasse", "Seite"])
+    data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" method="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
+    return data
+
 
 def add_book_stufe(Stufe, ISBN, abgeben=0):
     cursor, conn = re_connect()
