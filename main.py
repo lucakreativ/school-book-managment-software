@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.utils import secure_filename
+from datetime import datetime
 import random
 import time
 import os
@@ -30,6 +31,10 @@ app = Flask(__name__)
 app.secret_key=random_string
 
 app.config["UPLOAD_FOLDER"] = "files/"
+
+@app.context_processor
+def inject_now():
+    return {"now": datetime.utcnow()}
 
 
 @app.route("/")
