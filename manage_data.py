@@ -428,7 +428,7 @@ def search_settings(ISBN_Titel="", klasse="", stufe="", need_to_have=True):
     schueler=[]
     arguments=[]
     needed_and=False
-    statement='SELECT schueler.Vorname, schueler.Nachname, schueler.ID, schueler.Stufe, schueler.Klasse FROM schueler, ausgeliehen WHERE '
+    statement='SELECT schueler.Vorname, schueler.Nachname, schueler.ID, schueler.Stufe, schueler.Klasse, ausgeliehen.Anzahl FROM schueler, ausgeliehen WHERE '
     if stufe!="":
         statement+="schueler.Stufe = %s "
         arguments.append(stufe)
@@ -455,14 +455,17 @@ def search_settings(ISBN_Titel="", klasse="", stufe="", need_to_have=True):
         list_l[2]=cryption.encrypt(list_l[2])
         list_l[0]=list_l[1]+", "+list_l[0]
         list_l[1]=list_l[3]+list_l[4]
-        list_l.pop(3)
-        list_l.pop(3)
+        list_l[3]=list_l[5]
+        list_l[4]=list_l[2]
+        list_l.pop(5)
         schueler.append(list_l)
 
     schueler.sort(key=lambda x:x[0])
 
-    data=pd.DataFrame(schueler, columns=["Name", "Klasse", "Seite"])
+    data=pd.DataFrame(schueler, columns=["Name", "Klasse", "Seite", "Anzahl", "Zurückgeben"])
     data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" method="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
+    statement='<form action="/" method="get"><input type="hidden" name="site" value="save_specific"><input type="hidden" name="zu" value="%s"><input type="hidden" name="stufe" value="%s"><input type="hidden" name="klasse" value="%s">' % (ISBN_Titel, stufe, klasse)
+    data["Zurückgeben"]=data["Zurückgeben"].apply(lambda x:statement+'<input type="hidden" name="ID" value="{0}"><input type="submit" value="Zurückgeben"></form>'.format(x))
     return data
 
 

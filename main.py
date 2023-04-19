@@ -69,8 +69,6 @@ def home():
             ISBN=request.args.get("ISBN")
             stufe=request.args.get("stufe")
             klasse=request.args.get("class")
-            print(klasse)
-            print(type(klasse))
             if ISBN==None:
                 return render_template("search_specific.html")
             else:
@@ -259,6 +257,18 @@ def home():
 
             return redirect("/?site=schueler&ID=%s" % (ID_e))
 
+        elif site=="save_specific":
+            ID_e=request.args.get("ID")
+            ID=cryption.decrypt(ID_e)
+            user=user_get()
+            ISBN=request.args.get("zu")
+            stufe=request.args.get("stufe")
+            klasse=request.args.get("klasse")
+
+            if ISBN!="":
+                manage_data.insert_taken_book_add(ID, ISBN, user, -1)
+
+            return redirect("/?site=search_specific&ISBN=%s&stufe=%s&class=%s" % (ISBN, stufe, klasse))
 
         elif site=="admin":
             if check_rechte(0):
