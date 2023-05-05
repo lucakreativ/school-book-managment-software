@@ -12,6 +12,7 @@ import constants
 import import_data
 import manage_data
 import user_management
+import backup_nextcloud
 
 from write_protocol import write_login
 
@@ -323,6 +324,7 @@ def home():
 
 
         elif site=="logout":                #ausloggen wird aufgerufe
+            backup_nextcloud.make_backup()
             session.clear()                 #alle Daten werden gelöscht
             return(redirect("/login"))      #wird zur Login-Seite weitergeleitet
 
