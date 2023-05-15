@@ -2,6 +2,11 @@
     {% include "header.html" %}
 
     <body>
+        <div id="threecolumn">
+        <div id="threecolumnsideout">
+
+        </div>
+        <div id="threecolumnsidemid">
         <div id="main">
             <h2>Schüler</h2>
             {% for table in tables %}
@@ -9,8 +14,22 @@
             {{ table|safe }}
                 {% endfor %}
 
+        </div></div>
+        <div id="threecolumnsideout">
+            <br>
+            <br>
+            <br>
+            <h2>Buch der gesamten Klasse hinzufügen</h2>
+            <form action="/" method="get">
+                <input type="hidden" name="site" value="complete_class">
+                <input type="text" name="klass" placeholder="Klasse (9a)" value="{{klass}}"><br>
+                <input type="text" name="ISBN" placeholder="ISBN"><br>
+                <input type="number" name="an" placeholder="Anzahl" value="1"><br>
+                <input type="submit" value="absenden">
+                
+            </form>
         </div>
-
+        </div>
     </body>
 
     {% include "footer.html" %}

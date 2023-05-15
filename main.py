@@ -109,7 +109,7 @@ def home():
                 return render_template("klassen.html", tables=[data.to_html(escape=False)], titles=["Klassen"])
             else:
                 data=manage_data.schueler_by_class(klasse)
-                return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"])
+                return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"], klass=klasse)
 
         elif site=="fbuch":
             if check_rechte(0):
@@ -275,6 +275,19 @@ def home():
                 manage_data.insert_taken_book_add(ID, ISBN, user, -1)
 
             return redirect("/?site=search_specific&ISBN=%s&stufe=%s&class=%s" % (ISBN, stufe, klasse))
+
+        elif site=="complete_class":
+            klasse=request.args.get("klass")
+            ISBN=request.args.get("ISBN")
+            anzahl=request.args.get("an")
+            user=user_get()
+            if check_rechte(0):
+                manage_data.add_to_complete_class(klasse, ISBN, user, anzahl)
+            
+                return redirect("/?site=klassen&k=%s" % (klasse))
+            else:
+                return redirect("/?site=klassen&k=%s" % (klasse))
+
 
         elif site=="admin":
             if check_rechte(0):

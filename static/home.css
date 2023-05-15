@@ -379,3 +379,17 @@ tr:nth-child(even) {
     display: table;
     clear: both;
 }
+
+
+
+#threecolumn {
+    display: flex;
+}
+
+#threecolumnsidemid {
+    flex: 50%
+}
+
+#threecolumnsideout {
+    flex: 25%
+}

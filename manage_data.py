@@ -184,6 +184,22 @@ def execute_stufe(user):
         for t in threads:
             t.join()
 
+
+def add_to_complete_class(klasse, ISBN, user, anzahl):
+    if klasse[0:2]!="J1" and klasse[0:2]!="J2":
+        stufe=klasse[0:-1]
+        klasse=klasse[-1:]
+    else:
+        stufe=klasse[0:2]
+        klasse=""
+        
+    cursor, conn = re_connect()
+    cursor.execute("SELECT ID FROM schueler WHERE Stufe=%s AND Klasse=%s", [stufe, klasse])
+    IDs=cursor.fetchall()
+    for ID in IDs:
+        insert_taken_book_add(ID[0], ISBN, user, anzahl, cursor, conn)
+
+
 def book_by_user(ID):
     abgeben=False
 
