@@ -52,16 +52,22 @@ def home():
             ID=request.args.get("ID")
             if ID==None:
                 return "Schueler auswählen"
-            else:
-                if check_rechte(0):
-                    dis=""
-                else:
-                    dis="disabled"
 
-                bemerkung, geld = manage_data.bemgeld(ID)
-                schueler, buecher, stufe, klasse, return_mess = manage_data.book_by_user(ID)
-                next_ID, next_name, prev_ID, prev_name = manage_data.next_schueler(ID)
-                return render_template("schueler.html", table1=schueler.to_html(escape=False), table2=buecher.to_html(escape=False), ID_next=next_ID, ne_name=next_name, ID_prev=prev_ID, vor_name=prev_name, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld, messages=return_mess)
+            if check_rechte(0):
+                dis=""
+            else:
+                dis="disabled"
+
+            if "changed_book" in session:
+                changed=session["changed_book"]
+                session["changed_book"]=None
+            else:
+                changed=None
+
+            bemerkung, geld = manage_data.bemgeld(ID)
+            schueler, buecher, stufe, klasse, return_mess = manage_data.book_by_user(ID, changed)
+            next_ID, next_name, prev_ID, prev_name = manage_data.next_schueler(ID)
+            return render_template("schueler.html", table1=schueler.to_html(escape=False), table2=buecher.to_html(escape=False), ID_next=next_ID, ne_name=next_name, ID_prev=prev_ID, vor_name=prev_name, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld, messages=return_mess)
         
         elif site=="search":
             name=request.args.get("term")
@@ -252,8 +258,10 @@ def home():
             ISBN_ei=request.args.get("ei")
             if ISBN_zu!="" and ISBN_zu!=None:
                 manage_data.insert_taken_book_add(ID, ISBN_zu, user, str(-1))
+                session["changed_book"]=ISBN_zu
             if ISBN_ei!="" and ISBN_ei!=None:
                 manage_data.insert_taken_book_add(ID, ISBN_ei, user, str(1))
+                session["changed_book"]=ISBN_ei
 
             if check_rechte(0):
                 geld=request.args.get("geld")

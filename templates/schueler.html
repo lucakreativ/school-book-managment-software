@@ -78,7 +78,7 @@
                             <li>
                                 <div id="card2sp">
                                     <h2>Gebühren</h2>
-                                    <input type="text" name="geld" placeholder="Gebühren" value="{{geld}}" onchange="submitform()" {{dis}}>
+                                    <input type="text" id="jsgeld" name="geld" placeholder="Gebühren" value="{{geld}}" onchange="submitform()" {{dis}}>
                                 </div>
                             </li>
                         </ul>
@@ -112,7 +112,14 @@
     <script type="text/javascript">
 
             function submitform(){
-              document.forms["save_book"].submit();
+                var money=document.getElementById("jsgeld").value;
+                var temp=money.replace(",", ".");
+                if (temp==""){
+                    temp=0;
+                }
+
+                document.getElementById("jsgeld").value=temp;
+                document.forms["save_book"].submit();
             }
 
             function reload(){

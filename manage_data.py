@@ -200,7 +200,8 @@ def add_to_complete_class(klasse, ISBN, user, anzahl):
         insert_taken_book_add(ID[0], ISBN, user, anzahl, cursor, conn)
 
 
-def book_by_user(ID):
+def book_by_user(ID, changed=None):
+    s=time.time()
     abgeben=False
 
     ID=cryption.decrypt(ID)
@@ -246,12 +247,16 @@ def book_by_user(ID):
     for index in buecher.iterrows():
         num=index[0]
         anzahl=buecher.iloc[num]["Anzahl"]
+        ISBN=buecher.iloc[num]["ISBN"]
+
         temp='<input type="number" name="a%s" value="%s" onchange="submitform()">' % (num, anzahl)
+        if ISBN==changed:
+            temp="""<div id='mark_changed'>"""+temp+"""</div>"""
         buecher.at[num, "Anzahl"]=temp
 
 
 
-        ISBN=buecher.iloc[num]["ISBN"]
+        
         Titel=buecher.iloc[num]["Titel/ISBN"]
         temp='<input type="hidden" name="b%s" value="%s">' % (num, ISBN)
         cursor.execute("SELECT stufe FROM buchstufe WHERE stufe=%s AND ISBN=%s AND abgeben=1", [stufe, ISBN])
@@ -306,7 +311,7 @@ def book_by_user(ID):
     if len(return_mess)==0:
         return_mess.append(["", ""])
 
-
+    print(time.time()-s)
     return (schueler, buecher, stufe, klasse, return_mess)
 
 

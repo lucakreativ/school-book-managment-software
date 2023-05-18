@@ -387,9 +387,28 @@ tr:nth-child(even) {
 }
 
 #threecolumnsidemid {
-    flex: 50%
+    flex: 50%;
 }
 
 #threecolumnsideout {
-    flex: 25%
+    flex: 25%;
+}
+
+
+
+
+
+
+
+#mark_changed {
+    position: relative;
+    height: 21px;
+    margin-left:-6px;
+    margin-right: -6px;
+    margin-top: -3px;
+    padding-top: 3px;
+    background-color: green;
+    padding-left: 6px;
+    margin-bottom: -3px;
+    padding-bottom: 3px;
 }
