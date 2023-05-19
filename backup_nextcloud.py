@@ -30,9 +30,9 @@ def upload(file, file_path, nextcloud_config):
 
 
 def make_backup():
-    
-    file, file_path=export_database()
-
     nextcloud_config = read_nextcloud_config()
-    
-    upload(file, file_path, nextcloud_config)
+
+    if int(nextcloud_config["backup"])==1:
+        file, file_path=export_database()
+        
+        upload(file, file_path, nextcloud_config)
