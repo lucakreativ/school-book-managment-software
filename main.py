@@ -345,7 +345,7 @@ def home():
 
 
         elif site=="logout":                #ausloggen wird aufgerufe
-            #backup_nextcloud.make_backup()
+            backup_nextcloud.make_backup()
             session.clear()                 #alle Daten werden gelöscht
             return(redirect("/login"))      #wird zur Login-Seite weitergeleitet
 
