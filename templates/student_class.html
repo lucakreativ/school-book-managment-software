@@ -22,9 +22,9 @@
             <h2>Buch der gesamten Klasse hinzufügen</h2>
             <form action="/" method="get">
                 <input type="hidden" name="site" value="complete_class">
-                <input type="text" name="klass" placeholder="Klasse (9a)" value="{{klass}}"><br>
-                <input type="text" name="ISBN" placeholder="ISBN"><br>
-                <input type="number" name="an" placeholder="Anzahl" value="1"><br>
+                <input type="text" name="klass" placeholder="Klasse (9a)" value="{{klass}}" required><br>
+                <input type="text" name="ISBN" placeholder="ISBN" required><br>
+                <input type="number" name="an" placeholder="Anzahl" required><br>
                 <input type="submit" value="absenden">
                 
             </form>
