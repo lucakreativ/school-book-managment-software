@@ -311,7 +311,6 @@ def book_by_user(ID, changed=None):
     if len(return_mess)==0:
         return_mess.append(["", ""])
 
-    print(time.time()-s)
     return (schueler, buecher, stufe, klasse, return_mess)
 
 

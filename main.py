@@ -56,7 +56,7 @@ def home():
             if check_rechte(0):
                 dis=""
             else:
-                dis="disabled"
+                dis="readonly"
 
             if "changed_book" in session:
                 changed=session["changed_book"]
