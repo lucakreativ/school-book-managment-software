@@ -201,7 +201,6 @@ def add_to_complete_class(klasse, ISBN, user, anzahl):
 
 
 def book_by_user(ID, changed=None):
-    s=time.time()
     abgeben=False
 
     ID=cryption.decrypt(ID)
