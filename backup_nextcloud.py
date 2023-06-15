@@ -1,3 +1,4 @@
+import xmltodict
 import requests
 import time
 import os
@@ -9,6 +10,13 @@ headers = {
     "Content-Type": "application/octet-stream",
     "Depth": "0"
 }
+
+PROPFIND_REQUEST='''<?xml version="1.0" encoding="UTF-8"?>
+    <d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns" xmlns:nc="http://nextcloud.org/ns">
+      <d:prop>
+        <nc:upload_time />
+      </d:prop>
+    </d:propfind>'''
 
 
 
@@ -27,6 +35,36 @@ def upload(file, file_path, nextcloud_config):
             raise Exception("Es konnte kein Backup hochgeladen werden")
 
 
+def get_files(nextcloud_config):
+    s=requests.Session()
+    s.auth=(nextcloud_config["username"], nextcloud_config["password"])
+    url=nextcloud_config["adress"]+"/remote.php/dav/files/"+nextcloud_config["username"]+"/"+nextcloud_config["folder"]+"/"
+    r=s.request(method="PROPFIND", url=url, data=PROPFIND_REQUEST, headers={'Depth': '1'})
+    if r.status_code == 207:
+        data=r.text
+        my_dict=xmltodict.parse(data)
+        responses=my_dict["d:multistatus"]["d:response"]
+        counter=0
+        files=[]
+        for i in responses:
+            if counter>0:
+                files.append([i["d:propstat"]["d:prop"]["nc:upload_time"], i["d:href"]])
+            counter+=1
+
+        files.sort(reverse=True)
+        return files
+    else:
+        raise Exception("Das älteste Backup konnte nicht gelöscht werden.")
+    
+
+def delete_files(nextcloud_config):
+    files=get_files(nextcloud_config)
+    to_delete_files=files[int(nextcloud_config["delete_if_more"]):]
+    for i in to_delete_files:
+        url=nextcloud_config["adress"]+i[1]
+        response=requests.delete(url=url, auth=(nextcloud_config["username"], nextcloud_config["password"]))
+        if response.status_code!=204:
+            raise Exception("Problem beim Löschen der Dateien")
 
 
 def make_backup():
@@ -36,3 +74,5 @@ def make_backup():
         file, file_path=export_database()
         
         upload(file, file_path, nextcloud_config)
+
+        delete_files(nextcloud_config)
