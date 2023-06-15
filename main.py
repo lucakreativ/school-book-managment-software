@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from threading import Thread
 import random
 import time
 import os
@@ -345,7 +346,9 @@ def home():
 
 
         elif site=="logout":                #ausloggen wird aufgerufe
-            backup_nextcloud.make_backup()
+            thread = Thread(target=backup_nextcloud.make_backup, args=())
+            thread.daemon = True
+            thread.start()     
             session.clear()                 #alle Daten werden gelöscht
             return(redirect("/login"))      #wird zur Login-Seite weitergeleitet
 
