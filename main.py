@@ -207,8 +207,8 @@ def home():
                     data=manage_data.get_stufe()
                     return render_template("stufen.html", klassen=data, site="stufe", titel="Stufenverwaltung")
                 else:
-                    bekommen, abgeben=manage_data.select_book_stufe(stufe)
-                    return render_template("stufe_exakt.html", Stufe=stufe, tables=[bekommen.to_html(escape=False), abgeben.to_html(escape=False)], titles=["Bücher", "Bekommen", "Abgeben"])
+                    books=manage_data.select_book_stufe(stufe)
+                    return render_template("stufe_exakt.html", Stufe=stufe, tables=[books.to_html(escape=False)], titles=["Bücher", "Bücher", "Abgeben"])
             else:
                 return render_template("rechte_un.html")
 
@@ -216,8 +216,7 @@ def home():
             if check_rechte(0):
                 stufe=request.args.get("stufe")
                 ISBN=request.args.get("ISBN")
-                ab=request.args.get("ab")
-                manage_data.remove_book_stufe(stufe, ISBN, ab)
+                manage_data.remove_book_stufe(stufe, ISBN)
                 return redirect("/?site=stufe&stufe="+stufe)
             else:
                 return redirect("/?site=stufe")
@@ -226,19 +225,12 @@ def home():
             if check_rechte(0):
                 stufe=request.args.get("stufe")
                 ISBN=request.args.get("ISBN")
-                manage_data.add_book_stufe(stufe, ISBN)
+                lange=request.args.get("lange")
+                manage_data.add_book_stufe(stufe, ISBN, lange)
                 return redirect("/?site=stufe&stufe="+stufe)
             else:
                 return redirect("/?site=stufe")
-
-        elif site=="re_stufe":
-            if check_rechte(0):
-                stufe=request.args.get("stufe")
-                ISBN=request.args.get("ISBN")
-                manage_data.add_book_stufe(stufe, ISBN, 1)
-                return redirect("/?site=stufe&stufe="+stufe)
-            else:
-                return redirect("/?site=stufe")
+            
 
         elif site=="execute_stufe":
             user=user_get()

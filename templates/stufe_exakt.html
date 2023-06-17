@@ -11,29 +11,16 @@
                 {% endfor %}
             
             <div id="buchstufe">
-                <div id="buchstufes">
-                    <ul>
-                        <li>
-                            <h2>Buch bekommen</h2>
-                            <form action="/" method="get">
-                                <input type="hidden" name="site" value="add_stufe">
-                                <input type="hidden" name="stufe" value="{{Stufe}}">
-                                <input type="number" name="ISBN" placeholder="ISBN">
-                                <input type="submit" value="Einfügen">
-                            </form>
-                        </li>
-                        <li>
-                            <h2>Buch abgeben</h2>
-                            <form action="/" method="get">
-                                <input type="hidden" name="site" value="re_stufe">
-                                <input type="hidden" name="stufe" value="{{Stufe}}">
-                                <input type="number" name="ISBN" placeholder="ISBN">
-                                <input type="submit" value="Einfügen">
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                <div id="buchstufescard">
+                    <h2>Buch hinzufügen</h2>
+                    <form action="/" method="get">
+                        <input type="hidden" name="site" value="add_stufe">
+                        <input type="hidden" name="stufe" value="{{Stufe}}">
+                        <input type="number" name="ISBN" placeholder="ISBN"><br>
+                        <input type="number" name="lange" placeholder="Wie lange?"><br>
+                        <input type="submit" value="Hinzufügen">
+                    </form>
+            </div></div>
             
             <br>
             <form action="/" method="get">

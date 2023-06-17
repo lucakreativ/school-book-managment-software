@@ -135,7 +135,7 @@ def execute_second(i, schueler, user):
     cursor, conn =re_connect()
     stufe=i[0]
     ISBN=i[1]
-    Fach=i[3]
+    Fach=i[2]
     IDs=schueler[stufe]
     for sch in IDs:
         ID=sch[0]
@@ -147,17 +147,20 @@ def execute_stufe(user):
     cursor, conn =re_connect()
 
     threads=[]
-
+    books = []
     stufen=[]
     schueler={}
     delete_zero_taken_books()
     cursor, conn = re_connect()
-    cursor.execute("SELECT buchstufe.stufe, buchstufe.ISBN, buchstufe.abgeben, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND buchstufe.abgeben=0")
+    cursor.execute("SELECT buchstufe.stufe, buchstufe.abgeben, buchstufe.ISBN, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN")
     data=cursor.fetchall()
     
     for i in data:
         stufe=i[0]
-        stufen.append(stufe)
+        
+        for j in range(i[1]+1):
+            books.append([int(stufe)+j, i[2], i[3]])
+            stufen.append(int(stufe)+j)
 
 
     stufen=list(dict.fromkeys(stufen))
@@ -171,18 +174,16 @@ def execute_stufe(user):
         
         schueler[stufe]=schule
 
-    for i in data:
-        th=1
-        if th==1:
-            t=threading.Thread(target=execute_second, args=(i, schueler, user))
-            threads.append(t)
-            t.start()
-        else:
-            execute_second(i, schueler, user)
+    for i in books:
 
-    if th==1:
-        for t in threads:
-            t.join()
+        t=threading.Thread(target=execute_second, args=(i, schueler, user))
+        threads.append(t)
+        t.start()
+
+
+
+    for t in threads:
+        t.join()
 
 
 def add_to_complete_class(klasse, ISBN, user, anzahl):
@@ -201,7 +202,7 @@ def add_to_complete_class(klasse, ISBN, user, anzahl):
 
 
 def book_by_user(ID, changed=None):
-    abgeben=False
+    abgeben=True
 
     ID=cryption.decrypt(ID)
     cursor, conn = re_connect()
@@ -258,9 +259,9 @@ def book_by_user(ID, changed=None):
         
         Titel=buecher.iloc[num]["Titel/ISBN"]
         temp='<input type="hidden" name="b%s" value="%s">' % (num, ISBN)
-        cursor.execute("SELECT stufe FROM buchstufe WHERE stufe=%s AND ISBN=%s AND abgeben=1", [stufe, ISBN])
+        cursor.execute("SELECT IF(stufe + abgeben > %s AND stufe<=%s, 1, 0) FROM buchstufe WHERE ISBN = %s", (stufe, stufe, ISBN))
         data=cursor.fetchall()
-        if len(data)>0:
+        if len(data)==0 or data==[(0,)]:
             if abgeben==True:
                 buecher.at[num, "Titel/ISBN"]='<div id="abgabebuch">'
             else:
@@ -488,57 +489,37 @@ def search_settings(ISBN_Titel="", klasse="", stufe="", need_to_have=True):
     return data
 
 
-def add_book_stufe(Stufe, ISBN, abgeben=0):
+def add_book_stufe(Stufe, ISBN, wielange=0):
     cursor, conn = re_connect()
-    cursor.execute("INSERT INTO buchstufe (stufe, ISBN, abgeben) VALUES (%s, %s, %s)", (Stufe, ISBN, abgeben))
+    cursor.execute("INSERT INTO buchstufe (stufe, ISBN, abgeben) VALUES (%s, %s, %s)", (Stufe, ISBN, wielange))
     conn.commit()
 
-def remove_book_stufe(Stufe, ISBN, abgeben=0):
+def remove_book_stufe(Stufe, ISBN):
     cursor, conn = re_connect()
-    cursor.execute("DELETE FROM buchstufe WHERE Stufe=%s AND ISBN=%s AND abgeben=%s", (Stufe, ISBN, abgeben))
+    cursor.execute("DELETE FROM buchstufe WHERE Stufe=%s AND ISBN=%s", (Stufe, ISBN))
     conn.commit()
 
 def select_book_stufe(Stufe):
     cursor, conn = re_connect()
-    cursor.execute("SELECT ISBN FROM buchstufe WHERE Stufe=%s AND abgeben=0", (Stufe,))
+    cursor.execute("SELECT ISBN, abgeben FROM buchstufe WHERE Stufe=%s", (Stufe,))
     data=cursor.fetchall()
-    data=pd.DataFrame(data, columns=["Buch"])
-    data["ent"]=data["Buch"]
+    data=pd.DataFrame(data, columns=["Buch", "Wie lange"])
+    data["del"]=data["Buch"]
 
     for index in data.iterrows():
         num=index[0]
-        ISBN=data.iloc[num]["ent"]
+        ISBN=data.iloc[num]["del"]
 
-        temp='<form action="/" method="get"><input type="hidden" name="ab" value="0"><input type="hidden" name="site" value="remove_stufe"><input type="hidden" name="stufe" value="%s"><input type="hidden" name="ISBN" value="%s"><input type="submit" value="X" id="remove_stufe"></form>' % (Stufe, ISBN)
+        temp='<form action="/" method="get"><input type="hidden" name="site" value="remove_stufe"><input type="hidden" name="stufe" value="%s"><input type="hidden" name="ISBN" value="%s"><input type="submit" value="X" id="remove_stufe"></form>' % (Stufe, ISBN)
 
-        data.at[num, "ent"]=temp
+        data.at[num, "del"]=temp
 
         cursor.execute("SELECT Titel FROM buecher WHERE ISBN=%s", (ISBN,))
         title=cursor.fetchall()
         if len(title)!=0:
             data.at[num, "Buch"]=title[0][0]
-    bekommen=data
 
-    cursor.execute("SELECT ISBN FROM buchstufe WHERE Stufe=%s AND abgeben=1", (Stufe,))
-    data=cursor.fetchall()
-    data=pd.DataFrame(data, columns=["Buch"])
-    data["ent"]=data["Buch"]
-
-    for index in data.iterrows():
-        num=index[0]
-        ISBN=data.iloc[num]["ent"]
-
-        temp='<form action="/" method="get"><input type="hidden" name="ab" value="1"><input type="hidden" name="site" value="remove_stufe"><input type="hidden" name="stufe" value="%s"><input type="hidden" name="ISBN" value="%s"><input type="submit" value="X" id="remove_stufe"></form>' % (Stufe, ISBN)
-
-        data.at[num, "ent"]=temp
-
-        cursor.execute("SELECT Titel FROM buecher WHERE ISBN=%s", (ISBN,))
-        title=cursor.fetchall()
-        if len(title)!=0:
-            data.at[num, "Buch"]=title[0][0]
-    abgeben=data
-
-    return (bekommen, abgeben)
+    return data
 
 
 def get_stufe():
