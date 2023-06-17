@@ -526,8 +526,8 @@ def not_found(e):
     return render_template("404.html")
 
 @app.errorhandler(500)
-def not_found(e):
-    return "Internal Server Error"
+def error(e):
+    return render_template("500.html")
 
 
 def check_login():
