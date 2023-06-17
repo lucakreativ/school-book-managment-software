@@ -16,3 +16,4 @@ Werkzeug==2.2.3
 xlrd==2.0.1
 msoffcrypto-tool==5.0.0
 pyocclient==0.6
+xmltodict==0.12.0
