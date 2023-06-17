@@ -19,7 +19,7 @@ header li {
 
 header nav {
     float: right;
-    margin: 22px 50px 0 0;
+    margin: 22px 70px 0 0;
 }
   
 header nav ul li {
@@ -67,9 +67,11 @@ header #logo {
     position: absolute;
     background-color: #e6e6e6;
     min-width: 160px;
+    width: 185px;
     box-shadow: 0px 16px 32px 0px rgba(0,0,0,0.2);
     z-index: 1;
     margin-left: -50px;
+    border-radius: 5px;
   }
   
   /* Links inside the dropdown */

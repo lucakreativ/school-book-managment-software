@@ -35,8 +35,18 @@ app.secret_key=random_string
 app.config["UPLOAD_FOLDER"] = "files/"
 
 @app.context_processor
-def inject_now():
-    return {"now": datetime.utcnow()}
+def inject():
+    header=[]
+    header.append(["?site=settings", "Passwort ändern"])
+    if check_rechte(0):
+        header.append(["?site=admin", "LMB-Leitung"])
+    if session.get("user")=="admin":
+        header.append(["admin", "Admin-Verwaltung"])
+    
+    header.append(["?site=logout", "Abmelden"])
+
+
+    return {"now": datetime.utcnow(), "header_dropdown_content": header}
 
 
 @app.route("/")
@@ -540,6 +550,9 @@ def check_inactivity():
 
 def check_rechte(erford):
     username=session.get("user")
+    if username==None:
+        return False
+    
     if erford>=manage_data.check_rechte(username):
         return True
     else:

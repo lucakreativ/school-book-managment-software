@@ -19,9 +19,11 @@
                 <div class="dropdown">
                     <button class="dropbtn">Account</button>
                     <div class="dropdown-content">
-                      <a href="/?site=settings">Passwort ändern</a>
-                      <a href="/?site=admin">LMB-Leitung</a>
-                      <a href="/?site=logout">Abmelden</a>
+                        {% for i in header_dropdown_content %}
+
+                            <a href="/{{i.0}}">{{i.1}}</a>
+
+                        {% endfor %}
                     </div>
                 </div>
             </li>
