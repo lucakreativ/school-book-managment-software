@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, send_from_directory
 from werkzeug.utils import secure_filename
 from datetime import datetime
 from threading import Thread
@@ -130,6 +130,9 @@ def home():
 
         elif site=="fbuch":
             if check_rechte(0):
+                path=manage_data.missing_books()
+                return send_from_directory("",path)
+                """
                 stufe=request.args.get("stufe")
                 if stufe==None:
                     data=manage_data.get_stufe()
@@ -137,6 +140,7 @@ def home():
                 else:
                     data=manage_data.schueler_by_class(stufe+"a", 1, 1)
                     return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"])
+                """
             else:
                 return render_template("rechte_un.html")
 

@@ -261,8 +261,8 @@ def book_by_user(ID, changed=None):
         temp='<input type="hidden" name="b%s" value="%s">' % (num, ISBN)
         cursor.execute("SELECT IF(stufe + abgeben > %s AND stufe<=%s, 1, 0) FROM buchstufe WHERE ISBN = %s", (stufe, stufe, ISBN))
         data=cursor.fetchall()
-        if len(data)==0 or data==[(0,)]:
-            if abgeben==True:
+        if len(data)==0 or data[0]==(0,):
+            if abgeben==True and anzahl>0:
                 buecher.at[num, "Titel/ISBN"]='<div id="abgabebuch">'
             else:
                 buecher.at[num, "Titel/ISBN"]='<div>'
@@ -312,6 +312,62 @@ def book_by_user(ID, changed=None):
         return_mess.append(["", ""])
 
     return (schueler, buecher, stufe, klasse, return_mess)
+
+
+def missing_books():
+    cursor, conn = re_connect()
+
+    df=pd.DataFrame()
+    buch_dic={}
+    cursor.execute("SELECT ISBN, Titel FROM buecher")
+    buecher=cursor.fetchall()
+    for i in buecher:
+        buch_dic[i[0]]=i[1]
+
+    
+    cursor.execute("SELECT ID, Nachname, Vorname, Stufe, Klasse FROM schueler")
+    schueler=cursor.fetchall()
+
+
+    for student in schueler:
+        cursor.execute("SELECT ISBN FROM ausgeliehen WHERE ID=%s AND Anzahl>0", (student[0],))
+        buecher=cursor.fetchall()
+        cursor.execute("SELECT buchstufe.ISBN FROM buchstufe, ausgeliehen WHERE ausgeliehen.ID=%s AND ausgeliehen.ISBN=buchstufe.ISBN AND (stufe+abgeben>%s AND stufe<=%s)", (student[0], student[3], student[3]))
+        dont_abgeben=cursor.fetchall()
+        dont_abgeben2=[]#Bücher die nicht abgeben werden müssen
+        abgeben=[]
+        for i in dont_abgeben:
+            dont_abgeben2.append(i[0])
+
+        
+        #entfernt alle Bücher, die nicht abgeben werden müssen
+        for i in buecher:
+            buch=i[0]
+            if buch not in dont_abgeben2:
+                abgeben.append(buch)
+
+        abgeben=sorted(abgeben)#Bücher die abgeben werden müssen
+        if len(abgeben)>0:
+            abgeben_s=""
+            for i in abgeben:
+                if i in buch_dic:
+                    abgeben_s+=buch_dic[i]
+                else:
+                    abgeben_s+=i
+
+                abgeben_s+="; "
+        
+            dfappend=pd.DataFrame([[student[1], student[2], student[3]+student[4], abgeben_s]])
+            #print(abgeben_s)
+            df=pd.concat([df, dfappend])
+
+
+    df=df.sort_values([2, 0])
+    df.columns = ["Nachname", "Vorname", "Klasse", "Fehlende Bücher"]
+    df.reset_index(drop=True, inplace=True)
+    path="files/"+str(round(time.time(), 1))+"-missingbooks.xlsx"
+    df.to_excel(path)
+    return path
 
 
 def next_schueler(ID):
