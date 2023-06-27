@@ -75,6 +75,8 @@ def search_book(search_term):
     data=pd.DataFrame(data, columns=["ISBN", "Titel", "Fach", "Verlag", "Preis"])
     data["ISBN"]=data["ISBN"].apply(lambda x:'<a href="/?site=book_by_ISBN&ISBN={0}">{0}</a>'.format(x))
     data["Preis"]=data["Preis"].apply(lambda x:'{0} €'.format(x))
+    data=data.sort_values(by="Titel")
+    data.reset_index(drop=True, inplace=True)
     return data
 
 
@@ -85,6 +87,8 @@ def print_books():
     data=pd.DataFrame(data, columns=["ISBN", "Titel", "Fach", "Verlag", "Preis"])
     data["ISBN"]=data["ISBN"].apply(lambda x:'<a href="/?site=book_by_ISBN&ISBN={0}">{0}</a>'.format(x))
     data["Preis"]=data["Preis"].apply(lambda x:'{0} €'.format(x))
+    data=data.sort_values(by="Titel")
+    data.reset_index(drop=True, inplace=True)
     return data
 
 
@@ -575,6 +579,8 @@ def select_book_stufe(Stufe):
         if len(title)!=0:
             data.at[num, "Buch"]=title[0][0]
 
+    data.sort_values(by="Buch")
+    data.reset_index(drop=True, inplace=True)
     return data
 
 
