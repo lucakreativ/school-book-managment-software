@@ -587,7 +587,7 @@ def select_book_stufe(Stufe):
         if len(title)!=0:
             data.at[num, "Buch"]=title[0][0]
 
-    data.sort_values(by="Buch")
+    data=data.sort_values(by="Buch")
     data.reset_index(drop=True, inplace=True)
     return data
 
