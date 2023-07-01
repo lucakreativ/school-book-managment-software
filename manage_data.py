@@ -334,6 +334,14 @@ def missing_books():
 
 
     for student in schueler:
+        cursor.execute("SELECT schaden FROM bemgeld WHERE ID=%s", (student[0],))
+        bemgeld=cursor.fetchone()
+        if bemgeld==None:
+            bemgeld="0,00 €"
+        else:
+            bemgeld="%.2f €" % (bemgeld[0])
+            bemgeld=bemgeld.replace(".", ",")
+
         cursor.execute("SELECT ISBN FROM ausgeliehen WHERE ID=%s AND Anzahl>0", (student[0],))
         buecher=cursor.fetchall()
         cursor.execute("SELECT buchstufe.ISBN FROM buchstufe, ausgeliehen WHERE ausgeliehen.ID=%s AND ausgeliehen.ISBN=buchstufe.ISBN AND (stufe+abgeben>%s AND stufe<=%s)", (student[0], student[3], student[3]))
@@ -361,13 +369,13 @@ def missing_books():
 
                 abgeben_s+="; "
         
-            dfappend=pd.DataFrame([[student[1], student[2], student[3]+student[4], abgeben_s]])
+            dfappend=pd.DataFrame([[student[1], student[2], student[3]+student[4], bemgeld, abgeben_s]])
             #print(abgeben_s)
             df=pd.concat([df, dfappend])
 
 
     df=df.sort_values([2, 0])
-    df.columns = ["Nachname", "Vorname", "Klasse", "Fehlende Bücher"]
+    df.columns = ["Nachname", "Vorname", "Klasse", "Gebühren","Fehlende Bücher"]
     df.reset_index(drop=True, inplace=True)
     path="files/"+str(round(time.time(), 1))+"-missingbooks.xlsx"
     df.to_excel(path)
