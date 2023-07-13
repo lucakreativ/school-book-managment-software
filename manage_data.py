@@ -691,7 +691,7 @@ def check_password_strength(passwd):
 
 def change_password(username, old_pass, new1_pass, new2_pass):
     cursor, conn = re_connect()
-    cursor.execute("""SELECT hash FROM user WHERE username = %s""" % (username))
+    cursor.execute("""SELECT hash FROM user WHERE username = %s""", (username,))
     database_pass=cursor.fetchall()[0][0]
 
     old_hash=hash_func(old_pass)
@@ -699,7 +699,7 @@ def change_password(username, old_pass, new1_pass, new2_pass):
         if new1_pass==new2_pass:
             if check_password_strength(new1_pass):
                 new_pass_hash=hash_func(new1_pass)
-                cursor.execute("""UPDATE user SET hash = %s WHERE username = %s""" % (new_pass_hash, username))
+                cursor.execute("""UPDATE user SET hash = %s WHERE username = %s""", (new_pass_hash, username))
                 conn.commit()
             
                 return 0
