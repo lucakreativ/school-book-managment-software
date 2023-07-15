@@ -298,7 +298,7 @@ def book_by_user(ID, changed=None):
         buecher_check_l.append(buch[0])
 
 
-    cursor.execute("SELECT buchstufe.ISBN, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND stufe=%s AND abgeben=%s", (stufe, sqlab))
+    cursor.execute("SELECT buchstufe.ISBN, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND buchstufe.stufe=%s", (stufe,))
     data=cursor.fetchall()
 
 
