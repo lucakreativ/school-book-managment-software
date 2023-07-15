@@ -158,8 +158,16 @@ def execute_stufe(user):
     cursor, conn = re_connect()
     cursor.execute("SELECT buchstufe.stufe, buchstufe.abgeben, buchstufe.ISBN, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN")
     data=cursor.fetchall()
-    
+
+    todo=[]
     for i in data:
+        app=list(i)
+        if i[1]==-1:
+            app[1]=0
+            
+        todo.append(app)
+
+    for i in todo:
         stufe=i[0]
         
         for j in range(i[1]+1):
@@ -298,7 +306,7 @@ def book_by_user(ID, changed=None):
         buecher_check_l.append(buch[0])
 
 
-    cursor.execute("SELECT buchstufe.ISBN, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND buchstufe.stufe=%s", (stufe,))
+    cursor.execute("SELECT buchstufe.ISBN, buecher.Fach, buecher.Titel FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND buchstufe.stufe+0<=%s AND buchstufe.stufe+buchstufe.abgeben>=%s", (stufe, stufe))
     data=cursor.fetchall()
 
 
@@ -463,6 +471,8 @@ def schueler_by_class(klasse, fehlend=0, stufe_t=0):
         klasse=""
 
     if fehlend==1:
+        #depricated/not longer in use
+        #broken
         if stufe_t==1:
             cursor.execute("SELECT schueler.Vorname, schueler.Nachname, schueler.ID FROM schueler, buchstufe, ausgeliehen WHERE schueler.Stufe=%s AND buchstufe.stufe=schueler.Stufe AND schueler.ID=ausgeliehen.ID AND ausgeliehen.ISBN=buchstufe.ISBN AND buchstufe.abgeben=1 AND ausgeliehen.Anzahl>=1", (stufe,))
             data=cursor.fetchall()

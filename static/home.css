@@ -140,7 +140,7 @@ th {
 
 #buchstufe {
     width: 100%;
-    height: 120px;
+    height: 200px;
     opacity: 1;
 }
 
@@ -164,11 +164,11 @@ th {
     margin-right: auto;
 
 
-    width: 255px;
+    width: 355px;
     float: center;
     background-color: #cacaca;
 
-    height: 120px;
+    height: 200px;
     border-radius: 10px;
 }
 
