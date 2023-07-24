@@ -235,9 +235,13 @@ th {
     padding-top: 1px;
     background-color: #cacaca;
     margin: 0 10px;
-    height: 103px;
+    height: 123px;
     border-radius: 10px;
     width: 250px;
+}
+
+#card2sp #paddingtop {
+    margin-top: 5px;
 }
 
 #cards2 ul {

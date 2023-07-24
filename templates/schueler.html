@@ -70,7 +70,7 @@
                             <li>
                                 <div id="card1sp">
                                     <h2>Bemerkung</h2>
-                                    <textarea name="bemerkung" rows="5" cols="50" placeholder="Bemerkungen" onchange="submitform()" {{disabled}}>{{bemerkung}}</textarea>
+                                    <textarea name="bemerkung" rows="5" cols="50" placeholder="Bemerkungen" onchange="submitform()" {{dis}}>{{bemerkung}}</textarea>
                                 </div>
                             </li>
                         </ul>
@@ -79,6 +79,7 @@
                                 <div id="card2sp">
                                     <h2>Gebühren</h2>
                                     <input type="text" id="jsgeld" name="geld" placeholder="Gebühren" value="{{geld}}" onchange="submitform()" {{dis}}>
+                                    <input form="reset_money" type="submit" value="Begleichen" id="paddingtop" {{dis}}>
                                 </div>
                             </li>
                         </ul>
@@ -106,6 +107,13 @@
             </form>
         </div>
     </div>
+
+
+    
+    <form action="/" method="get" id="reset_money">
+        <input type="hidden" name="site" value="reset_money">
+        <input type="hidden" name="ID" value="{{ID}}">
+    </form>
 
     {% include "footer.html" %}
 

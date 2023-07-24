@@ -636,6 +636,15 @@ def bemgeld_up(id, bemerkung="", geld=0):
         cursor.execute("INSERT INTO bemgeld (ID, bemerkung, schaden) VALUES (%s, %s, %s)", (id, bemerkung, geld))
         conn.commit()
 
+def reset_money(id):
+    id=cryption.decrypt(id)
+    cursor, conn = re_connect()
+    cursor.execute("SELECT ID FROM bemgeld WHERE ID=%s", (id,))
+    data=cursor.fetchall()
+    if len(data)!=0:
+        cursor.execute("UPDATE bemgeld SET schaden=0 WHERE ID=%s", (id,))
+        conn.commit()
+
 
 def book_usage():
     cursor, conn = re_connect()

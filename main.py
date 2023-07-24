@@ -278,6 +278,15 @@ def home():
 
             return redirect("/?site=schueler&ID=%s" % (ID_e))
 
+        elif site=="reset_money":
+            ID_e=request.args.get("ID")
+
+            if check_rechte(0):
+                manage_data.reset_money(ID_e)
+
+            return redirect("/?site=schueler&ID=%s" % (ID_e))
+
+
         elif site=="save_specific":
             ID_e=request.args.get("ID")
             ID=cryption.decrypt(ID_e)
@@ -289,7 +298,7 @@ def home():
             if ISBN!="":
                 manage_data.insert_taken_book_add(ID, ISBN, user, -1)
 
-            return redirect("/?site=search_specific&ISBN=%s&stufe=%s&class=%s" % (ISBN, stufe, klasse))
+            return redirect("/?site=search_specific&ISBN=%s&stufe=%s&class=%s" % (ISBN, stufe, klasse))           
 
         elif site=="complete_class":
             klasse=request.args.get("klass")
