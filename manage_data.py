@@ -326,7 +326,7 @@ def book_by_user(ID, changed=None):
     return (schueler, buecher, stufe, klasse, return_mess)
 
 
-def missing_books():
+def missing_books(lastyear):
     cursor, conn = re_connect()
 
     df=pd.DataFrame()
@@ -336,7 +336,7 @@ def missing_books():
     for i in buecher:
         buch_dic[i[0]]=i[1]
 
-    
+
     cursor.execute("SELECT ID, Nachname, Vorname, Stufe, Klasse FROM schueler")
     schueler=cursor.fetchall()
 
@@ -350,9 +350,18 @@ def missing_books():
             bemgeld="%.2f €" % (bemgeld[0])
             bemgeld=bemgeld.replace(".", ",")
 
+        stufe=student[3]
+        if stufe=="J1":
+            stufe=11
+        elif stufe=="J2":
+            stufe=12
+
+        if lastyear==1:
+            stufe=int(stufe)-1
+
         cursor.execute("SELECT ISBN FROM ausgeliehen WHERE ID=%s AND Anzahl>0", (student[0],))
         buecher=cursor.fetchall()
-        cursor.execute("SELECT buchstufe.ISBN FROM buchstufe, ausgeliehen WHERE ausgeliehen.ID=%s AND ausgeliehen.ISBN=buchstufe.ISBN AND (stufe+abgeben>%s AND stufe<=%s)", (student[0], student[3], student[3]))
+        cursor.execute("SELECT buchstufe.ISBN FROM buchstufe, ausgeliehen WHERE ausgeliehen.ID=%s AND ausgeliehen.ISBN=buchstufe.ISBN AND (stufe+abgeben>%s AND stufe<=%s)", (student[0], stufe, stufe))
         dont_abgeben=cursor.fetchall()
         dont_abgeben2=[]#Bücher die nicht abgeben werden müssen
         abgeben=[]
@@ -376,8 +385,13 @@ def missing_books():
                     abgeben_s+=i
 
                 abgeben_s+="; "
+            
         
-            dfappend=pd.DataFrame([[student[1], student[2], student[3]+student[4], bemgeld, abgeben_s]])
+            if lastyear==1:
+                stufe=stufe+1
+
+            stufe=str(int(stufe))
+            dfappend=pd.DataFrame([[student[1], student[2], stufe+student[4], bemgeld, abgeben_s]])
             #print(abgeben_s)
             df=pd.concat([df, dfappend])
 

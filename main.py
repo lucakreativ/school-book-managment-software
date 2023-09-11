@@ -119,7 +119,7 @@ def home():
             klasse=request.args.get("k")
             b=request.args.get("b")
             if b=="1":
-                manage_data.get_klassen()
+                man/loginage_data.get_klassen()
                 
             if klasse==None:
                 data=manage_data.print_klassen()
@@ -130,7 +130,12 @@ def home():
 
         elif site=="fbuch":
             if check_rechte(0):
-                path=manage_data.missing_books()
+                lastyear=request.args.get("lastyear")
+                if lastyear=="on":
+                    lastyear=1
+                else:
+                    lastyear=0
+                path=manage_data.missing_books(lastyear)
                 return send_from_directory("",path)
                 """
                 stufe=request.args.get("stufe")
