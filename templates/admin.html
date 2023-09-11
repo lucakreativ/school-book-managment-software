@@ -42,6 +42,15 @@
                 <input type="submit" value="Statistiken" id="square">
             </form>
 
+            <form action="/" method="get">
+                <h2>Autofokus ausgeben</h2>
+                <input type="hidden" name="site" value="save_autofocus_return">
+                <label class="switch">
+                    <input type="checkbox" name="autofocus_on" {{on}}>
+                    <span class="slider round"></span>
+                </label><br>
+                <input type="submit" value="Speichern" id="square">
+            </form>
         </div>
 
     </body>

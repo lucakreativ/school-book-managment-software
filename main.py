@@ -69,6 +69,17 @@ def home():
             else:
                 dis="readonly"
 
+            autofocus_hand_out = session.get("autofocus")
+            if autofocus_hand_out=="1":
+                hand_out="autofocus"
+                hand_in=""
+            elif autofocus_hand_out=="0":
+                hand_out=""
+                hand_in="autofocus"
+            else:
+                hand_out=""
+                hand_in=""
+
             if "changed_book" in session:
                 changed=session["changed_book"]
                 session["changed_book"]=None
@@ -78,7 +89,7 @@ def home():
             bemerkung, geld = manage_data.bemgeld(ID)
             schueler, buecher, stufe, klasse, return_mess = manage_data.book_by_user(ID, changed)
             next_ID, next_name, prev_ID, prev_name = manage_data.next_schueler(ID)
-            return render_template("schueler.html", table1=schueler.to_html(escape=False), table2=buecher.to_html(escape=False), ID_next=next_ID, ne_name=next_name, ID_prev=prev_ID, vor_name=prev_name, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld, messages=return_mess)
+            return render_template("schueler.html", table1=schueler.to_html(escape=False), table2=buecher.to_html(escape=False), ID_next=next_ID, ne_name=next_name, ID_prev=prev_ID, vor_name=prev_name, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld, messages=return_mess, hand_out=hand_out, hand_in=hand_in)
         
         elif site=="search":
             name=request.args.get("term")
@@ -335,7 +346,14 @@ def home():
                 session["msg"]=None
                 session["farbe"]=None
 
-                return render_template("admin.html", msg=msg, farbe=farbe)
+                with open("data/autofocus.txt", "r") as f:
+                    autofocus_book_return=f.read()
+
+                if autofocus_book_return=="0":
+                    jinja2_on=""
+                else:
+                    jinja2_on="checked"
+                return render_template("admin.html", msg=msg, farbe=farbe, on=jinja2_on)
             else:
                 return render_template("rechte_un.html")
 
@@ -345,6 +363,23 @@ def home():
                 return render_template("statistics.html", tables=[data.to_html(escape=False)], titles=["Daten"])
             else:
                 return render_template("rechte_un.html")
+
+        elif site=="save_autofocus_return":
+            if check_rechte(0):
+                data=request.args.get("autofocus_on")
+
+                if data=="on":
+                    autofocus_book_return="1"
+                else:
+                    autofocus_book_return="0"
+
+                session["autofocus"]=autofocus_book_return
+
+                with open("data/autofocus.txt", "w") as file:
+                    file.write(autofocus_book_return)
+
+
+            return redirect("/?site=admin")
 
 
         elif site=="settings":                      #Einstllungen werden aufgerufen
@@ -514,6 +549,10 @@ def validate():
                 session["login"]=2
                 session["login_time"]=time.time()
                 session["user"]=username
+
+                with open("data/autofocus.txt", "r") as f:
+                    autofocus_book_return=f.read()
+                session["autofocus"]=autofocus_book_return
 
                 url=session.get("url")
                 if url==None:
