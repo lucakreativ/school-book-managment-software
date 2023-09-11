@@ -119,7 +119,7 @@ def home():
             klasse=request.args.get("k")
             b=request.args.get("b")
             if b=="1":
-                man/loginage_data.get_klassen()
+                mannage_data.get_klassen()
                 
             if klasse==None:
                 data=manage_data.print_klassen()
