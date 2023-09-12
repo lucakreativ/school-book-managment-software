@@ -6,9 +6,10 @@
 </head>    
 <body>    
     <center> <h1>Login-Seite</h1> </center>
-    <h1>Falscher Benutzername oder Passwort</h1>
+    
     <form action="/validate" method="post">  
-        <div class="container">   
+        <div class="container">
+            <h1 id="wrong_password">Falscher Benutzername oder Passwort</h1>  
             <label>Username : </label>   
             <input type="text" placeholder="Enter Username" name="username" required autofocus>  
             <label>Password : </label>   
