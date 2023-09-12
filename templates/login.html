@@ -11,9 +11,22 @@
             <label>Benutzername : </label>   
             <input type="text" placeholder="Benutzername" name="username" required autofocus>  
             <label>Passwort : </label>   
-            <input type="password" placeholder="Passwort" name="password" required>  
+            <input type="password" placeholder="Passwort" name="password" id="password" required>
+            <input type="checkbox" onclick="myFunction()" id="show_password">Passwort anzeigen
             <button type="submit">Login</button>   
         </div>   
     </form>     
 </body>     
-</html>  
+</html> 
+
+
+<script>
+    function myFunction() {
+      var x = document.getElementById("password");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+    }
+</script>
