@@ -421,6 +421,8 @@ def next_schueler(ID):
     i=0
     while i<len(data):
         if data[i][2]==ID:
+            percentage = str(int(round(((i+1)/len(data))*100, 0))) + "%"
+
             next_i=(i+1)%len(data)
             next_ID=data[next_i][2]
             next_name=data[next_i][0]+", "+data[next_i][1]
@@ -434,7 +436,8 @@ def next_schueler(ID):
         i+=1
     next_ID=cryption.encrypt(next_ID)
     prev_ID=cryption.encrypt(prev_ID)
-    return (next_ID, next_name, prev_ID, prev_name)
+    
+    return (next_ID, next_name, prev_ID, prev_name, percentage)
 
 
 def get_klassen():

@@ -88,8 +88,8 @@ def home():
 
             bemerkung, geld = manage_data.bemgeld(ID)
             schueler, buecher, stufe, klasse, return_mess = manage_data.book_by_user(ID, changed, autofocus_hand_out)
-            next_ID, next_name, prev_ID, prev_name = manage_data.next_schueler(ID)
-            return render_template("schueler.html", table1=schueler.to_html(escape=False), table2=buecher.to_html(escape=False), ID_next=next_ID, ne_name=next_name, ID_prev=prev_ID, vor_name=prev_name, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld, messages=return_mess, hand_out=hand_out, hand_in=hand_in)
+            next_ID, next_name, prev_ID, prev_name, percentage = manage_data.next_schueler(ID)
+            return render_template("schueler.html", table1=schueler.to_html(escape=False), table2=buecher.to_html(escape=False), ID_next=next_ID, ne_name=next_name, ID_prev=prev_ID, vor_name=prev_name, ID=ID, dis=dis, bemerkung=bemerkung, geld=geld, messages=return_mess, hand_out=hand_out, hand_in=hand_in, percentage=percentage)
         
         elif site=="search":
             name=request.args.get("term")
