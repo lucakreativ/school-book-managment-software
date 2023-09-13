@@ -307,6 +307,8 @@ def book_by_user(ID, changed=None, lastyear=0):
     for buch in buecher_check:
         buecher_check_l.append(buch[0])
 
+    if lastyear=="1":
+        stufe=str(int(stufe)+1)
 
     cursor.execute("SELECT buchstufe.ISBN, buecher.Fach, buecher.Titel FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND buchstufe.stufe+0<=%s AND buchstufe.stufe+buchstufe.abgeben>=%s", (stufe, stufe))
     data=cursor.fetchall()
