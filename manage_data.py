@@ -240,8 +240,6 @@ def book_by_user(ID, changed=None, lastyear=0):
 
 
     else:
-        if lastyear=="1": #simulate to be in last year
-            stufe=str(int(stufe)-1)
         schueler=pd.DataFrame(data, columns=["Stufe", "Klasse", "Vorname", "Nachname", "Religion", "Fremdsp1", "Fremdsp2", "Fremdsp3"])
         schueler["Klasse"]=schueler["Stufe"].astype(str)+schueler["Klasse"].astype(str)
         schueler["Klasse"]=schueler["Klasse"].apply(lambda x:'<input type="hidden" name="site" value="klassen"><input type="hidden" name="k" value={0}><input type="submit" value="{0}" id="full_cell">'.format(x))
@@ -273,7 +271,10 @@ def book_by_user(ID, changed=None, lastyear=0):
         
         Titel=buecher.iloc[num]["Titel/ISBN"]
         temp='<input type="hidden" name="b%s" value="%s">' % (num, ISBN)
-        cursor.execute("SELECT IF(stufe + abgeben > %s AND stufe<=%s, 1, 0) FROM buchstufe WHERE ISBN = %s", (stufe, stufe, ISBN))
+        if lastyear=="1":
+            cursor.execute("SELECT IF(stufe + abgeben> %s, 1, 0) FROM buchstufe WHERE ISBN = %s", (int(stufe)-1, ISBN))
+        else:
+            cursor.execute("SELECT IF(stufe + abgeben > %s AND stufe<=%s, 1, 0) FROM buchstufe WHERE ISBN = %s", (stufe, stufe, ISBN))
         data=cursor.fetchall()
         if len(data)==0 or data[0]==(0,):
             if abgeben==True and anzahl>0:
@@ -307,8 +308,6 @@ def book_by_user(ID, changed=None, lastyear=0):
     for buch in buecher_check:
         buecher_check_l.append(buch[0])
 
-    if lastyear=="1":
-        stufe=str(int(stufe)+1)
 
     cursor.execute("SELECT buchstufe.ISBN, buecher.Fach, buecher.Titel FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN AND buchstufe.stufe+0<=%s AND buchstufe.stufe+buchstufe.abgeben>=%s", (stufe, stufe))
     data=cursor.fetchall()
