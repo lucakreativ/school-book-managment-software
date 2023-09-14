@@ -268,11 +268,13 @@ def home():
             
             con=False
             i=0
+            return_student=True
             while con==False:
                 ISBN=request.args.get("b"+str(i))
                 Anzahl=request.args.get("a"+str(i))
                 if ISBN!=None and Anzahl!=None:
                     manage_data.insert_taken_book_absolute(ID, ISBN, user, Anzahl)
+                    return_student=False
                 else:
                     con=True
                 i+=1
@@ -292,7 +294,10 @@ def home():
                 if geld!=None and bemerkung!=None:
                     manage_data.bemgeld_up(ID_e, bemerkung, geld)
 
-            return redirect("/?site=schueler&ID=%s" % (ID_e))
+            if return_student==True:
+                return redirect("/?site=schueler&ID=%s" % (ID_e))
+            else:
+                return ""
 
         elif site=="reset_money":
             ID_e=request.args.get("ID")
