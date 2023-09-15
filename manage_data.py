@@ -327,7 +327,6 @@ def book_by_user(ID, changed=None, lastyear=0):
     for i in data:
         if i[1] in faecher:
             if i[0] not in buecher_check_l:
-                print(i[0])
                 con=False
                 break
                 
@@ -406,7 +405,6 @@ def missing_books(lastyear):
 
             stufe=str(int(stufe))
             dfappend=pd.DataFrame([[student[1], student[2], stufe+student[4], bemgeld, abgeben_s]])
-            #print(abgeben_s)
             df=pd.concat([df, dfappend])
 
 
