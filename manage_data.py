@@ -159,13 +159,23 @@ def execute_stufe(user):
     cursor.execute("SELECT buchstufe.stufe, buchstufe.abgeben, buchstufe.ISBN, buecher.Fach FROM buchstufe, buecher WHERE buchstufe.ISBN=buecher.ISBN")
     data=cursor.fetchall()
 
+    list_of_ISBN=[]
+
     todo=[]
     for i in data:
+        list_of_ISBN.append(i[2])
         app=list(i)
         if i[1]==-1:
             app[1]=0
             
         todo.append(app)
+
+    cursor.execute("SELECT stufe, abgeben, ISBN FROM buchstufe")
+    all_books=cursor.fetchall()
+
+    for i in all_books:
+        if i[2] not in list_of_ISBN:
+            todo.append([i[0], i[1], i[2], ""])
 
     for i in todo:
         stufe=i[0]
@@ -317,6 +327,7 @@ def book_by_user(ID, changed=None, lastyear=0):
     for i in data:
         if i[1] in faecher:
             if i[0] not in buecher_check_l:
+                print(i[0])
                 con=False
                 break
                 
