@@ -550,6 +550,10 @@ def validate():
         if manage_data.login(username, password)==True:
             if (login_v.check_ip(ip_addr)==False and login_v.check_data(username)==True) or login_v.check_ip(ip_addr)==True:
 
+                thread = Thread(target=backup_nextcloud.make_backup, args=())
+                thread.daemon = True
+                thread.start()
+
                 write_login(username, 1, ip_addr)
                 session["login"]=2
                 session["login_time"]=time.time()
