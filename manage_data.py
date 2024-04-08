@@ -561,7 +561,13 @@ def special_book(klasse, specialBookISBN):
         
         schueler.append(list_l)
     #sortieren
-    data=pd.DataFrame(schueler, columns=["Name", "Seite", "", "Entf/Hin"])
+    cursor.execute("SELECT Titel FROM buecher WHERE ISBN=%s", (specialBookISBN,))
+    specialBookTitle = cursor.fetchone()
+    if (specialBookTitle != None):
+        specialBookTitle = specialBookTitle[0]
+    else:
+        specialBookTitle = specialBookISBN
+    data=pd.DataFrame(schueler, columns=["Name", "Seite", "", specialBookTitle])
     
     data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" method="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
     return data

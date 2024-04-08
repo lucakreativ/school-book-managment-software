@@ -32,12 +32,18 @@
             </form>
             <br>
             <br>
+            <br>
             <h2>Abhaken eines Buches</h2>
             <form action="/" method="get">
                 <input type="hidden" name="site" value="klassen">
                 <input type="hidden" name="k" placeholder="Klasse (9a)" value="{{klass}}" required>
                 <input type="text" name="showBook" placeholder="ISBN" value="{{showBook}}" required><br>
-                <input type="submit" value="absenden">
+                <input type="submit" value="anzeigen">
+            </form>
+            <form action="/" method="get">
+                <input type="hidden" name="site" value="klassen">
+                <input type="hidden" name="k" placeholder="Klasse (9a)" value="{{klass}}" required>
+                <input type="submit" value="Anzeige zurücksetzen">
             </form>
         </div>
         </div>
