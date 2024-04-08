@@ -128,16 +128,21 @@ def home():
 
         elif site=="klassen":
             klasse=request.args.get("k")
+            showBook = request.args.get("showBook")
             b=request.args.get("b")
             if b=="1":
                 manage_data.get_klassen()
                 
-            if klasse==None:
+            if klasse==None and showBook==None:
                 data=manage_data.print_klassen()
                 return render_template("klassen.html", tables=[data.to_html(escape=False)], titles=["Klassen"])
-            else:
+            elif klasse!=None and showBook==None:
                 data=manage_data.schueler_by_class(klasse)
                 return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"], klass=klasse)
+            elif showBook!=None:
+                data=manage_data.special_book(klasse, showBook)
+                return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"], klass=klasse, showBook=showBook)
+
 
         elif site=="fbuch":
             if check_rechte(0):
@@ -148,15 +153,6 @@ def home():
                     lastyear=0
                 path=manage_data.missing_books(lastyear)
                 return send_from_directory("",path)
-                """
-                stufe=request.args.get("stufe")
-                if stufe==None:
-                    data=manage_data.get_stufe()
-                    return render_template("stufen.html", klassen=data, site="fbuch", titel="Fehlende Bücher")
-                else:
-                    data=manage_data.schueler_by_class(stufe+"a", 1, 1)
-                    return render_template("student_class.html", tables=[data.to_html(escape=False)], titles=["Schueler"])
-                """
             else:
                 return render_template("rechte_un.html")
 
@@ -293,6 +289,10 @@ def home():
                 bemerkung=request.args.get("bemerkung")
                 if geld!=None and bemerkung!=None:
                     manage_data.bemgeld_up(ID_e, bemerkung, geld)
+
+            returnUrl = request.args.get("returnUrl")
+            if returnUrl!=None:
+                return redirect(returnUrl)
 
             if return_student==True:
                 return redirect("/?site=schueler&ID=%s" % (ID_e))

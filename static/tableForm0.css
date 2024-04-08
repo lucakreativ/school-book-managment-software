@@ -1,0 +1,7 @@
+form {
+    display: inline;
+}
+
+input[type="submit"] {
+    height: 30px;
+}

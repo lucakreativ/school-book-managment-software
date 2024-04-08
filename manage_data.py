@@ -524,6 +524,45 @@ def schueler_by_class(klasse, fehlend=0, stufe_t=0):
 
     #sortieren
     data=pd.DataFrame(schueler, columns=["Name", "Seite"])
+    data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" method="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form><br>'.format(x))
+    return data
+
+def special_book(klasse, specialBookISBN):
+    returnUrl = "?site=klassen&k=%s&showBook=%s" % (klasse, specialBookISBN)
+    schueler=[]
+    cursor, conn = re_connect()
+
+    if klasse[0:2]!="J1" and klasse[0:2]!="J2":
+        stufe=klasse[0:-1]
+        klasse=klasse[-1:]
+    else:
+        stufe=klasse[0:2]
+        klasse=""
+
+    cursor.execute("SELECT Vorname, Nachname, ID FROM schueler WHERE Stufe=%s AND Klasse=%s", (stufe, klasse))
+    data=cursor.fetchall()
+
+    data=list(dict.fromkeys(data))
+    data.sort(key=lambda x:x[1])
+
+    for list_l in data:
+        list_l=list(list_l)
+        cursor.execute("SELECT Anzahl FROM ausgeliehen WHERE ID=%s AND ISBN=%s", (list_l[2], specialBookISBN))
+        amountOfSpecialBook = cursor.fetchone()
+        if (amountOfSpecialBook != None):
+            list_l.append(amountOfSpecialBook[0])
+        else:
+            list_l.append(0)
+        list_l[2]=cryption.encrypt(list_l[2])
+        list_l[0]=list_l[1]+", "+list_l[0]
+        list_l.pop(1)
+        ID = list_l[1]
+        list_l.append("""<form action="/" method="get"><input type="hidden" name="returnUrl" value="%s"><input type="hidden" name="site" value="save"><input type="hidden" name="ID" value="%s"><input type="hidden" name="ei" value="%s"><input type="submit" value="hinzufügen"></form><form action="/" method="get"><input type="hidden" name="returnUrl" value="%s"><input type="hidden" name="site" value="save"><input type="hidden" name="ID" value="%s"><input type="hidden" name="zu" value="%s"><input type="submit" value="entfernen"></form>""" % (returnUrl, ID, specialBookISBN, returnUrl, ID, specialBookISBN))
+        
+        schueler.append(list_l)
+    #sortieren
+    data=pd.DataFrame(schueler, columns=["Name", "Seite", "", "Entf/Hin"])
+    
     data["Seite"]=data["Seite"].apply(lambda x:'<form action="/" method="get"><input type="hidden" name="site" value="schueler"><input type="hidden" name="ID" value={0}><input type="submit" value="Seite"></form>'.format(x))
     return data
 

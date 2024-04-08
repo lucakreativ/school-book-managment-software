@@ -1,5 +1,8 @@
 <html>
     {% include "header.html" %}
+    <head>
+        <link rel="stylesheet" href="/static/tableForm0.css" type="text/css">
+    </head>
 
     <body>
         <div id="threecolumn">
@@ -23,10 +26,18 @@
             <form action="/" method="get">
                 <input type="hidden" name="site" value="complete_class">
                 <input type="text" name="klass" placeholder="Klasse (9a)" value="{{klass}}" required><br>
-                <input type="text" name="ISBN" placeholder="ISBN" required><br>
+                <input type="text" name="ISBN" placeholder="ISBN" value="{{showBook}}" required><br>
                 <input type="number" name="an" placeholder="Anzahl" required><br>
                 <input type="submit" value="absenden">
-                
+            </form>
+            <br>
+            <br>
+            <h2>Abhaken eines Buches</h2>
+            <form action="/" method="get">
+                <input type="hidden" name="site" value="klassen">
+                <input type="hidden" name="k" placeholder="Klasse (9a)" value="{{klass}}" required>
+                <input type="text" name="showBook" placeholder="ISBN" value="{{showBook}}" required><br>
+                <input type="submit" value="absenden">
             </form>
         </div>
         </div>
